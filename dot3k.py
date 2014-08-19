@@ -1,74 +1,84 @@
-import sn3218, st7036, time, copy, colorsys, math, psutil
-
-leds = [0] * 18
-
-def set_backlight(r, g, b):
-	leds[0] = leds[3] = leds[6] = int(r * 255)
-	leds[2] = leds[5] = leds[8] = int(g * 255)
-	leds[1] = leds[4] = leds[7] = int(b * 255)
-	sn3218.output(leds)
-
-def set_backlight_hue(hue):
-	r, g, b = colorsys.hsv_to_rgb(hue, 1, 1)
-
-	leds[0] = leds[3] = leds[6] = int(r * 255)
-	leds[2] = leds[5] = leds[8] = int(g * 255)
-	leds[1] = leds[4] = leds[7] = int(b * 255)
-	sn3218.output(leds)
-
-def set_graph(value):
-	value *= 9
-
-	if value > 9:
-		value = 9
-
-	for i in range(9):
-		leds[9 + i] = 0
-	
-	lit = int(math.floor(value))
-	for i in range(lit):
-		leds[9 + i] = 255
-
-	partial = lit
-	if partial < 9:
-		leds[9 + partial] = int((value % 1) * 255)
-
-	sn3218.output(leds)	
-
-# set gamma correction for backlight to normalise brightness
-g_channel_gamma = [value / 6 for value in sn3218.default_gamma_table]
-sn3218.channel_gamma(2, g_channel_gamma)
-sn3218.channel_gamma(5, g_channel_gamma)
-sn3218.channel_gamma(8, g_channel_gamma)
-
-r_channel_gamma = [value / 2 for value in sn3218.default_gamma_table]
-sn3218.channel_gamma(0, r_channel_gamma)
-sn3218.channel_gamma(3, r_channel_gamma)
-sn3218.channel_gamma(6, r_channel_gamma)
-
-w_channel_gamma = [value / 12 for value in sn3218.default_gamma_table]
-for i in range(9, 18):
-	sn3218.channel_gamma(i, w_channel_gamma)
-
-sn3218.enable()
-
+import backlight, st7036, time, datetime, copy, colorsys, math, psutil
 
 st7036 = st7036.st7036(register_select_pin=25)
-st7036.set_cursor_position(2, 1)
-st7036.write("test")
+
+st7036.clear()
+st7036.write(chr(0) + 'OMG! Such time' + chr(0))
+st7036.set_cursor_position(0,2)
+st7036.write(chr(1) + chr(4) + ' Very Wow! ' + chr(3) + chr(2) + chr(5))
+
+
+pirate = [
+	[0x00,0x1f,0x0b,0x03,0x00,0x04,0x11,0x1f],
+	[0x00,0x1f,0x16,0x06,0x00,0x08,0x03,0x1e],
+	[0x00,0x1f,0x0b,0x03,0x00,0x04,0x11,0x1f],
+	[0x00,0x1f,0x05,0x01,0x00,0x02,0x08,0x07]
+]
+
+heart = [
+	[0x00,0x0a,0x1f,0x1f,0x1f,0x0e,0x04,0x00],
+	[0x00,0x00,0x0a,0x0e,0x0e,0x04,0x00,0x00],
+	[0x00,0x00,0x00,0x0e,0x04,0x00,0x00,0x00],
+	[0x00,0x00,0x0a,0x0e,0x0e,0x04,0x00,0x00]
+	]
+
+raa = [
+	[0x1f,0x1d,0x19,0x13,0x17,0x1d,0x19,0x1f],
+	[0x1f,0x17,0x1d,0x19,0x13,0x17,0x1d,0x1f],
+	[0x1f,0x13,0x17,0x1d,0x19,0x13,0x17,0x1f],
+	[0x1f,0x19,0x13,0x17,0x1d,0x19,0x13,0x1f]
+	]
+
+arr = [
+	[31,14,4,0,0,0,0,0],
+	[0,31,14,4,0,0,0,0],
+	[0,0,31,14,4,0,0,0],
+	[0,0,0,31,14,4,0,0],
+	[0,0,0,0,31,14,4,0],
+	[0,0,0,0,0,31,14,4],
+	[4,0,0,0,0,0,31,14],
+	[14,4,0,0,0,0,0,31]
+]
+
+char = [
+	[12,11,9,9,25,25,3,3],
+	[0,15,9,9,9,25,27,3],
+	[3,13,9,9,9,27,27,0],
+	[0,15,9,9,9,25,27,3]
+]
+
+pacman = [
+	[0x0e,0x1f,0x1d,0x1f,0x18,0x1f,0x1f,0x0e],
+	[0x0e,0x1d,0x1e,0x1c,0x18,0x1c,0x1e,0x0f]
+]
+
+def getAnimFrame(char,fps):
+	return char[ int(round(time.time()*fps) % len(char)) ]
 
 cpu_sample_count = 200
 cpu_samples = [0] * cpu_sample_count
 hue = 0.0
 while True:
 	hue += 0.01
-	set_backlight_hue(hue)
+	backlight.sweep(hue)
 
 	cpu_samples.append(psutil.cpu_percent() / 100.0)
 	cpu_samples.pop(0)
 
 	cpu_avg = sum(cpu_samples) / cpu_sample_count
-	set_graph(cpu_avg)
+	backlight.set_graph(cpu_avg)
 
 	if hue > 1.0:
 		hue = 0.0
+
+	st7036.create_char(0,getAnimFrame(char,4))
+	st7036.create_char(1,getAnimFrame(arr,16))
+	st7036.create_char(2,getAnimFrame(raa,8))
+	st7036.create_char(3,getAnimFrame(pirate,2))
+	st7036.create_char(4,getAnimFrame(heart,4))
+	st7036.create_char(5,getAnimFrame(pacman,3))
+	st7036.set_cursor_position(0,1)
+	t = datetime.datetime.now().strftime("%H:%M:%S.%f")
+	st7036.write(t)
+
+	time.sleep(0.05)
