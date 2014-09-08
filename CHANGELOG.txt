@@ -1,5 +1,0 @@
-
-1.0dev
-------
-
-* Initial Release
