@@ -1,0 +1,5 @@
+include README.md
+include README.txt
+include CHANGELOG.txt
+include setup.py
+include dot3k/*
