@@ -2,37 +2,32 @@ import RPi.GPIO as GPIO
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 
-JOY_LEFT  = 0
-JOY_RIGHT = 0
-JOY_UP	  = 0
-JOY_DOWN  = 0
-JOY_BTN	  = 0
+LEFT  = 17
+RIGHT = 22
+UP    = 27
+DOWN  = 9
+BUTTON= 4
 
-BOUNCE    = 30
+BOUNCE= 300
 
-def callback_up():
-    pass
+def on(buttons):
+    buttons = buttons if isinstance(buttons, list) else [buttons]
+    
+    def register(handler):
+        for button in buttons:
+            GPIO.remove_event_detect(button)
+            GPIO.add_event_detect(button, GPIO.FALLING, callback=handler, bouncetime=BOUNCE)
+    
+    return register
 
-def callback_down():
-    pass
+up    = GPIO.setup(UP,    GPIO.IN, pull_up_down=GPIO.PUD_UP)
+down  = GPIO.setup(DOWN,  GPIO.IN, pull_up_down=GPIO.PUD_UP)
+left  = GPIO.setup(LEFT,  GPIO.IN, pull_up_down=GPIO.PUD_UP)
+right = GPIO.setup(RIGHT, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+button= GPIO.setup(BUTTON,GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
-def callback_right():
-    pass
-
-def callback_left():
-    pass
-
-def callback_button():
-    pass
-
-up   = GPIO.setup(JOY_UP,   GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-down = GPIO.setup(JOY_DOWN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-left = GPIO.setup(JOY_LEFT, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-right= GPIO.setup(JOY_RIGHT,GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-btn  = GPIO.setup(JOY_BTN,  GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-
-GPIO.add_event_detect(up,   GPIO.RISING,callback=up,   bouncetime=BOUNCE)
-GPIO.add_event_detect(down, GPIO.RISING,callback=down, bouncetime=BOUNCE)
-GPIO.add_event_detect(left, GPIO.RISING,callback=left, bouncetime=BOUNCE)
-GPIO.add_event_detect(right,GPIO.RISING,callback=right,bouncetime=BOUNCE)
-GPIO.add_event_detect(btn,  GPIO.RISING,callback=btn,  bouncetime=BOUNCE)
+#GPIO.add_event_detect(UP,   GPIO.FALLING,callback=callback_up,   bouncetime=BOUNCE)
+#GPIO.add_event_detect(DOWN, GPIO.FALLING,callback=callback_down, bouncetime=BOUNCE)
+#GPIO.add_event_detect(LEFT, GPIO.FALLING,callback=callback_left, bouncetime=BOUNCE)
+#GPIO.add_event_detect(RIGHT,GPIO.FALLING,callback=callback_right,bouncetime=BOUNCE)
+#GPIO.add_event_detect(BTN,  GPIO.FALLING,callback=callback_button,  bouncetime=BOUNCE)
