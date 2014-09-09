@@ -5,6 +5,7 @@ import dot3k.lcd as l
 import dot3k.backlight as b
 import signal, time
 
+l.set_contrast(40)
 
 class Menu():
 
@@ -97,18 +98,23 @@ class Menu():
   def up(self):
     if self.mode == 'navigate':
       self.prev_option()
+    elif self.mode == 'adjust':
+      self.current_value().up()
     #self.redraw()
 
   def down(self):
     if self.mode == 'navigate':
       self.next_option()
+    elif self.mode == 'adjust':
+      self.current_value().down()
     #self.redraw()
 
   def left(self):
     if self.mode == 'navigate':
       self.exit_option()
     elif self.mode == 'adjust':
-      self.current_value().left()
+      if not self.current_value().left():
+        self.mode = 'navigate'
     #self.redraw()
 
   def right(self):
@@ -137,6 +143,8 @@ class Menu():
       self.current_value().redraw()
 
 class MenuOption():
+   def millis(self):
+     return int(round(time.time() * 1000))
    def up(self):
      pass
    def down(self):
@@ -151,49 +159,212 @@ class MenuOption():
    def redraw(self, lcd):
      pass
 
+import colorsys
 class Backlight(MenuOption):
    def __init__(self):
      self.hue = 0
+     self.sat = 100
+     self.val = 100
+     self.mode = 0
+     self.modes = ['h','s','v','r','g','b']
+     self.from_hue()
+
+   def from_hue(self):
+     rgb = colorsys.hsv_to_rgb(self.hue,self.sat/100.0,self.val/100.0)
+     self.r = int(255*rgb[0])
+     self.g = int(255*rgb[1])
+     self.b = int(255*rgb[2])
+ 
+   def from_rgb(self):
+     self.hue = colorsys.rgb_to_hsv(self.r/255.0,self.g/255.0,self.b/255.0)[0]
+
+   def update_bl(self):
+     b.rgb(self.r,self.g,self.b)
+
+   def down(self):
+     self.mode+=1
+     if self.mode >= len(self.modes):
+       self.mode = 0
+     return True
+
+   def up(self):
+     self.mode-=1
+     if self.mode < 0:
+       self.mode = len(self.modes)-1
+     return True
 
    def right(self):
-     self.hue += (1.0/360.0)
-     if self.hue > 1:
-       self.hue = 0
-     b.hue(self.hue)
+     if self.mode == 0:
+       self.hue += (1.0/359.0)
+       if self.hue > 1:
+         self.hue = 0
+       self.from_hue()
+
+     elif self.mode == 1: # sat
+       self.sat += 1
+       if self.sat > 100:
+         self.sat = 0
+         self.from_hue()
+ 
+     elif self.mode == 2: # val
+       self.val += 1
+       if self.val > 100:
+         self.val = 0
+       self.from_hue()
+
+     else: # rgb
+       if self.mode == 3: #r
+         self.r += 1
+         if self.r > 255:
+           self.r = 0
+       elif self.mode == 4: #g
+         self.g += 1
+         if self.g > 255:
+           self.g = 0
+       elif self.mode == 5: #b
+         self.b += 1
+         if self.b > 255:
+           self.b = 0
+   
+       self.from_rgb()
+       
+     self.update_bl()
+     return True
 
    def left(self):    
-     self.hue -= (1.0/360.0)
-     if self.hue < 0:
-       self.hue = 1
-     b.hue(self.hue)
+     if self.mode == 0:
+       self.hue -= (1.0/359.0)
+       if self.hue < 0:
+         self.hue = 1
+       self.from_hue()
+
+     elif self.mode == 1: # sat
+       self.sat -= 1
+       if self.sat < 0:
+         self.sat = 100
+       self.from_hue()
+
+     elif self.mode == 2: #val
+       self.val -= 1
+       if self.val < 0:
+         self.val = 100
+       self.from_hue()
+
+     else: # rgb
+       if self.mode == 3: #r
+         self.r -= 1
+         if self.r < 0:
+           self.r = 255
+       elif self.mode == 4: #g
+         self.g -= 1
+         if self.g < 0:
+           self.g = 255
+       elif self.mode == 5: #b
+         self.b -= 1
+         if self.b < 0:
+           self.b = 255
+
+       self.from_rgb()
+
+     self.update_bl()
+     return True
    
    def redraw(self):
-     l.set_cursor_position(1,0)
+     l.set_cursor_position(0,0)
      l.write('Backlight')
-     l.set_cursor_position(1,1)
-     l.write('Hue: ' + str(int(self.hue*360)))
+     l.set_cursor_position(0,1)
+     l.write('HSV: ' + str(int(self.hue*359)).zfill(3) + ' ' + str(self.sat).zfill(3) + ' ' + str(self.val).zfill(3) )
+     l.set_cursor_position(0,2) 
 
+     l.write('RGB: ' + str(self.r).zfill(3) + ' ' + str(self.g).zfill(3) + ' ' + str(self.b).zfill(3))
+     if self.mode == 0: # hue
+       l.set_cursor_position(4,1)
+     elif self.mode == 1: # sat
+       l.set_cursor_position(8,1)
+     elif self.mode == 2: # val
+       l.set_cursor_position(12,1)
+     elif self.mode == 3: # r
+       l.set_cursor_position(4,2)
+     elif self.mode == 4: # g
+       l.set_cursor_position(8,2)
+     elif self.mode == 5: # b
+       l.set_cursor_position(12,2)
+     l.write(chr(252))
+ 
 class Contrast(MenuOption):
    def __init__(self):
-     self.contrast = 0
+     self.contrast = 30
 
    def right(self):
-     pass
+     self.contrast+=1
+     if self.contrast > 63:
+       self.contrast = 0
+     l.set_contrast(self.contrast)
+     return True
 
    def left(self):
-     pass
+     self.contrast-=1
+     if self.contrast < 0:
+       self.contrast = 63
+     l.set_contrast(self.contrast)
+     return True
    
    def redraw(self):
      l.set_cursor_position(1,0)
      l.write('Contrast')
      l.set_cursor_position(1,1)
-     print(self.contrast)
      l.write('Value: ' + str(self.contrast))
+
+import math, psutil 
+class GraphCPU(MenuOption):
+  def __init__(self):
+    self.cpu_samples = [0,0,0,0,0]
+    self.last = self.millis()
+  
+  def redraw(self):
+    now = self.millis()
+    if now - self.last < 1000:
+      return false
+
+    self.cpu_samples.append(psutil.cpu_percent() / 100.0)
+    self.cpu_samples.pop(0)
+    self.cpu_avg = sum(self.cpu_samples) / len(self.cpu_samples)
+    l.set_cursor_position(1,0)
+    l.write('CPU Load')
+    l.set_cursor_position(1,1)
+    l.write(str(self.cpu_avg) + '%')
+
+import commands
+class GraphTemp(MenuOption):
+  def __init__(self):
+    self.last = self.millis()
+
+  def get_cpu_temp(self):
+    tempFile = open( "/sys/class/thermal/thermal_zone0/temp" )
+    cpu_temp = tempFile.read()
+    tempFile.close()
+    return float(cpu_temp)/1000
+
+  def get_gpu_temp(self):
+    gpu_temp = commands.getoutput( '/opt/vc/bin/vcgencmd measure_temp' ).replace( 'temp=', '' ).replace( '\'C', '' )
+    return float(gpu_temp)
+
+  def redraw(self):
+    now = self.millis()
+    if now - self.last < 1000:
+      return false
+
+    l.set_cursor_position(1,0)
+    l.write('Temperature')
+    l.set_cursor_position(1,1)
+    l.write('CPU:' + str(self.get_cpu_temp()))
+    l.set_cursor_position(1,2)
+    l.write('GPU:' + str(self.get_gpu_temp()))
 
 my_menu = {
   'Status': {
-    'CPU': '',
-    'Temp': ''
+    'CPU':GraphCPU(),
+    'Temp':GraphTemp()
   },
   'Settings': {
     'Display': {
@@ -234,6 +405,6 @@ def handle_button(pin):
 while 1:
   menu.redraw()
   time.sleep(0.05)
-
+ 
 # Prevent the script exiting!
 signal.pause()
