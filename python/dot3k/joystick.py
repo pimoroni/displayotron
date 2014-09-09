@@ -5,7 +5,12 @@ GPIO.setwarnings(False)
 
 LEFT  = 17
 RIGHT = 22
-UP    = 27
+
+if GPIO.RPI_REVISION == 1:
+    UP= 21
+else:
+    UP= 27
+
 DOWN  = 9
 BUTTON= 4
 
