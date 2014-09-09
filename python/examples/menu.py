@@ -3,9 +3,10 @@
 import dot3k.joystick as j
 import dot3k.lcd as l
 import dot3k.backlight as b
-import signal, time
+import signal, time, ConfigParser, os
 
-l.set_contrast(40)
+config = ConfigParser.ConfigParser()
+config.read(['dot3k.cfg', os.path.expanduser('~/.dot3k.cfg')])
 
 class Menu():
 
@@ -16,6 +17,30 @@ class Menu():
     self.menu_options = structure
     #self.redraw()
     #l.create_char(0,[16,24,28,30,30,28,24,16])
+    
+    @j.on(j.UP)
+    def handle_up(pin):
+      self.up()
+      j.repeat(j.UP,self.up,0.4,0.9)
+
+    @j.on(j.DOWN)
+    def handle_down(pin):
+      self.down()
+      j.repeat(j.DOWN,self.down,0.4,0.9)
+
+    @j.on(j.LEFT)
+    def handle_left(pin):
+      self.left()
+      j.repeat(j.LEFT,self.left,0.4,0.9)
+
+    @j.on(j.RIGHT)
+    def handle_right(pin):
+      self.right()
+      j.repeat(j.RIGHT,self.right,0.4,0.9)
+
+    @j.on(j.BUTTON)
+    def handle_button(pin):
+      self.select()
 
   def current_submenu(self):
     """
@@ -58,8 +83,8 @@ class Menu():
       self.current_position = 0
     elif isinstance(self.current_value(),MenuOption):
       self.mode = 'adjust'
-    if callable(type(self.current_submenu()[self.current_key()])):
-      pass
+    elif callable(self.current_submenu()[self.current_key()]):
+      self.current_submenu()[self.current_key()]()
 
   def prev_option(self):
     """
@@ -179,21 +204,29 @@ class Backlight(MenuOption):
      self.hue = colorsys.rgb_to_hsv(self.r/255.0,self.g/255.0,self.b/255.0)[0]
 
    def update_bl(self):
+     if not 'Backlight' in config.sections():
+       config.add_section('Backlight')
+     config.set('Backlight','r',str(self.r))
+     config.set('Backlight','g',str(self.g))
+     config.set('Backlight','b',str(self.b))
+     config.set('Backlight','h',str(int(self.hue*359)))
+     config.set('Backlight','s',str(self.sat))
+     config.set('Backlight','v',str(self.val))
      b.rgb(self.r,self.g,self.b)
 
-   def down(self):
+   def right(self):
      self.mode+=1
      if self.mode >= len(self.modes):
        self.mode = 0
      return True
 
-   def up(self):
+   def left(self):
      self.mode-=1
      if self.mode < 0:
        self.mode = len(self.modes)-1
      return True
 
-   def right(self):
+   def up(self):
      if self.mode == 0:
        self.hue += (1.0/359.0)
        if self.hue > 1:
@@ -231,7 +264,7 @@ class Backlight(MenuOption):
      self.update_bl()
      return True
 
-   def left(self):    
+   def down(self):    
      if self.mode == 0:
        self.hue -= (1.0/359.0)
        if self.hue < 0:
@@ -361,6 +394,21 @@ class GraphTemp(MenuOption):
     l.set_cursor_position(1,2)
     l.write('GPU:' + str(self.get_gpu_temp()))
 
+def save_settings():
+  print('Config saved to dot3k.cfg')
+  with open('dot3k.cfg', 'wb') as configfile:
+    config.write(configfile)
+
+
+"""
+Using a set of nested lists you can describe
+the menu you want to display on dot3k.
+
+Instances of classes derived from MenuOption can
+be used as menu items to show information or change settings.
+
+See GraphTemp, GraphCPU, Contrast and Backlight for examples.
+"""
 my_menu = {
   'Status': {
     'CPU':GraphCPU(),
@@ -370,37 +418,14 @@ my_menu = {
     'Display': {
       'Contrast':Contrast(),
       'Backlight':Backlight()
-    }
+    },
+    'Save':save_settings
   }
 }
 
+l.set_contrast(40)
 b.rgb(255,255,255)
 menu = Menu(my_menu)
-
-
-@j.on(j.UP)
-def handle_up(pin):
-  menu.up()
-  j.repeat(j.UP,menu.up,0.4)
-
-@j.on(j.DOWN)
-def handle_down(pin):
-  menu.down()
-  j.repeat(j.DOWN,menu.down,0.4)
-
-@j.on(j.LEFT)
-def handle_left(pin):
-  menu.left()
-  j.repeat(j.LEFT,menu.left,0.4,0.9)
-
-@j.on(j.RIGHT)
-def handle_right(pin):
-  menu.right()
-  j.repeat(j.RIGHT,menu.right,0.4,0.9)
-
-@j.on(j.BUTTON)
-def handle_button(pin):
-  menu.select()
 
 while 1:
   menu.redraw()
