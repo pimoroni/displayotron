@@ -1,4 +1,5 @@
 import RPi.GPIO as GPIO
+import time
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 
@@ -19,6 +20,13 @@ def on(buttons):
             GPIO.add_event_detect(button, GPIO.FALLING, callback=handler, bouncetime=BOUNCE)
     
     return register
+
+def repeat(button, handler, delay = 0.1, ramp = 1.0):
+    time.sleep(delay)
+    while(GPIO.input(button) == 0):
+        handler()
+        time.sleep(delay)
+        delay*=ramp
 
 up    = GPIO.setup(UP,    GPIO.IN, pull_up_down=GPIO.PUD_UP)
 down  = GPIO.setup(DOWN,  GPIO.IN, pull_up_down=GPIO.PUD_UP)
