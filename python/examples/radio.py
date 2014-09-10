@@ -4,7 +4,7 @@ import dot3k.joystick as joystick
 import dot3k.lcd as lcd
 import dot3k.backlight as backlight
 from dot3k.menu import Menu, Backlight, Contrast, MenuOption
-import subprocess, socket, atexit, time, os, math, psutil, commands
+import re, subprocess, socket, atexit, time, os, math
 
 class DotVolume(MenuOption):
 
@@ -52,6 +52,8 @@ class DotRadio(MenuOption):
     self.active_station = None
     self.pid = None
     self.socket = None
+    self.current_stream = None
+    self.last_update = 0
     atexit.register(self.kill)
 
   def setup(self, lcd, config):
@@ -84,6 +86,10 @@ class DotRadio(MenuOption):
     if not self.ready:
       lcd.write('No stations found!')
       return False 
+  
+    if self.millis() - self.last_update > 500:
+      self.get_current_stream()
+      self.last_update = self.millis()
 
     if len(self.stations) > 2:
       self.draw_station(0, self.prev_station())
@@ -94,16 +100,21 @@ class DotRadio(MenuOption):
       self.draw_station(2, self.next_station())
 
   def draw_station(self, row, index):
+    stream = self.config.get('Radio Stations',self.stations[index])
+    title = stream.split(',')[0]
+    stream = stream.split(',')[1]
+
     if self.selected_station ==  index:
       self.lcd.set_cursor_position(0, row)
       self.lcd.write(chr(252))
 
-    if self.active_station == index:
+    #if self.active_station == index:
+    if stream == self.current_stream:
       self.lcd.set_cursor_position(0, row)
       self.lcd.write('*')
 
     self.lcd.set_cursor_position(1, row)
-    self.lcd.write(self.stations[index])
+    self.lcd.write(title)
 
   def kill(self):
     if self.pid != None:
@@ -116,9 +127,15 @@ class DotRadio(MenuOption):
     except socket.error:
       print('Failed to send command to VLC')
 
-  def current_feed(self):
+  def get_current_stream(self):
      self.send("status")
-     return self.socket.recv(8192).split(' ')[3]
+     status = self.socket.recv(8192)
+     result = re.search('input:\ (.*)\ ',status)
+     if result != None:
+       self.current_stream = result.group(1)
+     else:
+       self.current_stream = None
+     return self.current_stream
   
   def start(self):
     if self.pid == None:
@@ -141,20 +158,24 @@ class DotRadio(MenuOption):
         exit("Unable to connect to VLC")
   
   def right(self):
-    if self.active_station == self.selected_station:
+    #if self.active_station == self.selected_station:
+         #self.kill()
+
+    stream = self.config.get(
+	'Radio Stations',
+	self.stations[self.selected_station]
+	)
+
+    if ',' in stream:
+      stream = stream.split(',')[1]
+ 
+    if stream == self.get_current_stream():
       print('Skipping play, sending play/pause toggle')
       #devnull = open(os.devnull, 'w')
       #subprocess.call('/bin/echo pause | /bin/netcat 127.0.0.1 9393', shell=True, stdout=devnull)
       self.send("pause")
       return False
 
-    #self.kill()
- 
-    stream = self.config.get(
-	'Radio Stations',
-	self.stations[self.selected_station]
-	)
- 
     #subprocess.call('/bin/echo "add ' + stream + '" | /bin/netcat 127.0.0.1 9393', shell=True, stdout=open(os.devnull,'w'))
     self.send("add " + stream)
     self.active_station = self.selected_station
