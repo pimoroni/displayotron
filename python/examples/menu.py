@@ -4,8 +4,32 @@ import dot3k.joystick as joystick
 import dot3k.lcd as lcd
 import dot3k.backlight as backlight
 from dot3k.menu import Menu, Backlight, Contrast, MenuOption
-import time, os, math, psutil
+import time, os, math, psutil, commands
 
+class SpaceInvader(MenuOption):
+  """
+  A silly example "plug-in" showing an
+  animated space invader.
+  """
+
+  def __init__(self):
+    self.start = self.millis()
+    self.invader = [
+      [14,31,21,31,9,18,9,18],
+      [14,31,21,31,18,9,18,9]
+    ]
+    MenuOption.__init__(self)
+
+  def redraw(self):
+    now = self.millis()
+
+    x = int((self.start-now)/200 % 16)
+    self.lcd.create_char(0, self.invader[int((self.start-now)/400 % 2)])
+
+    self.lcd.set_cursor_position(0,0)
+    self.lcd.write('Space Invader!')
+    self.lcd.set_cursor_position(x,1)
+    self.lcd.write(chr(0))
 
 class GraphCPU(MenuOption):
   """
@@ -73,6 +97,7 @@ be used as menu items to show information or change settings.
 See GraphTemp, GraphCPU, Contrast and Backlight for examples.
 """
 menu = Menu({
+    'Space Invader':SpaceInvader(),
     'Status': {
       'CPU':GraphCPU(),
       'Temp':GraphTemp()
