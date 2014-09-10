@@ -4,7 +4,45 @@ import dot3k.joystick as joystick
 import dot3k.lcd as lcd
 import dot3k.backlight as backlight
 from dot3k.menu import Menu, Backlight, Contrast, MenuOption
-import subprocess, atexit, time, os, math, psutil, commands
+import subprocess, socket, atexit, time, os, math, psutil, commands
+
+class DotVolume(MenuOption):
+
+  def __init__(self):
+    self.volume = None
+
+  def setup(self, lcd, config):
+    MenuOption.setup(self, lcd, config)
+    self.volume = int(self.get_option('Sound','volume',80))
+    self.set_volume()
+
+  def set_volume(self):
+    self.set_option('Sound','volume',self.volume)
+    devnull = open(os.devnull, 'w')
+    subprocess.call(['/usr/bin/amixer','sset',"'PCM'", str(self.volume) + '%'], stdout=devnull)
+
+  def down(self):
+    self.volume -= 1
+    if self.volume < 0:
+      self.volume = 0
+    self.set_volume()
+
+  def up(self):
+    self.volume += 1
+    if self.volume > 100:
+      self.volume = 100
+    self.set_volume()
+
+  def redraw(self):
+    lcd.write('Volume')
+    lcd.set_cursor_position(0,1)
+    lcd.write('PCM: ')
+    lcd.write(str(self.volume))
+    lcd.write('%')
+
+    vol = '#' * int(16.0 * self.volume/100.0)
+    lcd.set_cursor_position(0,2)
+    lcd.write(vol)
 
 class DotRadio(MenuOption):
 
@@ -13,6 +51,7 @@ class DotRadio(MenuOption):
     self.selected_station = 0
     self.active_station = None
     self.pid = None
+    self.socket = None
     atexit.register(self.kill)
 
   def setup(self, lcd, config):
@@ -21,6 +60,7 @@ class DotRadio(MenuOption):
     if 'Radio Stations' in self.config.sections():
       self.stations = self.config.options('Radio Stations')
       self.ready = True
+      self.start()
 
   def prev_station(self):
     station = self.selected_station-1
@@ -70,23 +110,53 @@ class DotRadio(MenuOption):
       subprocess.call(['/bin/kill','-9',str(self.pid)])
       print('Killing VLC process with PID: ' + str(self.pid))
 
+  def send(self, command):
+    try:
+      self.socket.send(command + "\n")
+    except socket.error:
+      print('Failed to send command to VLC')
+
+  def current_feed(self):
+     self.send("status")
+     return self.socket.recv(8192).split(' ')[3]
+  
+  def start(self):
+    if self.pid == None:
+      return_value = subprocess.check_output(['./vlc.sh'])
+      self.pid = int(return_value.split('\n')[0])    
+
+      print('VLC started with PID: ' + str(self.pid))  
+      
+      self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+      for attempt in range(10):
+        try:
+          print("Attempting to connect to VLC")
+          self.socket.connect(("127.0.0.1",9393))
+          break
+        except socket.error:
+          time.sleep(0.5)
+      try:
+        self.socket.recv(0)
+      except socket.error:
+        exit("Unable to connect to VLC")
+  
   def right(self):
     if self.active_station == self.selected_station:
-      print('Skipping play, already playing')
+      print('Skipping play, sending play/pause toggle')
+      #devnull = open(os.devnull, 'w')
+      #subprocess.call('/bin/echo pause | /bin/netcat 127.0.0.1 9393', shell=True, stdout=devnull)
+      self.send("pause")
       return False
 
-    self.kill()
+    #self.kill()
  
     stream = self.config.get(
 	'Radio Stations',
 	self.stations[self.selected_station]
 	)
-
-    return_value = subprocess.check_output(['./vlc.sh', stream, "-I", "dummy"])
-    self.pid = int(return_value.split('\n')[0])    
-
-    print('VLC started with PID: ' + str(self.pid))  
-  
+ 
+    #subprocess.call('/bin/echo "add ' + stream + '" | /bin/netcat 127.0.0.1 9393', shell=True, stdout=open(os.devnull,'w'))
+    self.send("add " + stream)
     self.active_station = self.selected_station
 
 """
@@ -100,6 +170,7 @@ See GraphTemp, GraphCPU, Contrast and Backlight for examples.
 """
 menu = Menu({
     'Radio':DotRadio(),
+    'Volume':DotVolume(),
     'Settings': {
       'Display': {
         'Contrast':Contrast(),
