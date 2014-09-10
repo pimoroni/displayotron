@@ -53,8 +53,14 @@ class DotRadio(MenuOption):
     self.pid = None
     self.socket = None
     self.current_stream = None
+    self.current_state = None
     self.last_update = 0
     atexit.register(self.kill)
+    self.icons = {
+      'play': [0,24,30,31,30,24,0,0],
+      'pause':[0,27,27,27,27,27,0,0],
+      'stop': [0,31,31,31,31,31,0,0]
+    }
 
   def setup(self, lcd, config):
     self.ready = False
@@ -104,14 +110,21 @@ class DotRadio(MenuOption):
     title = stream.split(',')[0]
     stream = stream.split(',')[1]
 
-    if self.selected_station ==  index:
+    if self.selected_station == index:
       self.lcd.set_cursor_position(0, row)
       self.lcd.write(chr(252))
 
     #if self.active_station == index:
     if stream == self.current_stream:
+      #self.lcd.set_cursor_position(0, row)
+      if self.current_state == 'paused':
+        self.lcd.create_char(0,self.icons['pause'])
+      elif self.current_state == 'playing':
+        self.lcd.create_char(0,self.icons['play'])
+      else:
+        self.lcd.create_char(0,self.icons['stop'])
       self.lcd.set_cursor_position(0, row)
-      self.lcd.write('*')
+      self.lcd.write(chr(0))
 
     self.lcd.set_cursor_position(1, row)
     self.lcd.write(title)
@@ -131,6 +144,9 @@ class DotRadio(MenuOption):
      self.send("status")
      status = self.socket.recv(8192)
      result = re.search('input:\ (.*)\ ',status)
+     state = re.search('state\ (.*)\ ',status)
+     if state != None:
+       self.current_state = state.group(1)
      if result != None:
        self.current_stream = result.group(1)
      else:
@@ -190,7 +206,7 @@ be used as menu items to show information or change settings.
 See GraphTemp, GraphCPU, Contrast and Backlight for examples.
 """
 menu = Menu({
-    'Radio':DotRadio(),
+    'Radio Stream':DotRadio(),
     'Volume':DotVolume(),
     'Settings': {
       'Display': {

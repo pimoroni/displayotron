@@ -1,5 +1,18 @@
-Dot3k Radio Remote
-------------------
+Dot3k Radio Utilities
+=====================
+
+control
+-------
+
+This utility will allow you to play, pause or stop the radio.
+
+Usage
+-----
+
+    ./control play/pause/stop
+
+playstream
+----------
 
 This utility will load your radio channel list and let you play any of your feeds, or a totally arbitrary one!
 

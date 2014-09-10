@@ -5,9 +5,17 @@ config = ConfigParser.ConfigParser()
 config.read(['../dot3k.cfg','dot3k.cfg'])
 
 to_play = None
+host = '127.0.0.1'
+post = 9393
 
 if len(sys.argv) > 1:
   to_play = sys.argv[1]
+
+if len(sys.argv) > 2:
+  host = sys.argv[2]
+
+if len(sys.argv) > 3:
+  post = int(sys.argv[3])
 
 if 'Radio Stations' in config.sections():
   print('Found stations:')
@@ -25,8 +33,11 @@ if 'Radio Stations' in config.sections():
 
 if to_play != None:
   print('Playing: ' + to_play)
-  sck = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-  sck.connect(('127.0.0.1',9393))
-  sck.send('clear\n')
-  sck.send('add ' + to_play + '\n')
-  sck.send('play\n')
+  try:
+    sck = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sck.connect((host,port))
+    sck.send('clear\n')
+    sck.send('add ' + to_play + '\n')
+    sck.send('play\n')
+  except socket.error:
+    exit('Unable to connect to server: ' + host + ':' + str(port))
