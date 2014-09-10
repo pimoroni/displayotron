@@ -6,7 +6,7 @@ config.read(['../dot3k.cfg','dot3k.cfg'])
 
 to_play = None
 host = '127.0.0.1'
-post = 9393
+port = 9393
 
 if len(sys.argv) > 1:
   to_play = sys.argv[1]
@@ -15,7 +15,7 @@ if len(sys.argv) > 2:
   host = sys.argv[2]
 
 if len(sys.argv) > 3:
-  post = int(sys.argv[3])
+  port = int(sys.argv[3])
 
 if 'Radio Stations' in config.sections():
   print('Found stations:')
