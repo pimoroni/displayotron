@@ -115,25 +115,26 @@ menu = Menu({
 You can use anything to control dot3k.menu,
 but you'll probably want to use dot3k.joystick
 """
+REPEAT_DELAY = 0.5
 @joystick.on(joystick.UP)
 def handle_up(pin):
   menu.up()
-  joystick.repeat(joystick.UP,menu.up,0.4,0.9)
+  joystick.repeat(joystick.UP,menu.up,REPEAT_DELAY,0.9)
 
 @joystick.on(joystick.DOWN)
 def handle_down(pin):
   menu.down()
-  joystick.repeat(joystick.DOWN,menu.down,0.4,0.9)
+  joystick.repeat(joystick.DOWN,menu.down,REPEAT_DELAY,0.9)
 
 @joystick.on(joystick.LEFT)
 def handle_left(pin):
   menu.left()
-  joystick.repeat(joystick.LEFT,menu.left,0.4,0.9)
+  joystick.repeat(joystick.LEFT,menu.left,REPEAT_DELAY,0.9)
 
 @joystick.on(joystick.RIGHT)
 def handle_right(pin):
   menu.right()
-  joystick.repeat(joystick.RIGHT,menu.right,0.4,0.9)
+  joystick.repeat(joystick.RIGHT,menu.right,REPEAT_DELAY,0.9)
 
 @joystick.on(joystick.BUTTON)
 def handle_button(pin):

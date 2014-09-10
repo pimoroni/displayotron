@@ -1,6 +1,13 @@
 Dot3k Radio Utilities
 =====================
 
+volume
+------
+
+A simple bash script for changing volume via amixer:
+
+    ./volume 80
+
 control
 -------
 
