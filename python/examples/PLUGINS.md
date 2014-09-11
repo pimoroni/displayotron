@@ -13,8 +13,16 @@ Example
 This super simple example is what you need to get something displaying from your plugin on the Dot3k LCD. Easy!
 
     class MyPlugin(MenuOption):
-      def redraw(self):
-        self.lcd.write('Hello World')
+      def redraw(self, menu):
+        menu.clear_row(0)
+        menu.write_row(1,'Hello World')
+        menu.clear_row(2)
+
+Every time redraw is called, the parent menu sends itself and lets you call write_row, clear_row or write_option to draw things to the LCD.
+
+You should always call menu.clear_row() on any rows you don't use.
+
+menu.write_row and menu.write_option will always truncate any text that doesn't fit on the screen. You can implement a scrolling marquee, but doing this automatically is on the feature roadmap!
 
 Methods
 -------
@@ -26,11 +34,11 @@ MenuOption has the following methods which you can override:
 * left - as above, but you should return true if you want to prevent the menu exiting your plugin
 * right - yup, this is called when you press right.
 * select - by default this returns true and causes the menu to exit your plugin, return false to prevent
-* redraw - called every draw pass, you can draw to self.lcd here, the lcd will start blank
-* setup - lcd and config are passed to this method by default, you should overide like so:
+* redraw - called every draw pass, you can draw using menu.write_row here, make sure to clear_row rows you don't use
+* setup - the config is passed to this method by default, you should overide like so:
 
-    def setup(self, lcd, config):
-      MenuOption.setup(self, lcd, config)
+    def setup(self, config):
+      MenuOption.setup(self, config)
       # Your stuff
 
 Options
