@@ -147,7 +147,9 @@ class Menu():
   def redraw(self):
     self.lcd.clear()
     if self.mode == 'navigate':
-      self.lcd.set_cursor_position(1,1) # x, y
+      
+      # Draw the selected menu option
+      self.lcd.set_cursor_position(0,1) # x, y
       self.lcd.write(chr(252))
       self.lcd.write(self.current_submenu().keys()[self.current_position])
 
@@ -159,6 +161,7 @@ class Menu():
         self.lcd.set_cursor_position(1,2)
         self.lcd.write(self.current_submenu().keys()[self.next_position()])
 
+    # Call the redraw function of the endpoint Class
     elif self.mode == 'adjust':
       self.current_value().redraw()
 

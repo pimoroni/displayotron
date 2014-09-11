@@ -112,7 +112,8 @@ class Radio(MenuOption):
   def start(self):
     if self.pid == None:
       return_value = subprocess.check_output(['./vlc.sh'])
-      self.pid = int(return_value.split('\n')[0])    
+      pids = return_value.split('\n')[0]
+      self.pid = int(pids.split(' ')[0])
 
       print('VLC started with PID: ' + str(self.pid))  
       

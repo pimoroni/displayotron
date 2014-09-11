@@ -61,4 +61,4 @@ def handle_button(pin):
 while 1:
   # Redraw the menu, since we don't want to hand this off to a thread
   menu.redraw()
-  time.sleep(0.05)
+  time.sleep(0.1)
