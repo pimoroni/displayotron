@@ -35,18 +35,22 @@ class Volume(MenuOption):
       self.volume = 100
     self.set_volume()
 
-  def redraw(self):
-    self.lcd.write('Volume: ')
-    self.lcd.write(str(self.actual_volume))
-    self.lcd.write('%')
-    self.lcd.set_cursor_position(0,1)
-    self.lcd.write('Target: ')
-    self.lcd.write(str(self.volume))
-    self.lcd.write('%')
+  def redraw(self, menu):
+    menu.write_row(0,'Volume: ' + str(self.actual_volume),'',0)
+    menu.write_row(1,'Target: ' + str(self.volume),'',0)
+    menu.write_row(2,'#' * int(16.0 * float(self.actual_volume)/100.0),'',0)
+    #self.lcd.clear()
+    #self.lcd.write('Volume: ')
+    #self.lcd.write(str(self.actual_volume))
+    #self.lcd.write('%')
+    #self.lcd.set_cursor_position(0,1)
+    #self.lcd.write('Target: ')
+    #self.lcd.write(str(self.volume))
+    #self.lcd.write('%')
 
-    vol = '#' * int(16.0 * float(self.actual_volume)/100.0)
-    self.lcd.set_cursor_position(0,2)
-    self.lcd.write(vol)
+    #vol = '#' * int(16.0 * float(self.actual_volume)/100.0)
+    #self.lcd.set_cursor_position(0,2)
+    #self.lcd.write(vol)
 
     if self.millis() - self.last_update > 1000:
       self.actual_volume = self.get_volume()

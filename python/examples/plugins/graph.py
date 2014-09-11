@@ -10,7 +10,8 @@ class GraphCPU(MenuOption):
     self.last = self.millis()
     MenuOption.__init__(self)
   
-  def redraw(self):
+  def redraw(self menu):
+    self.lcd.clear()
     now = self.millis()
     if now - self.last < 1000:
       return false
@@ -43,7 +44,8 @@ class GraphTemp(MenuOption):
     gpu_temp = commands.getoutput( '/opt/vc/bin/vcgencmd measure_temp' ).replace( 'temp=', '' ).replace( '\'C', '' )
     return float(gpu_temp)
 
-  def redraw(self):
+  def redraw(self, menu):
+    self.lcd.clear()
     now = self.millis()
     if now - self.last < 1000:
       return false

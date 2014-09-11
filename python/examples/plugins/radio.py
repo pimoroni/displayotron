@@ -44,9 +44,11 @@ class Radio(MenuOption):
   def up(self):
     self.selected_station = self.prev_station()
 
-  def redraw(self):
+  def redraw(self, menu):
     if not self.ready:
-      lcd.write('No stations found!')
+      menu.clear_row(0)
+      menu.write_row(1,'No stations found!')
+      menu.clear_row(2)
       return False 
   
     if self.millis() - self.last_update > 500:
@@ -54,36 +56,43 @@ class Radio(MenuOption):
       self.last_update = self.millis()
 
     if len(self.stations) > 2:
-      self.draw_station(0, self.prev_station())
+      self.draw_station(menu, 0, self.prev_station())
 
-    self.draw_station(1, self.selected_station)
+    self.draw_station(menu, 1, self.selected_station)
 
     if len(self.stations) > 1:
-      self.draw_station(2, self.next_station())
+      self.draw_station(menu, 2, self.next_station())
 
-  def draw_station(self, row, index):
+  def draw_station(self, menu, row, index):
     stream = self.config.get('Radio Stations',self.stations[index])
     title = stream.split(',')[0]
     stream = stream.split(',')[1]
 
+    icon = ' '
+
     if self.selected_station == index:
-      self.lcd.set_cursor_position(0, row)
-      self.lcd.write(chr(252))
+      icon = chr(252)
+      #self.lcd.set_cursor_position(0, row)
+      #self.lcd.write(chr(252))
 
     #if self.active_station == index:
     if stream == self.current_stream:
       #self.lcd.set_cursor_position(0, row)
       if self.current_state == 'paused':
         self.lcd.create_char(0,self.icons['pause'])
+        icon = chr(0)
       elif self.current_state == 'playing':
         self.lcd.create_char(0,self.icons['play'])
+        icon = chr(0)
       else:
         self.lcd.create_char(0,self.icons['stop'])
-      self.lcd.set_cursor_position(0, row)
-      self.lcd.write(chr(0))
+        icon = chr(0)
+      #self.lcd.set_cursor_position(0, row)
+      #self.lcd.write(chr(0))
 
-    self.lcd.set_cursor_position(1, row)
-    self.lcd.write(title)
+    #self.lcd.set_cursor_position(1, row)
+    #self.lcd.write(title)
+    menu.write_row(row, title, icon)
 
   def kill(self):
     if self.pid != None:
