@@ -16,13 +16,13 @@ BUTTON= 4
 
 BOUNCE= 300
 
-def on(buttons):
+def on(buttons, bounce=BOUNCE):
     buttons = buttons if isinstance(buttons, list) else [buttons]
     
     def register(handler):
         for button in buttons:
             GPIO.remove_event_detect(button)
-            GPIO.add_event_detect(button, GPIO.FALLING, callback=handler, bouncetime=BOUNCE)
+            GPIO.add_event_detect(button, GPIO.FALLING, callback=handler, bouncetime=bounce)
     
     return register
 

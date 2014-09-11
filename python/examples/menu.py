@@ -3,7 +3,8 @@
 import dot3k.joystick as joystick
 import dot3k.lcd as lcd
 import dot3k.backlight as backlight
-from dot3k.menu import Menu, Backlight, Contrast, MenuOption
+from dot3k.menu import Menu, MenuOption
+from plugins.utils import Backlight, Contrast
 from plugins.graph import GraphTemp, GraphCPU
 import time, os, math, psutil, commands
 
@@ -25,7 +26,7 @@ class SpaceInvader(MenuOption):
     now = self.millis()
 
     x = int((self.start-now)/200 % 16)
-    self.lcd.create_char(0, self.invader[int((self.start-now)/400 % 2)])
+    menu.lcd.create_char(0, self.invader[int((self.start-now)/400 % 2)])
 
     menu.write_row(0,'Space Invader!')
     menu.write_row(1,(' '*x) + chr(0))
@@ -86,4 +87,4 @@ def handle_button(pin):
 
 while 1:
   menu.redraw()
-  time.sleep(0.01)
+  time.sleep(0.05)

@@ -5,40 +5,21 @@ import dot3k.lcd as lcd
 import dot3k.backlight as backlight
 from dot3k.menu import Menu
 from plugins.utils import Backlight, Contrast
-from plugins import Radio, Volume, GraphCPU, GraphTemp
-import time
+from plugins.debris import Debris
+import time, os, math, psutil, commands
 
-"""
-Using a set of nested dictionaries you can describe
-the menu you want to display on dot3k.
-
-A nested dictionary describes a submenu.
-An instance of a plugin class ( derived from MenuOption ) can be used for things like settings, radio, etc
-A function name will call that function.
-"""
 menu = Menu({
-    'Radio Stream':Radio(),
-    'Volume':Volume(),
-    'Status': {
-      'CPU':GraphCPU(),
-      'Temp':GraphTemp()
-    },
+    'Debris Game':Debris(),
     'Settings': {
-      'Contrast':Contrast(lcd),
-      'Backlight':Backlight(backlight)
+      'Display': {
+        'Contrast':Contrast(lcd),
+        'Backlight':Backlight(backlight)
+      }
     }
   },
   lcd)
 
-"""
-You can use anything to control dot3k.menu,
-but you'll probably want to use dot3k.joystick
-
-Repeat delay determines how quickly holding the joystick
-in a direction will start to trigger repeats
-"""
 REPEAT_DELAY = 0.5
-
 @joystick.on(joystick.UP)
 def handle_up(pin):
   menu.up()
@@ -64,6 +45,5 @@ def handle_button(pin):
   menu.select()
 
 while 1:
-  # Redraw the menu, since we don't want to hand this off to a thread
   menu.redraw()
   time.sleep(0.05)

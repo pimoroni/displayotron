@@ -1,6 +1,11 @@
 Changelog
 ---------
 
+1.3
+---
+
+* Removed plugins from dot3k.menu into examples/plugins folder
+
 1.2
 ---
 
