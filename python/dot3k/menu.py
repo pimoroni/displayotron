@@ -144,26 +144,55 @@ class Menu():
       self.current_value().right()
     #self.redraw()
 
+  def clear_row(self,row,margin=1):
+    self.lcd.set_cursor_position(margin,row)
+    self.lcd.write(' '*16-margin)
+
+  def write_row(self,row,text,icon='',margin=1):
+     
+    current_row = ''
+    self.lcd.set_cursor_position(0,row)
+
+    current_row += icon
+   
+    while len(current_row) < margin:
+      current_row += ' '
+
+    current_row += text
+
+    while len(current_row) < 16:
+      current_row += ' '
+
+    self.lcd.write(current_row[0:16])
+
+  def get_menu_item(self, index):
+    return self.current_submenu().keys()[index]
+
   def redraw(self):
-    self.lcd.clear()
     if self.mode == 'navigate':
       
       # Draw the selected menu option
-      self.lcd.set_cursor_position(0,1) # x, y
-      self.lcd.write(chr(252))
-      self.lcd.write(self.current_submenu().keys()[self.current_position])
+      #self.lcd.set_cursor_position(0,1) # x, y
+      #self.lcd.write(chr(252))
+      #self.lcd.write(self.current_submenu().keys()[self.current_position])
+
+      self.write_row(1,self.get_menu_item(self.current_position),chr(252))
 
       if len(self.current_submenu()) > 2:
-        self.lcd.set_cursor_position(1,0)
-        self.lcd.write(self.current_submenu().keys()[self.previous_position()])
+        self.write_row(0, self.get_menu_item(self.previous_position()))
+      else:
+        self.clear_row(0)
 
       if len(self.current_submenu()) > 1:
-        self.lcd.set_cursor_position(1,2)
-        self.lcd.write(self.current_submenu().keys()[self.next_position()])
+        self.write_row(2, self.get_menu_item(self.next_position()))
+      else:
+        self.clear_row(2)
+      
 
     # Call the redraw function of the endpoint Class
     elif self.mode == 'adjust':
-      self.current_value().redraw()
+      #self.lcd.clear()
+      self.current_value().redraw(self)
 
 class MenuOption():
   def __init__(self):
@@ -182,7 +211,7 @@ class MenuOption():
   def select(self):
     # Must return true to allow exit
     return True
-  def redraw(self, lcd):
+  def redraw(self, menu):
     pass
   def setup(self, lcd, config):
     self.lcd = lcd
@@ -392,7 +421,8 @@ class Contrast(MenuOption):
     self.set_option('Display','contrast',str(self.contrast))
     self.lcd.set_contrast(self.contrast)
 
-  def redraw(self):
+  def redraw(self, menu):
+    self.lcd.clear()
     self.lcd.set_cursor_position(1,0)
     self.lcd.write('Contrast')
     self.lcd.set_cursor_position(1,1)
