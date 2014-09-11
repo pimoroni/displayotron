@@ -1,6 +1,17 @@
 Changelog
 ---------
 
+1.5
+---
+
+* Fixed joystick repeat using delta timing instead of delays
+
+1.4
+---
+
+* Bugfix of menu.py line-endings
+* Attempt to fix joystick.repeat to prevent multiple repeats firing at once
+
 1.3
 ---
 

@@ -16,6 +16,14 @@ BUTTON= 4
 
 BOUNCE= 300
 
+repeat_status = {
+  UP:     False,
+  DOWN:   False,
+  LEFT:   False,
+  RIGHT:  False,
+  BUTTON: False
+}
+
 def on(buttons, bounce=BOUNCE):
     buttons = buttons if isinstance(buttons, list) else [buttons]
     
@@ -26,12 +34,19 @@ def on(buttons, bounce=BOUNCE):
     
     return register
 
+def millis():
+    return int(round(time.time() * 1000))
+
 def repeat(button, handler, delay = 0.1, ramp = 1.0):
-    time.sleep(delay)
+    if repeat_status[button]:
+        return False
+    repeat_status[button] = True
+    last_trigger = millis()
     while(GPIO.input(button) == 0):
-        handler()
-        time.sleep(delay)
-        delay*=ramp
+        if millis() - last_trigger >= (delay*1000):
+            handler()
+            delay*=ramp
+    repeat_status[button] = False
 
 up    = GPIO.setup(UP,    GPIO.IN, pull_up_down=GPIO.PUD_UP)
 down  = GPIO.setup(DOWN,  GPIO.IN, pull_up_down=GPIO.PUD_UP)

@@ -38,7 +38,7 @@ classifiers = ['Development Status :: 5 - Production/Stable',
                'Topic :: System :: Hardware']
 
 setup(name		= 'dot3k',
-	version		= '1.3',
+	version		= '1.5',
 	author		= 'Philip Howard',
 	author_email	= 'phil@pimoroni.com',
 	description	= 'Display-o-Tron 3000 Driver',
