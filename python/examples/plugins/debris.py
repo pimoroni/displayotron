@@ -92,7 +92,7 @@ class Debris(MenuOption):
       self.debris.append((15,random.randint(0,self.height)))
 
   def redraw(self, menu):
-    if self.millis() - self.last_update > 500:
+    if self.millis() - self.last_update >= 250:
       self.update(menu)
       self.last_update = self.millis()
 
