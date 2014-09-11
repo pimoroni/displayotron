@@ -35,6 +35,7 @@ MenuOption has the following methods which you can override:
 * right - yup, this is called when you press right.
 * select - by default this returns true and causes the menu to exit your plugin, return false to prevent
 * redraw - called every draw pass, you can draw using menu.write_row here, make sure to clear_row rows you don't use
+* begin - called when the menu enters your plugin, use to start games, reset things, etc
 * setup - the config is passed to this method by default, you should overide like so:
 
     def setup(self, config):
