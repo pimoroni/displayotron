@@ -35,7 +35,7 @@ class Menu():
       if type(value) is dict:
         self.setup_menu(value)
       elif isinstance(value,MenuOption):
-        value.setup(self.lcd,self.config)
+        value.setup(self.config)
 
   def current_submenu(self):
     """
@@ -144,14 +144,19 @@ class Menu():
       self.current_value().right()
     #self.redraw()
 
-  def clear_row(self,row,margin=1):
-    self.lcd.set_cursor_position(margin,row)
-    self.lcd.write(' '*16-margin)
+  def clear_row(self,row):
+    self.lcd.set_cursor_position(0,row)
+    self.lcd.write(' '*16)
+  
+  def write_row(self,row,text):
+    self.lcd.set_cursor_position(0,row)
+    while len(text) < 16:
+      text += ' '
+    self.lcd.write(text[0:16])
 
-  def write_row(self,row,text,icon='',margin=1):
+  def write_option(self,row,text,icon=' ',margin=1):
      
     current_row = ''
-    self.lcd.set_cursor_position(0,row)
 
     current_row += icon
    
@@ -159,11 +164,8 @@ class Menu():
       current_row += ' '
 
     current_row += text
-
-    while len(current_row) < 16:
-      current_row += ' '
-
-    self.lcd.write(current_row[0:16])
+    
+    self.write_row(row,current_row)
 
   def get_menu_item(self, index):
     return self.current_submenu().keys()[index]
@@ -176,15 +178,15 @@ class Menu():
       #self.lcd.write(chr(252))
       #self.lcd.write(self.current_submenu().keys()[self.current_position])
 
-      self.write_row(1,self.get_menu_item(self.current_position),chr(252))
+      self.write_option(1,self.get_menu_item(self.current_position),chr(252))
 
       if len(self.current_submenu()) > 2:
-        self.write_row(0, self.get_menu_item(self.previous_position()))
+        self.write_option(0, self.get_menu_item(self.previous_position()))
       else:
         self.clear_row(0)
 
       if len(self.current_submenu()) > 1:
-        self.write_row(2, self.get_menu_item(self.next_position()))
+        self.write_option(2, self.get_menu_item(self.next_position()))
       else:
         self.clear_row(2)
       
@@ -196,7 +198,6 @@ class Menu():
 
 class MenuOption():
   def __init__(self):
-    self.lcd = None
     self.config = None
   def millis(self):
     return int(round(time.time() * 1000))
@@ -213,8 +214,7 @@ class MenuOption():
     return True
   def redraw(self, menu):
     pass
-  def setup(self, lcd, config):
-    self.lcd = lcd
+  def setup(self, config):
     self.config = config
 
   def set_option(self, section, option, value):
@@ -254,8 +254,7 @@ class Backlight(MenuOption):
   def from_rgb(self):
     self.hue = colorsys.rgb_to_hsv(self.r/255.0,self.g/255.0,self.b/255.0)[0]
 
-  def setup(self, lcd, config):
-    self.lcd = lcd
+  def setup(self, config):
     self.config = config
 
     self.r = int(self.get_option('Backlight','r',255))
@@ -366,34 +365,31 @@ class Backlight(MenuOption):
     self.update_bl()
     return True
 
-  def redraw(self):
-    self.lcd.set_cursor_position(0,0)
-    self.lcd.write('Backlight')
-    self.lcd.set_cursor_position(0,1)
-    self.lcd.write('HSV: ' + str(int(self.hue*359)).zfill(3) + ' ' + str(self.sat).zfill(3) + ' ' + str(self.val).zfill(3) )
-    self.lcd.set_cursor_position(0,2) 
-
-    self.lcd.write('RGB: ' + str(self.r).zfill(3) + ' ' + str(self.g).zfill(3) + ' ' + str(self.b).zfill(3))
+  def redraw(self, menu):
+    menu.write_row(0,'Backlight')
+    menu.write_row(1,'HSV: ' + str(int(self.hue*359)).zfill(3) + ' ' + str(self.sat).zfill(3) + ' ' + str(self.val).zfill(3) )
+    menu.write_row(2,'RGB: ' + str(self.r).zfill(3) + ' ' + str(self.g).zfill(3) + ' ' + str(self.b).zfill(3))
 
     # Position the cursor next to the value we're modifying
     if self.mode == 0: # hue
-      self.lcd.set_cursor_position(4,1)
+      menu.lcd.set_cursor_position(4,1)
     elif self.mode == 1: # sat
-      self.lcd.set_cursor_position(8,1)
+      menu.lcd.set_cursor_position(8,1)
     elif self.mode == 2: # val
-      self.lcd.set_cursor_position(12,1)
+      menu.lcd.set_cursor_position(12,1)
     elif self.mode == 3: # r
-      self.lcd.set_cursor_position(4,2)
+      menu.lcd.set_cursor_position(4,2)
     elif self.mode == 4: # g
-      self.lcd.set_cursor_position(8,2)
+      menu.lcd.set_cursor_position(8,2)
     elif self.mode == 5: # b
-      self.lcd.set_cursor_position(12,2)
+      menu.lcd.set_cursor_position(12,2)
 
     # Write the little arrow!
-    self.lcd.write(chr(252))
+    menu.lcd.write(chr(252))
  
 class Contrast(MenuOption):
-  def __init__(self):
+  def __init__(self, lcd):
+    self.lcd = lcd
     self.contrast = 30
     MenuOption.__init__(self)
 
@@ -411,8 +407,7 @@ class Contrast(MenuOption):
     self.update_contrast()
     return True
 
-  def setup(self, lcd, config):
-    self.lcd = lcd
+  def setup(self, config):
     self.config = config
     self.contrast = int(self.get_option('Display','contrast',40))
     self.lcd.set_contrast(self.contrast)
@@ -422,8 +417,6 @@ class Contrast(MenuOption):
     self.lcd.set_contrast(self.contrast)
 
   def redraw(self, menu):
-    self.lcd.clear()
-    self.lcd.set_cursor_position(1,0)
-    self.lcd.write('Contrast')
-    self.lcd.set_cursor_position(1,1)
-    self.lcd.write('Value: ' + str(self.contrast))
+    menu.write_row(0,'Contrast')
+    menu.write_row(1,'Value: ' + str(self.contrast))
+    menu.clear_row(2)

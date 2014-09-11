@@ -7,8 +7,8 @@ class Volume(MenuOption):
     self.actual_volume = 0
     self.last_update = 0
 
-  def setup(self, lcd, config):
-    MenuOption.setup(self, lcd, config)
+  def setup(self, config):
+    MenuOption.setup(self, config)
     self.volume = int(self.get_option('Sound','volume',80))
     self.set_volume()
     self.actual_volume = self.get_volume()
@@ -36,21 +36,9 @@ class Volume(MenuOption):
     self.set_volume()
 
   def redraw(self, menu):
-    menu.write_row(0,'Volume: ' + str(self.actual_volume),'',0)
-    menu.write_row(1,'Target: ' + str(self.volume),'',0)
-    menu.write_row(2,'#' * int(16.0 * float(self.actual_volume)/100.0),'',0)
-    #self.lcd.clear()
-    #self.lcd.write('Volume: ')
-    #self.lcd.write(str(self.actual_volume))
-    #self.lcd.write('%')
-    #self.lcd.set_cursor_position(0,1)
-    #self.lcd.write('Target: ')
-    #self.lcd.write(str(self.volume))
-    #self.lcd.write('%')
-
-    #vol = '#' * int(16.0 * float(self.actual_volume)/100.0)
-    #self.lcd.set_cursor_position(0,2)
-    #self.lcd.write(vol)
+    menu.write_row(0,'Volume: ' + str(self.actual_volume))
+    menu.write_row(1,'Target: ' + str(self.volume))
+    menu.write_row(2,'#' * int(16.0 * float(self.actual_volume)/100.0))
 
     if self.millis() - self.last_update > 1000:
       self.actual_volume = self.get_volume()

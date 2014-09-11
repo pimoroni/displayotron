@@ -18,9 +18,9 @@ class Radio(MenuOption):
       'stop': [0,31,31,31,31,31,0,0]
     }
 
-  def setup(self, lcd, config):
+  def setup(self, config):
     self.ready = False
-    MenuOption.setup(self, lcd, config)
+    MenuOption.setup(self, config)
     if 'Radio Stations' in self.config.sections():
       self.stations = self.config.options('Radio Stations')
       self.ready = True
@@ -72,27 +72,19 @@ class Radio(MenuOption):
 
     if self.selected_station == index:
       icon = chr(252)
-      #self.lcd.set_cursor_position(0, row)
-      #self.lcd.write(chr(252))
 
-    #if self.active_station == index:
     if stream == self.current_stream:
-      #self.lcd.set_cursor_position(0, row)
       if self.current_state == 'paused':
-        self.lcd.create_char(0,self.icons['pause'])
+        menu.lcd.create_char(0,self.icons['pause'])
         icon = chr(0)
       elif self.current_state == 'playing':
-        self.lcd.create_char(0,self.icons['play'])
+        menu.lcd.create_char(0,self.icons['play'])
         icon = chr(0)
       else:
-        self.lcd.create_char(0,self.icons['stop'])
+        menu.lcd.create_char(0,self.icons['stop'])
         icon = chr(0)
-      #self.lcd.set_cursor_position(0, row)
-      #self.lcd.write(chr(0))
-
-    #self.lcd.set_cursor_position(1, row)
-    #self.lcd.write(title)
-    menu.write_row(row, title, icon)
+    
+    menu.write_option(row, title, icon)
 
   def kill(self):
     if self.pid != None:

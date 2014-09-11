@@ -4,7 +4,7 @@ import dot3k.joystick as joystick
 import dot3k.lcd as lcd
 import dot3k.backlight as backlight
 from dot3k.menu import Menu, Backlight, Contrast
-from plugins import Radio, Volume
+from plugins import Radio, Volume, GraphCPU, GraphTemp
 import time
 
 """
@@ -18,8 +18,12 @@ A function name will call that function.
 menu = Menu({
     'Radio Stream':Radio(),
     'Volume':Volume(),
+    'Status': {
+      'CPU':GraphCPU(),
+      'Temp':GraphTemp()
+    },
     'Settings': {
-      'Contrast':Contrast(),
+      'Contrast':Contrast(lcd),
       'Backlight':Backlight(backlight)
     }
   },

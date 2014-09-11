@@ -1,4 +1,5 @@
 import os, math, psutil, commands
+from dot3k.menu import MenuOption
 
 class GraphCPU(MenuOption):
   """
@@ -10,20 +11,18 @@ class GraphCPU(MenuOption):
     self.last = self.millis()
     MenuOption.__init__(self)
   
-  def redraw(self menu):
-    self.lcd.clear()
+  def redraw(self, menu):
     now = self.millis()
     if now - self.last < 1000:
       return false
 
-    self.cpu_samples.append(psutil.cpu_percent() / 100.0)
+    self.cpu_samples.append(psutil.cpu_percent())
     self.cpu_samples.pop(0)
     self.cpu_avg = sum(self.cpu_samples) / len(self.cpu_samples)
 
-    self.lcd.set_cursor_position(1,0)
-    self.lcd.write('CPU Load')
-    self.lcd.set_cursor_position(1,1)
-    self.lcd.write(str(self.cpu_avg) + '%')
+    menu.write_row(0, 'CPU Load')
+    menu.write_row(1, str(self.cpu_avg) + '%')
+    menu.write_row(2, '#' * int(16*(self.cpu_avg/100)))
 
 class GraphTemp(MenuOption):
   """
@@ -45,14 +44,10 @@ class GraphTemp(MenuOption):
     return float(gpu_temp)
 
   def redraw(self, menu):
-    self.lcd.clear()
     now = self.millis()
     if now - self.last < 1000:
       return false
-
-    self.lcd.set_cursor_position(1,0)
-    self.lcd.write('Temperature')
-    self.lcd.set_cursor_position(1,1)
-    self.lcd.write('CPU:' + str(self.get_cpu_temp()))
-    self.lcd.set_cursor_position(1,2)
-    self.lcd.write('GPU:' + str(self.get_gpu_temp()))
+    
+    menu.write_row(0,'Temperature')
+    menu.write_row(1,'CPU:' + str(self.get_cpu_temp()))
+    menu.write_row(2,'GPU:' + str(self.get_gpu_temp()))
