@@ -5,7 +5,7 @@ class Radio(MenuOption):
   def __init__(self):
     MenuOption.__init__(self)
     self.selected_station = 0
-    self.active_station = None
+    self.selected_option = 0
     self.pid = None
     self.socket = None
     self.current_stream = None
@@ -13,6 +13,7 @@ class Radio(MenuOption):
     # Keep track of whether we've started a VLC instance
     self.started_vlc_instance = False
     self.last_update = 0
+    self.mode = 'main'
     atexit.register(self.kill)
     self.icons = {
       'play': [0,24,30,31,30,24,0,0],
@@ -39,24 +40,85 @@ class Radio(MenuOption):
     if station >= len(self.stations):
       station = 0
     return station
+  
+  def next_option(self):
+    self.selected_option += 1
+    self.selected_option %= 3
 
+  def prev_option(self):
+    self.selected_option -= 1
+    self.selected_option %= 3
+ 
   def down(self):
-    self.selected_station = self.next_station()
+    if self.mode == 'main':
+      self.next_option()
+    else:
+      self.selected_station = self.next_station()
 
   def up(self):
-    self.selected_station = self.prev_station()
+    if self.mode == 'main':
+      self.prev_option()
+    else:
+      self.selected_station = self.prev_station()
+ 
+  def right(self):
+    if self.mode == 'main':
+      if self.selected_option == 0:
+        self.mode = 'list'
+      elif self.selected_option == 1:
+        self.send('pause')
+      elif self.selected_option == 2 and self.current_state == 'playing':
+        self.send('stop')
+      elif self.selected_option == 2 and self.current_state == 'stopped':
+        self.send('play')
+    else:
+      self.play_selected_station()
 
-  def redraw(self, menu):
+  def left(self):
+    if self.mode == 'main':
+      return False
+    else:
+      self.mode = 'main'
+      return True
+
+  def play_selected_station(self):
+    stream = self.config.get(
+	'Radio Stations',
+	self.stations[self.selected_station]
+	)
+
+    if ',' in stream:
+      stream = stream.split(',')[1]
+ 
+    if stream == self.get_current_stream():
+      print('Skipping play, sending play/pause toggle')
+      self.send("pause")
+      return False
+
+    self.send("add " + stream)
+  def redraw(self, menu): 
+    if self.millis() - self.last_update > 500:
+      self.get_current_stream()
+      self.last_update = self.millis()
+
+    if self.mode == 'list':
+      self.redraw_stations(menu)
+    elif self.mode == 'main':
+      self.redraw_main(menu)
+
+  def redraw_main(self, menu):
+    # Row, Text, Icon, Left Margin
+    menu.write_option(0,'Stations',chr(252) if self.selected_option == 0 else ' ',1)
+    menu.write_option(1,'Pause' if self.current_state != 'paused' else 'Resume',chr(252) if self.selected_option == 1 else ' ',1)
+    menu.write_option(2,'Stop' if self.current_state != 'stopped' else 'Play',chr(252) if self.selected_option == 2 else ' ',1)
+    
+  def redraw_stations(self, menu):
     if not self.ready:
       menu.clear_row(0)
       menu.write_row(1,'No stations found!')
       menu.clear_row(2)
       return False 
-  
-    if self.millis() - self.last_update > 500:
-      self.get_current_stream()
-      self.last_update = self.millis()
-
+ 
     if len(self.stations) > 2:
       self.draw_station(menu, 0, self.prev_station())
 
@@ -127,7 +189,6 @@ class Radio(MenuOption):
       self.socket.recv(0)
     except socket.error:
       return False
-      #exit("Unable to connect to VLC")
  
   def start(self):
     if self.pid == None:
@@ -153,26 +214,4 @@ class Radio(MenuOption):
 
     if not self.connect():
       exit("Unable to connect to VLC")
- 
-  def right(self):
-    #if self.active_station == self.selected_station:
-         #self.kill()
 
-    stream = self.config.get(
-	'Radio Stations',
-	self.stations[self.selected_station]
-	)
-
-    if ',' in stream:
-      stream = stream.split(',')[1]
- 
-    if stream == self.get_current_stream():
-      print('Skipping play, sending play/pause toggle')
-      #devnull = open(os.devnull, 'w')
-      #subprocess.call('/bin/echo pause | /bin/netcat 127.0.0.1 9393', shell=True, stdout=devnull)
-      self.send("pause")
-      return False
-
-    #subprocess.call('/bin/echo "add ' + stream + '" | /bin/netcat 127.0.0.1 9393', shell=True, stdout=open(os.devnull,'w'))
-    self.send("add " + stream)
-    self.active_station = self.selected_station
