@@ -3,9 +3,12 @@ import random, time
 
 class Debris(MenuOption):
   def __init__(self):
+    self.debug = False
     self.debris = []
+    self.stars = []
     self.running = False
     self.max_debris = 10
+    self.max_stars  = 10
     self.last_update = 0
     self.time_start = 0
     self.sprites = [
@@ -23,6 +26,10 @@ class Debris(MenuOption):
     self.player_x = 1 # Player horizontal position
     self.player_y = 3 # Player vertical position
 
+    self.current_player_x   = None
+    self.current_player_y   = None
+    self.current_player_pos = None
+
     self.fill_debris()
 
     MenuOption.__init__(self)
@@ -35,14 +42,20 @@ class Debris(MenuOption):
     self.player_x = 1
     self.player_y = 3
     self.fill_debris()
+    self.fill_stars()
     self.running = True
     self.time_start = 0
     self.last_update = 0
   
+  def fill_stars(self):
+    self.stars = []
+    while len(self.stars) < self.max_stars:
+      self.stars.append((random.randint(3,15),random.randint(0,2)))
+
   def fill_debris(self):
     self.debris = []
     while len(self.debris) < self.max_debris:
-      self.debris.append((random.randint(3,15),random.randint(0,self.height)))
+      self.debris.append((random.randint(8,15),random.randint(0,self.height)))
 
   def left(self):
     if not self.running:
@@ -62,16 +75,24 @@ class Debris(MenuOption):
     self.player_y -= 1
     if self.player_y < 0:
       self.player_y = 0
+    if self.debug:
+      print("Player up", self.player_y)
     return True
   
   def down(self):
     self.player_y += 1
     if self.player_y > self.height:
       self.player_y = self.height - 1
+    if self.debug:
+      print("Player down", self.player_y)
     return True
 
   def update(self, menu):
     if self.time_start == 0:
+ 
+      for idx, sprite in enumerate(self.sprites):
+        menu.lcd.create_char(idx, sprite)
+
       menu.clear_row(0)
       menu.clear_row(1)
       menu.clear_row(2)
@@ -80,20 +101,60 @@ class Debris(MenuOption):
         menu.lcd.write('  0' + str(3-x) + '! ')
         time.sleep(0.5)
       self.time_start = self.millis()
+
+    self.current_player_x   = int(self.player_x)
+    self.current_player_y   = int(self.player_y / 2)
+    self.current_player_pos = (self.player_y % 2)
+ 
+    # Move all stars left
+    for idx, star in enumerate(self.stars):
+      self.stars[idx] = (star[0] - 0.5, star[1])
+
     # Move all debris left 1 place
     for idx, rock in enumerate(self.debris):
       self.debris[idx] = (rock[0] - 1, rock[1])
+      debris_x   = int(rock[0])
+      debris_y   = int(rock[1] / 2)
+      debris_pos = (rock[1] % 2)
+     
+      if (debris_x,debris_y,debris_pos) == (self.current_player_x,self.current_player_y,self.current_player_pos):
+        # Boom!
+        menu.lcd.set_cursor_position(5,1)
+        menu.lcd.write(' BOOM!')
+
+        if self.debug:
+          print(debris_x,debris_y,debris_pos)
+          print(self.current_player_x, 
+                self.current_player_y,
+                self.current_player_pos)
+
+          print(self.player_x, self.player_y)
+          exit()
+
+        self.running = False
+        time.sleep(1)
+        self.reset()
+        return False
 
     # Remove off-screen debris
     self.debris = filter(lambda x: x[0] > -1, self.debris)
+
+    # Remove off-screen stars
+    self.stars = filter(lambda x: x[0] > -1, self.stars)
 
     # Create new debris to replace the removed ones
     while len(self.debris) < self.max_debris:
       self.debris.append((15,random.randint(0,self.height)))
 
+    while len(self.stars) < self.max_stars:
+      self.stars.append((15,random.randint(0,2)))
+
+    return True
+
   def redraw(self, menu):
     if self.millis() - self.last_update >= 250:
-      self.update(menu)
+      if not self.update(menu):
+        return False
       self.last_update = self.millis()
 
     game_time = str(int((self.millis()-self.time_start)/1000)).zfill(3)
@@ -101,36 +162,31 @@ class Debris(MenuOption):
     buffer = []
     for i in range(3):
       buffer.append( [' '] * 16 )
-    
-    player_y      = int(self.player_y / 2)
-    player_x      = self.player_x
-    player_sprite = 2 + (self.player_y % 2)
 
-    buffer[player_y][player_x] = chr(player_sprite)
+    for idx, rock in enumerate(self.stars):
+      buffer[rock[1]][int(rock[0])] = '.'
+    
+    #player_y      = int(self.player_y / 2)
+    #player_x      = self.player_x
+    player_sprite = 2 + self.current_player_pos
+
+    buffer[self.current_player_y][self.current_player_x] = chr(player_sprite)
 
     for idx, rock in enumerate(self.debris):
       debris_x = int(rock[0])
       debris_y = int(rock[1] / 2)
       debris_sprite = (rock[1] % 2)
 
-      if player_y == debris_y and debris_x == player_x:
-        # BOOM!
-        if (self.player_y % 2) == (rock[1] % 2):
-          menu.lcd.set_cursor_position(5,1)
-          menu.lcd.write(' BOOM!')
-          self.running = False
-          time.sleep(1)
-          self.reset()
-          return False
-        else:
+      if (debris_y, debris_x) == (self.current_player_y, self.current_player_x):
+        if (rock[1] % 2) != self.current_player_pos:
           debris_sprite = 2 + player_sprite
 
       buffer[debris_y][debris_x] = chr(debris_sprite)
 
+    # Draw elapsed seconds
     buffer[0][16-len(game_time):len(game_time)] = game_time
-    
-    for idx, sprite in enumerate(self.sprites):
-      menu.lcd.create_char(idx, sprite)
 
     for idx, row in enumerate(buffer):
       menu.write_row(idx,''.join(row))
+ 
+
