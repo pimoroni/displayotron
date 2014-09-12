@@ -112,11 +112,16 @@ class Radio(MenuOption):
   
   def start(self):
     if self.pid == None:
-      return_value = subprocess.check_output(['./vlc.sh'])
-      pids = return_value.split('\n')[0]
-      self.pid = int(pids.split(' ')[0])
+      try:
+        return_value = subprocess.check_output(['./vlc.sh'])
+        pids = return_value.split('\n')[0]
+        self.pid = int(pids.split(' ')[0])
 
-      print('VLC started with PID: ' + str(self.pid))  
+        print('VLC started with PID: ' + str(self.pid))  
+      except subprocess.CalledProcessError:
+        print('You must have VLC installed to use Dot3k Radio')
+        print('Try: sudo apt-get install vlc')
+        exit()
       
       self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
       for attempt in range(10):
