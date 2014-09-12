@@ -1,5 +1,6 @@
 import os, math, psutil, commands
 from dot3k.menu import MenuOption
+import dot3k.backlight
 
 class GraphCPU(MenuOption):
   """
@@ -22,7 +23,13 @@ class GraphCPU(MenuOption):
 
     menu.write_row(0, 'CPU Load')
     menu.write_row(1, str(self.cpu_avg) + '%')
-    menu.write_row(2, '#' * int(16*(self.cpu_avg/100)))
+    menu.write_row(2, '#' * int(16*(self.cpu_avg/100.0)))
+    
+    dot3k.backlight.set_graph(self.cpu_avg/100.0)
+
+  def left(self):
+    dot3k.backlight.set_graph(0)
+    return False
 
 class GraphTemp(MenuOption):
   """

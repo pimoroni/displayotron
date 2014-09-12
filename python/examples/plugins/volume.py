@@ -1,4 +1,5 @@
 from dot3k.menu import MenuOption
+import dot3k.backlight
 import subprocess, os
 class Volume(MenuOption):
 
@@ -12,6 +13,10 @@ class Volume(MenuOption):
     self.volume = int(self.get_option('Sound','volume',80))
     self.set_volume()
     self.actual_volume = self.get_volume()
+  
+  def left(self):
+    dot3k.backlight.set_graph(0)
+    return False
 
   def get_volume(self):
     actual_volume = subprocess.check_output("amixer get 'PCM' | awk '$0~/%/{print $4}' | tr -d '[]%'", shell=True)
@@ -43,3 +48,7 @@ class Volume(MenuOption):
     if self.millis() - self.last_update > 1000:
       self.actual_volume = self.get_volume()
       self.last_update = self.millis()
+
+      dot3k.backlight.set_graph(float(self.actual_volume)/100.0)
+
+
