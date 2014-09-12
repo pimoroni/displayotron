@@ -12,11 +12,19 @@ Then head into Advanced Options -> SPI -> Yes.
 
 And i2c.
 
-    sudo vim /etc/modprobe.d/raspi-blacklist.conf
+    sudo nano /etc/modprobe.d/raspi-blacklist.conf
 
 And comment out ( place a # before ):
 
     blacklist i2c-bcm2708
+
+And also:
+
+    sudo nano /etc/modules
+
+Add the line:
+   
+    i2c-dev
 
 Reboot to make these changes take effect.
 
@@ -35,6 +43,7 @@ Then install st7036 and sn3218 using pip:
 
     sudo pip install st7036 sn3218
 
+You can run the requirements.sh file to do this for you!
 
 Usage
 =====

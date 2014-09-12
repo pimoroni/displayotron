@@ -25,6 +25,10 @@ In order for radio.py to detect the current playing feed, you'll need to use the
 menu.py
 ------
 
+Make sure you install psutil:
+
+    sudo pip install psutil
+
 A demonstration of menu building and plugins. Shows CPU usage and Temp, contrast configuration, backlight configuration and a basic animation example.
 
 joystick.py
