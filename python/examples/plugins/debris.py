@@ -1,4 +1,5 @@
 from dot3k.menu import MenuOption
+import dot3k.backlight
 import random, time
 
 class Debris(MenuOption):
@@ -37,6 +38,7 @@ class Debris(MenuOption):
   def begin(self):
     self.running = False
     self.reset()
+    dot3k.backlight.hue(0.0)
 
   def reset(self):
     self.player_x = 1
@@ -59,6 +61,10 @@ class Debris(MenuOption):
 
   def left(self):
     if not self.running:
+      r = int(self.get_option('Backlight','r'))
+      g = int(self.get_option('Backlight','g'))
+      b = int(self.get_option('Backlight','b'))
+      dot3k.backlight.rgb(r,g,b)
       return False
     self.player_x -= 1
     if self.player_x < 0:
@@ -66,6 +72,9 @@ class Debris(MenuOption):
     return True
 
   def right(self):
+    if not self.running:
+      self.reset()
+      return True
     self.player_x += 1
     if self.player_x > 15:
       self.player_x = 15
@@ -100,6 +109,7 @@ class Debris(MenuOption):
         menu.lcd.set_cursor_position(5,1)
         menu.lcd.write('  0' + str(3-x) + '! ')
         time.sleep(0.5)
+      dot3k.backlight.hue(0.5)
       self.time_start = self.millis()
 
     self.current_player_x   = int(self.player_x)
@@ -132,8 +142,8 @@ class Debris(MenuOption):
           exit()
 
         self.running = False
-        time.sleep(1)
-        self.reset()
+        #time.sleep(1)
+        #self.reset()
         return False
 
     # Remove off-screen debris
@@ -152,12 +162,15 @@ class Debris(MenuOption):
     return True
 
   def redraw(self, menu):
+    if not self.running:
+      return False
     if self.millis() - self.last_update >= 250:
       if not self.update(menu):
         return False
       self.last_update = self.millis()
 
     game_time = str(int((self.millis()-self.time_start)/1000)).zfill(3)
+    dot3k.backlight.sweep(((self.millis()-self.time_start)/500 % 360)/359.0)
 
     buffer = []
     for i in range(3):
