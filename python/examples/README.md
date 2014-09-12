@@ -22,6 +22,12 @@ Radio picks up its presets from dot3k.cfg next to it, or ~/.dot3k.cfg, you can a
 
 In order for radio.py to detect the current playing feed, you'll need to use the final feed ( that you get redirected to in VLC ).
 
+If you have an existing instance of VLC running, radio.py will try to connect to it. You can start VLC with the bash script ( also used in radio.py ):
+
+    sudo ./vlc.sh
+
+The remote utilities playstream and playshoutcast will work even if radio.py isn't running.
+
 menu.py
 ------
 

@@ -10,6 +10,8 @@ class Radio(MenuOption):
     self.socket = None
     self.current_stream = None
     self.current_state = None
+    # Keep track of whether we've started a VLC instance
+    self.started_vlc_instance = False
     self.last_update = 0
     atexit.register(self.kill)
     self.icons = {
@@ -87,7 +89,7 @@ class Radio(MenuOption):
     menu.write_option(row, title, icon)
 
   def kill(self):
-    if self.pid != None:
+    if self.pid != None and self.started_vlc_instance:
       subprocess.call(['/bin/kill','-9',str(self.pid)])
       print('Killing VLC process with PID: ' + str(self.pid))
 
@@ -109,33 +111,49 @@ class Radio(MenuOption):
      else:
        self.current_stream = None
      return self.current_stream
-  
+
+  def connect(self):      
+    self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    for attempt in range(10):
+      try:
+        print("Attempting to connect to VLC")
+        self.socket.connect(("127.0.0.1",9393))
+        print("Connection successful!")
+        return True
+        break
+      except socket.error:
+        time.sleep(0.5)
+    try:
+      self.socket.recv(0)
+    except socket.error:
+      return False
+      #exit("Unable to connect to VLC")
+ 
   def start(self):
     if self.pid == None:
+      try:
+        return_value = subprocess.check_output(['pidof','vlc'])
+        self.pid = int(return_value.split(' ')[0])
+        print('Found VLC with PID: ' + str(self.pid))
+        if self.connect():
+          return True
+      except subprocess.CalledProcessError:
+        pass        
+
       try:
         return_value = subprocess.check_output(['./vlc.sh'])
         pids = return_value.split('\n')[0]
         self.pid = int(pids.split(' ')[0])
-
+        self.started_vlc_instance = True
         print('VLC started with PID: ' + str(self.pid))  
       except subprocess.CalledProcessError:
         print('You must have VLC installed to use Dot3k Radio')
         print('Try: sudo apt-get install vlc')
         exit()
-      
-      self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-      for attempt in range(10):
-        try:
-          print("Attempting to connect to VLC")
-          self.socket.connect(("127.0.0.1",9393))
-          break
-        except socket.error:
-          time.sleep(0.5)
-      try:
-        self.socket.recv(0)
-      except socket.error:
-        exit("Unable to connect to VLC")
-  
+
+    if not self.connect():
+      exit("Unable to connect to VLC")
+ 
   def right(self):
     #if self.active_station == self.selected_station:
          #self.kill()
