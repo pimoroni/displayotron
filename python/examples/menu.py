@@ -42,8 +42,10 @@ be used as menu items to show information or change settings.
 
 See GraphTemp, GraphCPU, Contrast and Backlight for examples.
 """
+my_invader = SpaceInvader()
+
 menu = Menu({
-    'Space Invader':SpaceInvader(),
+    'Space Invader':my_invader,
     'Clock':Clock(),
     'Status': {
       'CPU':GraphCPU(),
@@ -56,7 +58,9 @@ menu = Menu({
       }
     }
   },
-  lcd)
+  lcd,
+  my_invader,
+  30)
 
 """
 You can use anything to control dot3k.menu,

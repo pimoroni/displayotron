@@ -1,6 +1,11 @@
 Changelog
 ---------
 
+1.6
+---
+
+* Added support for an "idle" plugin which shows after a customisable amount of seconds
+
 1.5
 ---
 

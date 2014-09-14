@@ -7,6 +7,7 @@ class Clock(MenuOption):
     self.modes = ['date','week','binary','dim','bright']
     self.mode = 0
     self.binary = True
+    self.running = False
 
     self.option_time = 0
 
@@ -19,6 +20,10 @@ class Clock(MenuOption):
 
   def begin(self):
     self.is_setup = False
+    self.running = True
+
+  def setup(self, config):
+    MenuOption.setup(self, config)
     self.load_options()
 
   def set_backlight(self, brightness):
@@ -33,10 +38,16 @@ class Clock(MenuOption):
     self.set_option('Clock','binary',self.binary)
 
   def load_options(self):
-    self.dim_hour    = int(self.get_option('Clock','dim', self.dim_hour))
-    self.bright_hour = int(self.get_option('Clock','bright', self.bright_hour))
-    self.binary      = self.get_option('Clock','binary',self.binary) == 'True'
+    self.dim_hour    = int(self.get_option('Clock','dim', str(self.dim_hour)))
+    self.bright_hour = int(self.get_option('Clock','bright', str(self.bright_hour)))
+    self.binary      = self.get_option('Clock','binary',str(self.binary)) == 'True'
 
+  def cleanup(self):
+    self.running = False
+    time.sleep(0.01)
+    self.set_backlight(1.0)
+    self.is_setup = False
+   
   def left(self):
     if self.modes[self.mode] == 'binary':
         self.binary = False
@@ -45,9 +56,7 @@ class Clock(MenuOption):
     elif self.modes[self.mode] == 'bright':
         self.bright_hour = (self.bright_hour - 1) % 24
     else:
-        self.set_backlight(1.0)
-        self.is_setup = False
-        return False
+       return False
     self.update_options()
     self.option_time = self.millis()
     return True
@@ -74,6 +83,9 @@ class Clock(MenuOption):
     return True
 
   def redraw(self, menu):
+    if not self.running:
+        return False
+
     if self.millis() - self.option_time > 5000 and self.option_time > 0:
         self.option_time = 0
         self.mode = 0
@@ -106,6 +118,10 @@ class Clock(MenuOption):
         menu.write_row(1,binary_hour + binary_min + binary_sec)
     else:
         menu.write_row(1,'-'*16)
+
+    if self.idling:
+        menu.clear_row(2)
+        return True
 
     bottom_row = ''
     

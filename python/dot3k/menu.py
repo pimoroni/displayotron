@@ -10,10 +10,13 @@ class Menu():
   * A class derived from MenuOption, providing interactive functionality
   """
 
-  def __init__(self, structure, lcd):
+  def __init__(self, structure, lcd, idle_handler = None, idle_time = 60):
     self.list_location = []
     self.lcd = lcd
     self.current_position = 0
+    self.idle_handler = idle_handler
+    self.idle_time = idle_time*1000
+    self.idle = False
     self.mode = 'navigate'
     self.menu_options = structure
 
@@ -21,8 +24,13 @@ class Menu():
     self.config.read(['dot3k.cfg', os.path.expanduser('~/.dot3k.cfg')])
 
     self.setup_menu(self.menu_options)
+   
+    self.last_action = self.millis()
 
     atexit.register(self.save)
+
+  def millis(self):
+    return int(round(time.time() * 1000))
 
   def save(self):
     with open('dot3k.cfg', 'wb') as configfile:
@@ -59,14 +67,12 @@ class Menu():
 
   def next_position(self):
     position = self.current_position + 1
-    if position >= len(self.current_submenu()):
-      position = 0
+    position %= len(self.current_submenu())
     return position
 
   def previous_position(self):
     position = self.current_position - 1
-    if position < 0:
-      position = len(self.current_submenu()) - 1
+    position %= len(self.current_submenu())
     return position
 
   def select_option(self):
@@ -108,42 +114,73 @@ class Menu():
     """
     Handle "select" action
     """
+    self.last_action = self.millis()
+    if self.idle:
+      self.idle = False
+      self.idle_handler.cleanup()
+      self.idle_handler.idling = False
+      return True
+
     if self.mode == 'navigate':
       self.select_option()
     elif self.mode == 'adjust':
       # The "select" call must return true to exit the adjust
       if self.current_value().select():
         self.mode = 'navigate'
-    #self.redraw()
 
   def up(self):
+    self.last_action = self.millis()
+    if self.idle:
+      self.idle = False
+      self.idle_handler.cleanup()
+      self.idle_handler.idling = False
+      return True
+
     if self.mode == 'navigate':
       self.prev_option()
     elif self.mode == 'adjust':
       self.current_value().up()
-    #self.redraw()
 
   def down(self):
+    self.last_action = self.millis()
+    if self.idle:
+      self.idle = False
+      self.idle_handler.cleanup()
+      self.idle_handler.idling = False
+      return True
+
     if self.mode == 'navigate':
       self.next_option()
     elif self.mode == 'adjust':
       self.current_value().down()
-    #self.redraw()
 
   def left(self):
+    self.last_action = self.millis()
+    if self.idle:
+      self.idle = False
+      self.idle_handler.cleanup()
+      self.idle_handler.idling = False
+      return True
+
     if self.mode == 'navigate':
       self.exit_option()
     elif self.mode == 'adjust':
       if not self.current_value().left():
+        self.current_value().cleanup()
         self.mode = 'navigate'
-    #self.redraw()
 
   def right(self):
+    self.last_action = self.millis()
+    if self.idle:
+      self.idle = False
+      self.idle_handler.cleanup()
+      self.idle_handler.idling = False
+      return True
+
     if self.mode == 'navigate':
       self.select_option()
     elif self.mode == 'adjust':
       self.current_value().right()
-    #self.redraw()
 
   def clear_row(self,row):
     self.lcd.set_cursor_position(0,row)
@@ -171,14 +208,16 @@ class Menu():
   def get_menu_item(self, index):
     return self.current_submenu().keys()[index]
 
-  def redraw(self):
-    if self.mode == 'navigate':
-      
-      # Draw the selected menu option
-      #self.lcd.set_cursor_position(0,1) # x, y
-      #self.lcd.write(chr(252))
-      #self.lcd.write(self.current_submenu().keys()[self.current_position])
+  def redraw(self): 
+    if self.can_idle() and isinstance(self.idle_handler,MenuOption):
+      if self.idle == False:
+        self.idle_handler.idling = True
+        self.idle_handler.begin()
+      self.idle = True
+      self.idle_handler.redraw(self)
+      return False
 
+    if self.mode == 'navigate':
       self.write_option(1,self.get_menu_item(self.current_position),chr(252))
 
       if len(self.current_submenu()) > 2:
@@ -194,11 +233,21 @@ class Menu():
 
     # Call the redraw function of the endpoint Class
     elif self.mode == 'adjust':
-      #self.lcd.clear()
       self.current_value().redraw(self)
+
+  def can_idle(self):
+    if self.millis() - self.last_action >= self.idle_time:
+      if self.mode == 'navigate':
+        return True
+      if self.mode == 'adjust' and self.current_value().can_idle:
+        return True
+    return False
+ 
 
 class MenuOption():
   def __init__(self):
+    self.idling = False
+    self.can_idle = False
     self.config = None
   def millis(self):
     return int(round(time.time() * 1000))
@@ -219,6 +268,9 @@ class MenuOption():
     pass
   def setup(self, config):
     self.config = config
+  def cleanup(self):
+    # Undo any backlight or other changes
+    pass
 
   def set_option(self, section, option, value):
     if self.config != None:
