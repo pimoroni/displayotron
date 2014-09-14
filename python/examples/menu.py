@@ -6,6 +6,7 @@ import dot3k.backlight as backlight
 from dot3k.menu import Menu, MenuOption
 from plugins.utils import Backlight, Contrast
 from plugins.graph import GraphTemp, GraphCPU
+from plugins.clock import Clock
 import time, os, math, psutil, commands
 
 class SpaceInvader(MenuOption):
@@ -43,6 +44,7 @@ See GraphTemp, GraphCPU, Contrast and Backlight for examples.
 """
 menu = Menu({
     'Space Invader':SpaceInvader(),
+    'Clock':Clock(),
     'Status': {
       'CPU':GraphCPU(),
       'Temp':GraphTemp()

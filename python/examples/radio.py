@@ -5,6 +5,7 @@ import dot3k.lcd as lcd
 import dot3k.backlight as backlight
 from dot3k.menu import Menu
 from plugins.utils import Backlight, Contrast
+from plugins.clock import Clock
 from plugins import Radio, Volume, GraphCPU, GraphTemp
 import time
 
@@ -17,6 +18,7 @@ An instance of a plugin class ( derived from MenuOption ) can be used for things
 A function name will call that function.
 """
 menu = Menu({
+    'Clock':Clock(),
     'Radio Stream':Radio(),
     'Volume':Volume(),
     'Status': {
