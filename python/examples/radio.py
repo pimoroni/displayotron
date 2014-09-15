@@ -9,6 +9,10 @@ from plugins.clock import Clock
 from plugins import Radio, Volume, GraphCPU, GraphTemp
 import time
 
+# We want to use clock both as an option
+# and as the idle plugin
+clock = Clock()
+
 """
 Using a set of nested dictionaries you can describe
 the menu you want to display on dot3k.
@@ -18,7 +22,7 @@ An instance of a plugin class ( derived from MenuOption ) can be used for things
 A function name will call that function.
 """
 menu = Menu({
-    'Clock':Clock(),
+    'Clock':clock,
     'Radio Stream':Radio(),
     'Volume':Volume(),
     'Status': {
@@ -30,7 +34,10 @@ menu = Menu({
       'Backlight':Backlight(backlight)
     }
   },
-  lcd)
+  lcd,   # Draw to dot3k.lcd
+  clock, # Idle with the clock plugin,
+  10     # Idle after 10 seconds
+)
 
 """
 You can use anything to control dot3k.menu,

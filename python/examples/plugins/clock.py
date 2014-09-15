@@ -27,6 +27,9 @@ class Clock(MenuOption):
     self.load_options()
 
   def set_backlight(self, brightness):
+    brightness = brightness + 0.01
+    if brightness > 1.0:
+      brightness = 1.0
     r = int(int(self.get_option('Backlight','r')) * brightness)
     g = int(int(self.get_option('Backlight','g')) * brightness)
     b = int(int(self.get_option('Backlight','b')) * brightness)
