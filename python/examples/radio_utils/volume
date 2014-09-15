@@ -1,2 +1,0 @@
-#!/usr/bin/env bash
-amixer sset 'PCM' $1%
