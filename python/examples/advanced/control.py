@@ -13,13 +13,14 @@ import dot3k.backlight as backlight
 import dot3k.joystick as joystick
 import utils.usbkeyboard as keyboard
 from dot3k.menu import Menu, MenuOption
-from plugins import Volume, Backlight, Contrast, GraphTemp, GraphCPU, Clock, Radio
+from plugins import Volume, Backlight, Contrast, GraphTemp, GraphCPU, Clock, Radio, Stocks
 import time
 
 my_clock = Clock()
 
 menu = Menu({
     'Clock':my_clock,
+    'Stocks':Stocks(),
     'Radio':Radio(),
     'Status': {
       'CPU':GraphCPU(),
