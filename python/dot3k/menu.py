@@ -10,18 +10,46 @@ class Menu():
   * A class derived from MenuOption, providing interactive functionality
   """
 
-  def __init__(self, structure, lcd, idle_handler = None, idle_time = 60):
+  def __init__(self, *args, **kwargs):
+    """
+    structure, lcd, idle_handler = None, idle_time = 60
+    """
+    self.menu_options = {}
+    self.lcd = None
+    self.idle_handler = None
+    self.input_handler = None
+    self.idle_time = 60*1000
+    self.config_file = 'dot3k.cfg'
+
+    if len(args) > 0:
+      self.menu_options = args[0]
+    if len(args) > 1:
+      self.lcd = args[1]
+    if len(args) > 2:
+      idle_handler = args[2]
+    if len(args) > 3:
+      idle_time = args[3]*1000
+
+    if 'structure' in kwargs.keys():
+      self.menu_options = kwargs['structure']
+    if 'lcd' in kwargs.keys():
+      self.lcd = kwargs['lcd']
+    if 'idle_handler' in kwargs.keys():
+      self.idle_handler = kwargs['idle_handler']
+    if 'idle_time' in kwargs.keys():
+      self.idle_time = kwargs['idle_time']*1000
+    if 'input_handler' in kwargs.keys():
+      self.input_handler = kwargs['input_handler']
+    if 'config_file' in kwargs.keys():
+      self.config_file = kwargs['config_file']
+
     self.list_location = []
-    self.lcd = lcd
     self.current_position = 0
-    self.idle_handler = idle_handler
-    self.idle_time = idle_time*1000
     self.idle = False
     self.mode = 'navigate'
-    self.menu_options = structure
 
     self.config = ConfigParser.ConfigParser()
-    self.config.read(['dot3k.cfg', os.path.expanduser('~/.dot3k.cfg')])
+    self.config.read([self.config_file, os.path.expanduser('~/.' + self.config_file)])
 
     self.setup_menu(self.menu_options)
    

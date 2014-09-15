@@ -13,12 +13,14 @@ import dot3k.backlight as backlight
 import dot3k.joystick as joystick
 import utils.usbkeyboard as keyboard
 from dot3k.menu import Menu, MenuOption
+from plugins.text import Text
 from plugins import Volume, Backlight, Contrast, GraphTemp, GraphCPU, Clock, Radio, Stocks
 import time
 
 my_clock = Clock()
 
-menu = Menu({
+menu = Menu(structure={
+    'Text':Text(),
     'Clock':my_clock,
     'Stocks':Stocks(),
     'Radio':Radio(),
@@ -32,9 +34,10 @@ menu = Menu({
       'Backlight':Backlight(backlight)
     }
   },
-  lcd,
-  my_clock,
-  3)
+  lcd=lcd,
+  idle_handler=my_clock,
+  idle_time=3,
+  input_handler=Text())
 
 """
 usbkeyboard provides the same methods as dot3k.joystick
