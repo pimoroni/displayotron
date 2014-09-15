@@ -1,6 +1,11 @@
 Changelog
 ---------
 
+1.6.1
+-----
+
+* Fixed bug in set_bar which cased the left blue backlight to light
+
 1.6
 ---
 

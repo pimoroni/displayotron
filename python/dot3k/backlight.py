@@ -75,10 +75,10 @@ Args:
 """
 def set_bar(index, value):
 	if isinstance(value, int):
-		set(LED_L_G + 1 + index, value)
+		set(LED_L_B + 1 + index, value)
 	if isinstance(value, list):
 		for i, v in enumerate(value):
-				set(LED_L_G + 1 + ((index + i)%9), v)
+				set(LED_L_B + 1 + ((index + i)%9), v)
 	update()
 
 """
