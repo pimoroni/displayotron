@@ -11,6 +11,7 @@ Using python?
 
 You can just:
 
+    sudo apt-get install python-dev python-pip python-smbus
     sudo pip install dot3k
 
 To get started!
