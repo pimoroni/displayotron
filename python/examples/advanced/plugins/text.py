@@ -2,10 +2,14 @@ from dot3k.menu import MenuOption
 import dot3k.backlight
 import time
 
+_MODE_CONFIRM = 1
+_MODE_ENTRY   = 0
+
 class Text(MenuOption):
   def __init__(self):
 
-    self.mode        = 'entry'
+    self.mode        = _MODE_ENTRY
+    self.input_prompt= ''
 
     self.initialized = False
     self.back_icon   = chr(0)
@@ -16,7 +20,7 @@ class Text(MenuOption):
 
     self.entry_text  = [' ']*16
 
-    self.confirm = False
+    self.confirm = 0
     self.final_text = ''
 
     self.entry_position = 0
@@ -29,6 +33,9 @@ class Text(MenuOption):
     length = len(value)
     self.entry_text = list(value + self.back_icon + (' '*(16-length)))
     self.entry_position = length
+  
+  def set_prompt(self, value):
+    self.input_prompt = value
 
   def get_value(self):
     return self.final_text
@@ -68,7 +75,7 @@ class Text(MenuOption):
     self.entry_char  = 0
     self.entry_mode  = 0
     self.entry_position = 0
-    self.mode        = 'entry'
+    self.mode        = _MODE_ENTRY
     self.pick_char(' ')
     self.entry_text  = [' ']*16
     self.set_value('Booblie!')
@@ -80,8 +87,8 @@ class Text(MenuOption):
     self.entry_text  = [' ']*16
    
   def left(self):
-    if self.mode == 'confirm':
-      self.confirm = True
+    if self.mode == _MODE_CONFIRM:
+      self.confirm = (self.confirm + 1) % 3
       return True
     if self.entry_text[self.entry_position] == self.back_icon:
       return True
@@ -89,8 +96,8 @@ class Text(MenuOption):
     return True
 
   def right(self):
-    if self.mode == 'confirm':
-      self.confirm = False
+    if self.mode == _MODE_CONFIRM:
+      self.confirm = (self.confirm - 1) % 3
       return True
     if self.entry_text[self.entry_position] == self.back_icon:
       return True
@@ -98,29 +105,33 @@ class Text(MenuOption):
     return True
 
   def up(self):
-    if self.mode == 'confirm':
+    if self.mode == _MODE_CONFIRM:
       return True
     self.prev_char()
     return True
   
   def down(self):
-    if self.mode == 'confirm':
+    if self.mode == _MODE_CONFIRM:
       return True
     self.next_char()
     return True
 
   def select(self):
-    if self.mode == 'confirm':
-      if self.confirm:
+    if self.mode == _MODE_CONFIRM:
+      if self.confirm == 1: # Yes
         return True
-      else:
-        self.mode = 'entry'
+      elif self.confirm == 2: # Quit
+        self.cancel_input = True
+        self.mode = _MODE_ENTRY
+        return True
+      else: # No
+        self.mode = _MODE_ENTRY
         return False
 
     if self.entry_text[self.entry_position] == self.back_icon:
       text = ''.join(self.entry_text)
       self.final_text = text[0:text.index(self.back_icon)].strip()
-      self.mode = 'confirm'
+      self.mode = _MODE_CONFIRM
     else:
       self.change_case()
     return False
@@ -132,11 +143,20 @@ class Text(MenuOption):
       menu.lcd.create_char(5,[0,0,10,27,10,0,0,0]) # Left right arrow
       self.initialized = True
 
-    if self.mode == 'entry':
-      menu.clear_row(0)
+    if self.mode == _MODE_ENTRY:
+      menu.write_row(0, self.input_prompt)
       menu.write_row(1,''.join(self.entry_text))
-      menu.write_row(2,(' ' * self.entry_position) + chr(4))
+      if self.entry_text[self.entry_position] == self.back_icon:
+        if self.entry_position > 3:
+          menu.write_row(2,(' ' * (self.entry_position-3)) + 'END' + chr(4))
+        else:
+          menu.write_row(2,(' ' * self.entry_position) + chr(4) + 'END')
+      else:
+        menu.write_row(2,(' ' * self.entry_position) + chr(4))
     else:
       menu.write_row(0,'Confirm?')
       menu.write_row(1,self.final_text)
-      menu.write_row(2,'  ' + ('>' if self.confirm else ' ') + 'Yes    ' + ('>' if not self.confirm else ' ') + 'No   ')
+      menu.write_row(2,
+' ' + ('>' if self.confirm == 1 else ' ') + 'Yes ' + 
+       ('>' if self.confirm == 0 else ' ') + 'No ' + 
+       ('>' if self.confirm == 2 else ' ') + 'Quit' )

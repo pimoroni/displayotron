@@ -1,5 +1,9 @@
 import time, ConfigParser, os, atexit
 
+_MODE_NAV = 'navigate'
+_MODE_ADJ = 'adjust'
+_MODE_TXT = 'entry'
+
 class Menu():
   """
   This class accepts a list of menu items,
@@ -46,7 +50,7 @@ class Menu():
     self.list_location = []
     self.current_position = 0
     self.idle = False
-    self.mode = 'navigate'
+    self.mode = _MODE_NAV
 
     self.config = ConfigParser.ConfigParser()
     self.config.read([self.config_file, os.path.expanduser('~/.' + self.config_file)])
@@ -111,7 +115,7 @@ class Menu():
       self.list_location.append( self.current_position )
       self.current_position = 0
     elif isinstance(self.current_value(),MenuOption):
-      self.mode = 'adjust'
+      self.mode = _MODE_ADJ
       self.current_value().begin()
     elif callable(self.current_submenu()[self.current_key()]):
       self.current_submenu()[self.current_key()]()
@@ -138,6 +142,27 @@ class Menu():
     if len(self.list_location) > 0:
       self.current_position = self.list_location.pop()
 
+  def start_input(self):
+    if self.input_handler == None:
+      return False
+
+    self.current_value().text_entry = False
+    self.input_handler.begin()
+    self.input_handler.set_value(self.current_value().initial_value())
+    self.input_handler.set_prompt(self.current_value().input_prompt())
+    self.mode = _MODE_TXT
+
+  def finish_input(self):
+    if self.input_handler.cancel_input:
+      self.current_value().cancel_input()
+      self.input_handler.cancel_input = False
+      self.input_handler.cleanup()
+      self.mode = _MODE_ADJ
+    else:
+      self.current_value().receive_input(self.input_handler.get_value())
+      self.input_handler.cleanup() 
+      self.mode = _MODE_ADJ
+ 
   def select(self):
     """
     Handle "select" action
@@ -149,12 +174,15 @@ class Menu():
       self.idle_handler.idling = False
       return True
 
-    if self.mode == 'navigate':
+    if self.mode == _MODE_NAV:
       self.select_option()
-    elif self.mode == 'adjust':
+    elif self.mode == _MODE_ADJ:
       # The "select" call must return true to exit the adjust
       if self.current_value().select():
-        self.mode = 'navigate'
+        self.mode = _MODE_NAV
+    elif self.mode == _MODE_TXT:
+      if self.input_handler.select():
+        self.finish_input()
 
   def up(self):
     self.last_action = self.millis()
@@ -164,10 +192,12 @@ class Menu():
       self.idle_handler.idling = False
       return True
 
-    if self.mode == 'navigate':
+    if self.mode == _MODE_NAV:
       self.prev_option()
-    elif self.mode == 'adjust':
+    elif self.mode == _MODE_ADJ:
       self.current_value().up()
+    elif self.mode == _MODE_TXT:
+      self.input_handler.up()
 
   def down(self):
     self.last_action = self.millis()
@@ -177,10 +207,12 @@ class Menu():
       self.idle_handler.idling = False
       return True
 
-    if self.mode == 'navigate':
+    if self.mode == _MODE_NAV:
       self.next_option()
-    elif self.mode == 'adjust':
+    elif self.mode == _MODE_ADJ:
       self.current_value().down()
+    elif self.mode == _MODE_TXT:
+      self.input_handler.down()
 
   def left(self):
     self.last_action = self.millis()
@@ -190,12 +222,15 @@ class Menu():
       self.idle_handler.idling = False
       return True
 
-    if self.mode == 'navigate':
+    if self.mode == _MODE_NAV:
       self.exit_option()
-    elif self.mode == 'adjust':
+    elif self.mode == _MODE_ADJ:
       if not self.current_value().left():
         self.current_value().cleanup()
-        self.mode = 'navigate'
+        self.mode = _MODE_NAV
+    elif self.mode == _MODE_TXT:
+      self.input_handler.left()
+      
 
   def right(self):
     self.last_action = self.millis()
@@ -205,10 +240,12 @@ class Menu():
       self.idle_handler.idling = False
       return True
 
-    if self.mode == 'navigate':
+    if self.mode == _MODE_NAV:
       self.select_option()
-    elif self.mode == 'adjust':
+    elif self.mode == _MODE_ADJ:
       self.current_value().right()
+    elif self.mode == _MODE_TXT:
+      self.input_handler.right()
 
   def clear_row(self,row):
     self.lcd.set_cursor_position(0,row)
@@ -245,7 +282,7 @@ class Menu():
       self.idle_handler.redraw(self)
       return False
 
-    if self.mode == 'navigate':
+    if self.mode == _MODE_NAV:
       self.write_option(1,self.get_menu_item(self.current_position),chr(252))
 
       if len(self.current_submenu()) > 2:
@@ -260,14 +297,19 @@ class Menu():
       
 
     # Call the redraw function of the endpoint Class
-    elif self.mode == 'adjust':
+    elif self.mode == _MODE_ADJ:
       self.current_value().redraw(self)
+      if self.current_value().text_entry:
+        self.start_input()
+
+    elif self.mode == _MODE_TXT:
+      self.input_handler.redraw(self)
 
   def can_idle(self):
     if self.millis() - self.last_action >= self.idle_time:
-      if self.mode == 'navigate':
+      if self.mode == _MODE_NAV:
         return True
-      if self.mode == 'adjust' and self.current_value().can_idle:
+      if self.mode == _MODE_ADJ and self.current_value().can_idle:
         return True
     return False
  
@@ -277,6 +319,39 @@ class MenuOption():
     self.idling = False
     self.can_idle = False
     self.config = None
+    self.text_entry = False
+
+  """
+  These helper functions let you start
+  the input_handler of the parent menu
+  and receive the text that the user inputs
+  """
+  def initial_value(self):
+    # Return a value to start with
+    return ''
+  def receive_input(self, value):
+    # Return false to reject input
+    return True
+  def request_input(self):
+    self.text_entry = True
+  def cancel_input(self):
+    # Called if input is cancelled by handler
+    pass
+  def input_prompt(self):
+    return 'Input text:'
+
+  """
+  These helper functions are for
+  input handler plugins
+  """
+  def set_value(self, value):
+    pass
+
+  def get_value(self):
+    return ''
+  def set_prompt(self, value):
+    pass
+
   def millis(self):
     return int(round(time.time() * 1000))
   def up(self):

@@ -20,8 +20,26 @@ class Stocks(MenuOption):
     
     self.is_setup = False
 
+
+  def input_prompt(self):
+    """
+    Returns the prompt/title for the input plugin
+    """
+    return 'Stock code:'
+
+  def receive_input(self, value):
+    """ 
+    The value we get back when text input finishes
+    """
+    self.companies.append(value)
+    self.get_stock_data(True)
+    self.update_options()
+
   def begin(self):
     self.reset_timeout()
+
+  def add_new(self):
+    self.request_input()
 
   def reset_timeout(self):
     self.last_event = self.millis()
@@ -41,6 +59,11 @@ class Stocks(MenuOption):
   def cleanup(self):
     self.is_setup = False
    
+  
+  def select(self):
+   self.add_new()
+   return False
+
   def left(self):
     self.reset_timeout()
     return False
@@ -59,9 +82,9 @@ class Stocks(MenuOption):
     self.company = (self.company + 1) % len(self.companies)
     return True
   
-  def get_stock_data(self):
+  def get_stock_data(self, force = False):
     # Update only once every 60 seconds
-    if self.millis() - self.last_update < 6*1000*60:
+    if self.millis() - self.last_update < 6*1000*60 and not force:
       return False
     
     update = threading.Thread(None, self.do_update)

@@ -67,7 +67,7 @@ class Backlight(MenuOption):
       self.sat += 1
       if self.sat > 100:
         self.sat = 0
-        self.from_hue()
+      self.from_hue()
 
     elif self.mode == 2: # val
       self.val += 1

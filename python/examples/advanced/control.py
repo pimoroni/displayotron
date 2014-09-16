@@ -20,7 +20,6 @@ import time
 my_clock = Clock()
 
 menu = Menu(structure={
-    'Text':Text(),
     'Clock':my_clock,
     'Stocks':Stocks(),
     'Radio':Radio(),
@@ -60,25 +59,26 @@ def handle_button(pin):
   menu.button()
 
 REPEAT_DELAY = 0.5
+REPEAT_DATE = 0.99
 @joystick.on(joystick.UP)
 def handle_up(pin):
   menu.up()
-  joystick.repeat(joystick.UP,menu.up,REPEAT_DELAY,0.9)
+  joystick.repeat(joystick.UP,menu.up,REPEAT_DELAY,0.99)
 
 @joystick.on(joystick.DOWN)
 def handle_down(pin):
   menu.down()
-  joystick.repeat(joystick.DOWN,menu.down,REPEAT_DELAY,0.9)
+  joystick.repeat(joystick.DOWN,menu.down,REPEAT_DELAY,0.99)
 
 @joystick.on(joystick.LEFT)
 def handle_left(pin):
   menu.left()
-  joystick.repeat(joystick.LEFT,menu.left,REPEAT_DELAY,0.9)
+  joystick.repeat(joystick.LEFT,menu.left,REPEAT_DELAY,0.99)
 
 @joystick.on(joystick.RIGHT)
 def handle_right(pin):
   menu.right()
-  joystick.repeat(joystick.RIGHT,menu.right,REPEAT_DELAY,0.9)
+  joystick.repeat(joystick.RIGHT,menu.right,REPEAT_DELAY,0.99)
 
 @joystick.on(joystick.BUTTON)
 def handle_button(pin):
