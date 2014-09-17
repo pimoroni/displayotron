@@ -1,71 +1,89 @@
-dot3k
-=====
+# dot3k
 
-Hardware Requirements
----------------------
+## Hardware Requirements
 
 You'll need to enable spi.
 
-    sudo raspi-config
+```bash
+sudo raspi-config
+```
 
-Then head into Advanced Options -> SPI -> Yes.
+Then head into `Advanced Options -> SPI -> Yes`.
 
 And i2c.
 
-    sudo nano /etc/modprobe.d/raspi-blacklist.conf
+```bash
+sudo nano /etc/modprobe.d/raspi-blacklist.conf
+```
 
-And comment out ( place a # before ):
+And comment out (place a `#` before):
 
-    blacklist i2c-bcm2708
+```
+blacklist i2c-bcm2708
+```
 
 And also:
 
-    sudo nano /etc/modules
+```bash
+sudo nano /etc/modules
+```
 
 Add the line:
    
-    i2c-dev
+```
+i2c-dev
+```
 
-Reboot to make these changes take effect.
+Reboot to make these changes take effect:
 
-Software Requirements
----------------------
+```bash
+sudo reboot
+```
+
+## Software Requirements
 
 Next you should install python-smbus and python-dev via apt:
 
-    sudo apt-get install python-smbus python-dev
+```bash
+sudo apt-get install python-smbus python-dev
+```
 
 And pip, if you don't have it:
 
-    sudo apt-get install python-pip
+```bash
+sudo apt-get install python-pip
+```
 
 Then install st7036 and sn3218 using pip:
 
-    sudo pip install st7036 sn3218
+```bash
+sudo pip install st7036 sn3218
+```
 
-You can run the requirements.sh file to do this for you!
+You can run the `requirements.sh` file to do this for you!
 
-Usage
-=====
+## Usage
 
-LCD
----
+### LCD
 
-    import dot3k.lcd as lcd
-    lcd.write('Hello World!')
+```python
+from dot3k import lcd
+lcd.write('Hello World!')
+```
 
+### Backlight
 
-Backlight
----------
+```python
+from dot3k import backlight
+backlight.sweep(0.5)
+backlight.update()
+```
 
-    import dot3k.backlight as backlight
-    backlight.sweep(0.5)
-    backlight.update()
+### Joystick
 
-Joystick
---------
-
-    import dot3k.joystick as joystick
-    @joystick.on(joystick.UP)
-    def handle_joystick_up(pin):
-        print("Joystick up!")
+```python
+from dot3k import joystick
+@joystick.on(joystick.UP)
+def handle_joystick_up(pin):
+    print("Joystick up!")
+```
