@@ -90,7 +90,10 @@ class Deluge(MenuOption):
     torrents = map(lambda x: dict(y.split(': ',1) for y in x), map(lambda x: x.replace(' Active:','\nActive:').replace(' Ratio:','\nRatio:').split('\n'), torrents))
     
     for torrent in torrents:
-      torrent['Progress'] = float(torrent['Progress'].split('%')[0])
+      if 'Progress' in torrent.keys():
+        torrent['Progress'] = float(torrent['Progress'].split('%')[0])
+      else:
+        torrent['Progress'] = 100.0
     
     if self.selected_item > len(torrents):
       self.selected_item = 0
