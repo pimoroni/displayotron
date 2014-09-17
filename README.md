@@ -15,3 +15,13 @@ You can just:
     sudo pip install dot3k
 
 To get started!
+
+
+Credits
+=======
+
+* http://www.jan-holst.dk/pi-radio/pi-radio.html - for initial inspiration to do a Radio plugin
+
+* http://rollcode.com/use-python-get-raspberry-pis-temperature/ - for guidance on getting CPU/GPU temp in Python
+
+* https://github.com/facelessloser/Atmega_screen - for stock ticker plugin
