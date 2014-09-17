@@ -25,6 +25,10 @@ class Menu():
     self.idle_time = 60*1000
     self.config_file = 'dot3k.cfg'
 
+    # Track displayed text for auto-scroll
+    self.last_text = ['','','']
+    self.last_change = [0,0,0]
+
     if len(args) > 0:
       self.menu_options = args[0]
     if len(args) > 1:
@@ -257,12 +261,66 @@ class Menu():
       text += ' '
     self.lcd.write(text[0:16])
 
-  def write_option(self,row,text,icon=' ',margin=1):
-     
+  #def write_option(self,row,text,icon=' ',margin=1):
+  def write_option(self, *args, **kwargs):
+
+    row = 0
+    text = ''
+    icon = ' '
+    margin = 1
+    scroll = False
+   
+    scroll_padding = '  '
+    scroll_delay = 2000
+    scroll_repeat = 10000
+    scroll_speed = 200
+
+    if len(args) > 0:
+      row = args[0]
+    if len(args) > 1:
+      text = args[1]
+    if len(args) > 2:
+      icon = args[2]
+    if len(args) > 3:
+      margin = args[3]
+
+    if 'row' in kwargs.keys():
+      row = kwargs['row']
+    if 'text' in kwargs.keys():
+      text = kwargs['text']
+    if 'icon' in kwargs.keys():
+      icon = kwargs['icon']
+    if 'margin' in kwargs.keys():
+      margin = kwargs['margin']
+
+    if 'scroll' in kwargs.keys() and kwargs['scroll'] == True:
+      scroll = True
+    if 'scroll_speed' in kwargs.keys():
+      scroll_speed = kwargs['scroll_speed']
+    if 'scroll_repeat' in kwargs.keys():
+      scroll_repeat = kwargs['scroll_repeat']
+    if 'scroll_delay' in kwargs.keys():
+      scroll_delay = kwargs['scroll_delay']
+    if 'scroll_padding' in kwargs.keys():
+      scroll_padding = kwargs['scroll_padding']
+
     current_row = ''
 
+    if( self.last_text[row] != text ):
+      self.last_text[row] = text
+      self.last_change[row] = self.millis()
+
+    if scroll:
+      text += scroll_padding
+
+    if scroll and self.millis() - self.last_change[row] > scroll_delay:
+      pos = int(((self.millis() - self.last_change[row] - scroll_delay) / scroll_speed) % len(text))
+      text = text[pos:]+text[:pos]
+      if pos == len(text)-1:
+        self.last_change[row] = self.millis() + scroll_repeat
+
     current_row += icon
-   
+
     while len(current_row) < margin:
       current_row += ' '
 

@@ -14,12 +14,14 @@ import dot3k.joystick as joystick
 import utils.usbkeyboard as keyboard
 from dot3k.menu import Menu, MenuOption
 from plugins.text import Text
+from plugins.deluge import Deluge
 from plugins import Volume, Backlight, Contrast, GraphTemp, GraphCPU, Clock, Radio, Stocks
 import time
 
 my_clock = Clock()
 
 menu = Menu(structure={
+    'Deluge':Deluge(),
     'Clock':my_clock,
     'Stocks':Stocks(),
     'Radio':Radio(),
