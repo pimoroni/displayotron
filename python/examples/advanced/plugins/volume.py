@@ -4,6 +4,7 @@ import subprocess, os
 class Volume(MenuOption):
 
   def __init__(self):
+    MenuOption.__init__(self)
     self.volume = None
     self.actual_volume = 0
     self.last_update = 0

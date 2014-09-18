@@ -266,8 +266,8 @@ class Menu():
 
     row = 0
     text = ''
-    icon = ' '
-    margin = 1
+    icon = ''
+    margin = 0
     scroll = False
    
     scroll_padding = '  '
@@ -303,6 +303,12 @@ class Menu():
       scroll_delay = kwargs['scroll_delay']
     if 'scroll_padding' in kwargs.keys():
       scroll_padding = kwargs['scroll_padding']
+
+    if icon == None:
+      icon = ''
+
+    if margin == None:
+      margin = 0
 
     current_row = ''
 
@@ -341,15 +347,28 @@ class Menu():
       return False
 
     if self.mode == _MODE_NAV:
-      self.write_option(1,self.get_menu_item(self.current_position),chr(252))
+      self.write_option(
+        row=1,
+        text=self.get_menu_item(self.current_position),
+        icon=chr(252),
+        margin=1
+      )
 
       if len(self.current_submenu()) > 2:
-        self.write_option(0, self.get_menu_item(self.previous_position()))
+        self.write_option(
+          row=0,
+          text=self.get_menu_item(self.previous_position()),
+          margin=1
+        )
       else:
         self.clear_row(0)
 
       if len(self.current_submenu()) > 1:
-        self.write_option(2, self.get_menu_item(self.next_position()))
+        self.write_option(
+          row=2,
+          text=self.get_menu_item(self.next_position()),
+          margin=1
+        )
       else:
         self.clear_row(2)
       
