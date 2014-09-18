@@ -1,6 +1,11 @@
 Changelog
 ---------
 
+1.7.1
+-----
+
+* Sane defaults for write_option(), now no longer defauts to 1 margin and blank icon
+
 1.7
 ---
 
