@@ -16,6 +16,7 @@ You can just:
 
 To get started!
 
+Then you can check out the Basic and Advanced examples in: [python/examples](python/examples)
 
 Credits
 =======
