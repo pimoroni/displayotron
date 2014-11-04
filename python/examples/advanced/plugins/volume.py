@@ -1,6 +1,6 @@
 from dot3k.menu import MenuOption
 import dot3k.backlight
-import subprocess, os
+import subprocess, os, sys
 class Volume(MenuOption):
 
   def __init__(self):
@@ -21,10 +21,13 @@ class Volume(MenuOption):
 
   def get_volume(self):
     actual_volume = subprocess.check_output("amixer get 'PCM' | awk '$0~/%/{print $4}' | tr -d '[]%'", shell=True)
-    return actual_volume.strip()
+    if sys.version_info[0] >= 3:
+        return actual_volume.strip().decode('utf-8')
+    else:
+        return actual_volume.strip()
    
   def set_volume(self):
-    self.set_option('Sound','volume',self.volume)
+    self.set_option('Sound','volume',str(self.volume))
     devnull = open(os.devnull, 'w')
     subprocess.call(['/usr/bin/amixer','sset',"'PCM'", str(self.volume) + '%'], stdout=devnull)
     self.actual_volume = self.get_volume()
