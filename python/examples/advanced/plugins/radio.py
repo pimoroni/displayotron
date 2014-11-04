@@ -1,5 +1,5 @@
 from dot3k.menu import MenuOption
-import re, subprocess, socket, atexit, time, os, math
+import re, subprocess, socket, atexit, time, os, math, sys
 class Radio(MenuOption):
 
   def __init__(self):
@@ -157,13 +157,18 @@ class Radio(MenuOption):
 
   def send(self, command):
     try:
-      self.socket.send(command + "\n")
+      if sys.version_info[0] >= 3:
+        self.socket.send(encode(command + "\n"))
+      else:
+        self.socket.send(command + "\n")
     except socket.error:
       print('Failed to send command to VLC')
 
   def get_current_stream(self):
      self.send("status")
      status = self.socket.recv(8192)
+     if sys.version_info[0] >= 3:
+       status = status.decode('utf-8')
      result = re.search('input:\ (.*)\ ',status)
      state = re.search('state\ (.*)\ ',status)
      if state != None:
@@ -194,7 +199,10 @@ class Radio(MenuOption):
     if self.pid == None:
       try:
         return_value = subprocess.check_output(['pidof','vlc'])
-        self.pid = int(return_value.split(' ')[0])
+        if sys.version_info[0] >= 3:
+            self.pid = int(return_value.decode('utf-8').split(' ')[0])
+        else:
+            self.pid = int(return_value.split(' ')[0])
         print('Found VLC with PID: ' + str(self.pid))
         if self.connect():
           return True
