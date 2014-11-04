@@ -147,10 +147,10 @@ class Debris(MenuOption):
         return False
 
     # Remove off-screen debris
-    self.debris = filter(lambda x: x[0] > -1, self.debris)
+    self.debris = list(filter(lambda x: x[0] > -1, self.debris))
 
     # Remove off-screen stars
-    self.stars = filter(lambda x: x[0] > -1, self.stars)
+    self.stars = list(filter(lambda x: x[0] > -1, self.stars))
 
     # Create new debris to replace the removed ones
     while len(self.debris) < self.max_debris:

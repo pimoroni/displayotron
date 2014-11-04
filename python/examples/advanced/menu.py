@@ -7,7 +7,7 @@ from dot3k.menu import Menu, MenuOption
 from plugins.utils import Backlight, Contrast
 from plugins.graph import GraphTemp, GraphCPU
 from plugins.clock import Clock
-import time, os, math, psutil, commands
+import time
 
 class SpaceInvader(MenuOption):
   """

@@ -89,11 +89,11 @@ class Menu():
   def current_submenu(self):
     """
     Traverse the list of indexes in list_location
-    and find the relevant nested dictionary
+    and find the relevant nested listionary
     """
     menu = self.menu_options
     for location in self.list_location:
-      menu = menu[menu.keys()[location]]
+      menu = menu[list(menu.keys())[location]]
     return menu
 
   def current_value(self):
@@ -102,9 +102,9 @@ class Menu():
   def current_key(self):
     """
     Convert the integer current_position into
-    a valid key for the currently selected dictionary
+    a valid key for the currently selected listionary
     """
-    return self.current_submenu().keys()[self.current_position]
+    return list(self.current_submenu().keys())[self.current_position]
 
   def next_position(self):
     position = self.current_position + 1
@@ -340,7 +340,7 @@ class Menu():
     self.write_row(row,current_row)
 
   def get_menu_item(self, index):
-    return self.current_submenu().keys()[index]
+    return list(self.current_submenu().keys())[index]
 
   def redraw(self): 
     if self.can_idle() and isinstance(self.idle_handler,MenuOption):

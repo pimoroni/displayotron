@@ -47,8 +47,8 @@ class GraphTemp(MenuOption):
     return float(cpu_temp)/1000
 
   def get_gpu_temp(self):
-    proc = subprocess.Popen( ['/opt/vc/bin/vcgencmd', 'measure_temp'] )
-    out, err = proc.communicate
+    proc = subprocess.Popen( ['/opt/vc/bin/vcgencmd', 'measure_temp'], stdout=subprocess.PIPE )
+    out, err = proc.communicate()
     gpu_temp = out.replace( 'temp=', '' ).replace( '\'C', '' )
     return float(gpu_temp)
 
