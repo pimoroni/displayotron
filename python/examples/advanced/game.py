@@ -6,7 +6,7 @@ import dot3k.backlight as backlight
 from dot3k.menu import Menu
 from plugins.utils import Backlight, Contrast
 from plugins.debris import Debris
-import time, os, math, psutil, commands
+import time
 
 menu = Menu({
     'Debris Game':Debris(),

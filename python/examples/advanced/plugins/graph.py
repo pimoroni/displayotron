@@ -1,4 +1,4 @@
-import os, math, psutil, commands
+import os, math, psutil, subprocess
 from dot3k.menu import MenuOption
 import dot3k.backlight
 
@@ -47,7 +47,9 @@ class GraphTemp(MenuOption):
     return float(cpu_temp)/1000
 
   def get_gpu_temp(self):
-    gpu_temp = commands.getoutput( '/opt/vc/bin/vcgencmd measure_temp' ).replace( 'temp=', '' ).replace( '\'C', '' )
+    proc = subprocess.Popen( ['/opt/vc/bin/vcgencmd', 'measure_temp'] )
+    out, err = proc.communicate
+    gpu_temp = out.replace( 'temp=', '' ).replace( '\'C', '' )
     return float(gpu_temp)
 
   def redraw(self, menu):

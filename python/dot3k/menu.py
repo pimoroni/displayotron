@@ -1,4 +1,9 @@
-import time, ConfigParser, os, atexit
+import time, os, atexit, sys
+
+if sys.version_info[0] >= 3:
+    import configparser as ConfigParser
+else:
+    import ConfigParser
 
 _MODE_NAV = 'navigate'
 _MODE_ADJ = 'adjust'
