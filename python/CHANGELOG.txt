@@ -1,6 +1,12 @@
 Changelog
 ---------
 
+1.8.0
+-----
+
+* Significant, possibly breaking, change to __init__.py to remove redundant imports
+* lcd and joystick should work with Python 3, backlight still requires smbus
+
 1.7.1
 -----
 
