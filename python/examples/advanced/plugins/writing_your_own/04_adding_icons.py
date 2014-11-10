@@ -1,18 +1,7 @@
 #!/usr/bin/env python
 '''
-Building upon our options example, we'll now explore running
-scynronous ( short ) and asyncronous/background ( long ) tasks
-in response to both menu options being selected and on a schedule.
-
-There are many ways that tasks can be run, in a thread, every n seconds,
-or in direct response to a menu option being selected.
-
-A task can be as simple as switching to a different menu mode, and changing
-what's on the display... or as complex as calling a system process
-and updating some stored information for display.
-
-The code in this example is a decent way to handle options and actions,
-but it's far from the only way.
+Building upon our doing stuff example, we'll now add icons to show
+when things are running.
 '''
 from dot3k.menu import MenuOption
 import threading, subprocess
@@ -25,24 +14,20 @@ class HelloWorld(MenuOption):
   def __init__(self):
     self.selected_option = 0
 
-    self.options = [
-      'Pirate',
-      'Monkey',
-      'Robot',
-      'Ninja',
-      'Dolphin'
-    ]
-
     '''
     Python has no "switch" so we'll store an array of functions
-    to call when an option is selected
+    to call when an option is selected.
+
+    We've added icons to this example, so instead of two arrays
+    we've collected all the related stuff into an array of
+    dictionaries.
     '''
-    self.actions = [
-      self.handle_pirate,
-      self.handle_monkey,
-      self.handle_robot,
-      self.handle_ninja,
-      self.handle_dolphin,
+    self.options = [
+      {'title': 'Pirate', 'action': self.handle_pirate,   'icon': ' '}
+      {'title': 'Pirate', 'action': self.handle_monkey,   'icon': ' '}
+      {'title': 'Pirate', 'action': self.handle_robot,    'icon': ' '}
+      {'title': 'Pirate', 'action': self.handle_ninja,    'icon': ' '}
+      {'title': 'Pirate', 'action': self.handle_dolphin,  'icon': ' '}
     ]
 
     MenuOption.__init__(self)
@@ -58,8 +43,7 @@ class HelloWorld(MenuOption):
   by the "redraw" method, or you'll have to hang the whole
   user-interface with time.sleep, icky!
 
-  Instead, we should hand anything complex to a thread or change a state-machine
-  and act accordingly on the next redraw.
+  Instead, we should hand anything complex to a thread or state change.
   '''
 
   '''
@@ -71,6 +55,7 @@ class HelloWorld(MenuOption):
   '''
   def handle_pirate(self):
     print('Arrr! Doing pirate stuff!')
+    self.icons[0] = '!'
     update = threading.Thread(None, self.do_pirate_update)
     update.daemon = True
     update.start()
@@ -85,11 +70,13 @@ class HelloWorld(MenuOption):
     result = result.split("\n")
     result = result[len(result)-2]
     print(result)
+    self.icons[0] = ' '
 
   def handle_monkey(self):
     print('Eeek! Doing monkey stuff!')
+    self.icons[1] = '!'
     time.sleep(2)
-    print('Done monkey stuff!')
+    self.icons[1] = ' '
 
   def handle_robot(self):
     print('Deep! Doing robot stuff!')
@@ -102,16 +89,11 @@ class HelloWorld(MenuOption):
 
   '''
   To run an option we can simply call its associated function.
+  This can be done by adding brackets to the action.
   '''
   def select_option(self):
-    self.actions[ self.selected_option ]()
+    self.actions[ self.selected_option ]['action']()
 
-  '''
-  UP/DOWN are handy directions for selecting the previous and next
-  option in a list. So we create functions to increment/decriment
-  the selected_option. Using modulus ( % ) is an easy way to wrap them
-  when we reach 0 or the length of the options array above.
-  '''
   def next_option(self):
     self.selected_option = (self.selected_option + 1) % len(self.options)
 
@@ -132,34 +114,46 @@ class HelloWorld(MenuOption):
     self.select_option()
 
   def get_current_option(self):
-    return self.options[ self.selected_option ]
+    return self.options[ self.selected_option ]['title']
 
   def get_next_option(self):
-    return self.options[ (self.selected_option + 1) % len(self.options) ]
+    return self.options[ (self.selected_option + 1) % len(self.options) ]['title']
 
   def get_prev_option(self):
-    return self.options[ (self.selected_option - 1) % len(self.options) ]
+    return self.options[ (self.selected_option - 1) % len(self.options) ]['title']
+
+  '''
+  A few helpers for getting the icons couldn't hurt either!
+  '''
+  def get_current_icon(self):
+    return self.options[ self.selected_option ]['icon']
+
+  def get_next_icon(self):
+    return self.options[ (self.selected_option + 1) % len(self.options) ]['icon']
+
+  def get_prev_icon(self):
+    return self.options[ (self.selected_option - 1) % len(self.options) ]['icon']
 
   def redraw(self, menu):
   
     menu.write_option( 
         row=0,
         margin=1,
-        icon='',
+        icon=self.get_prev_icon(),
         text=self.get_prev_option()
     )
   
     menu.write_option( 
         row=1,
         margin=1,
-        icon='>', # Let's use a > to denote the currently selected option
+        icon=self.get_current_icon() or '>',
         text=self.get_current_option()
     )
   
     menu.write_option( 
         row=2,
         margin=1,
-        icon='',
+        icon=self.get_next_icon(),
         text=self.get_next_option()
     )
 
@@ -186,10 +180,7 @@ enter your plugin:
 '''
 menu.right()
 
-'''
-We need to handle UP/DOWN to select the
-previous/next option.
-'''
+
 @dot3k.joystick.on(dot3k.joystick.UP)
 def handle_up(pin):
   menu.up()
@@ -200,7 +191,7 @@ def handle_down(pin):
 
 
 '''
-We need to handle right, to let us choose the selected option
+We need to handle right, to let us select options
 '''
 @dot3k.joystick.on(dot3k.joystick.RIGHT)
 def handle_right(pin):
