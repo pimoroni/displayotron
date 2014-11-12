@@ -1,7 +1,12 @@
-import os, math, psutil, subprocess
+import os, math, psutil, subprocess, time
 import socket, fcntl, struct
 from dot3k.menu import MenuOption
 import dot3k.backlight
+
+def run_cmd(cmd):  
+   p = Popen(cmd, shell=True, stdout=PIPE, stderr=STDOUT)  
+   output = p.communicate()[0]  
+   return output  
 
 class IPAddress(MenuOption):
   """
@@ -110,3 +115,127 @@ class GraphTemp(MenuOption):
     menu.write_row(0,'Temperature')
     menu.write_row(1,'CPU:' + str(self.get_cpu_temp()))
     menu.write_row(2,'GPU:' + str(self.get_gpu_temp()))
+
+class GraphNetTrans(MenuOption):
+  """
+  Gets the total transfered amount of the raspberry and displays to the LCD, ONLY on eth0.
+  """
+  def __init__(self):
+    self.last = self.millis()
+    MenuOption.__init__(self)
+
+  def get_down(self):
+    show_dl_raw = ""
+    show_dl_hr = "ifconfig eth0 | grep bytes | cut -d')' -f1 | cut -d'(' -f2"
+    hr_dl = run_cmd(show_dl_hr) 
+    return hr_dl
+
+  def get_up(self):
+    show_ul_raw = ""
+    show_ul_hr = "ifconfig eth0 | grep bytes | cut -d')' -f2 | cut -d'(' -f2"
+    hr_ul = run_cmd(show_ul_hr) 
+    return hr_ul
+
+    
+  def redraw(self, menu):
+    now = self.millis()
+    if now - self.last < 1000:
+      return false
+    
+    menu.write_row(0,'ETH0 Transfers')
+    menu.write_row(1,str('Dn:' + self.get_down())[:-1])
+    menu.write_row(2,str('Up:' + self.get_up())[:-1])     
+
+
+class GraphNetSpeed(MenuOption):
+  """
+  Gets the total network transfered amount of the raspberry and displays to the LCD, ONLY on eth0.
+  """
+ 
+  def __init__(self):
+    self.last = self.millis()
+    self.last_update = 0
+    self.raw_dlold = 0
+    self.raw_ulold = 0
+    MenuOption.__init__(self)
+
+  def get_current_down(self):
+    show_dl_raw = "ifconfig eth0 | grep bytes | cut -d':' -f2 | cut -d' ' -f1"
+    raw_dl = run_cmd(show_dl_raw) 
+    return raw_dl
+
+  def get_current_up(self):
+    show_ul_raw = "ifconfig eth0 | grep bytes | cut -d':' -f3 | cut -d' ' -f1"
+    raw_ul = run_cmd(show_ul_raw) 
+    return raw_ul
+   
+  def redraw(self, menu, force = False):
+    now = self.millis()
+ 
+    #if now - self.last < 1000:
+    #  return false
+ 
+    if self.millis() - self.last_update < 1000*1 and not force:
+      return False
+
+    tdelta = self.millis() - self.last_update
+    self.last_update = self.millis()
+ 
+    raw_dlnew = self.get_current_down()[:-1]
+    raw_ulnew = self.get_current_up()[:-1]
+    
+    ddelta = int(raw_dlnew) - int(self.raw_dlold)
+    udelta = int(raw_ulnew) - int(self.raw_ulold)
+    
+    dlspeed = round(float(ddelta) / float(tdelta),1)
+    ulspeed = round(float(udelta) / float(tdelta),1)    
+    
+    menu.write_row(0,'ETH0 Speed')
+    menu.write_row(1,str('Dn:'+ str(dlspeed) + 'kB/s'))
+    menu.write_row(2,str('Up:'+ str(ulspeed) + 'kB/s'))
+    
+    self.raw_dlold = raw_dlnew
+    self.raw_ulold = raw_ulnew
+    
+class GraphSysShutdown(MenuOption):
+  """
+  Shutsdown the Raspberry Pi
+  """
+  def __init__(self):
+    self.last = self.millis()
+    MenuOption.__init__(self)  
+
+  def redraw(self, menu):
+    shutdown  = "sudo shutdown now"  
+    
+    now = self.millis()
+    if now - self.last < 1000*5:
+      return false
+
+    a = run_cmd(shutdown)
+
+    menu.write_row(0,'RPI Shutdown')
+    menu.write_row(1,'')
+    menu.write_row(2,time.strftime('  %a %H:%M:%S  '))     
+
+  
+class GraphSysReboot(MenuOption):
+  """
+  Reboots the Raspberry Pi 
+  """  
+  def __init__(self):
+    self.last = self.millis()
+    MenuOption.__init__(self)  
+
+  def redraw(self, menu):
+    reboot  = "sudo reboot"  
+    
+    now = self.millis()
+    if now - self.last < 1000*5:
+      return false
+
+    a = run_cmd(reboot)
+
+    menu.write_row(0,'RPI Reboot')
+    menu.write_row(1,'')
+    menu.write_row(2,time.strftime('  %a %H:%M:%S  '))    
