@@ -5,13 +5,17 @@ import urllib
 import socket, sys, ConfigParser
 
 feedurl = "http://crankygamersuk.libsyn.com/rss"
+episode_idx = 0
 
 if len(sys.argv) > 1:
 	feedurl = sys.argv[1]
 
+if len(sys.argv) > 2:
+	episode_idx = int(sys.argv[2])
+
 parsed = podcastparser.parse(feedurl, urllib.urlopen(feedurl))
 
-episode = parsed['episodes'][0]['enclosures'][0]['url']
+episode = parsed['episodes'][episode_idx]['enclosures'][0]['url']
 
 config = ConfigParser.ConfigParser()
 config.read(['../dot3k.cfg','dot3k.cfg'])

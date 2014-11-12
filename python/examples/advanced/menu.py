@@ -5,7 +5,7 @@ import dot3k.lcd as lcd
 import dot3k.backlight as backlight
 from dot3k.menu import Menu, MenuOption
 from plugins.utils import Backlight, Contrast
-from plugins.graph import GraphTemp, GraphCPU
+from plugins.graph import IPAddress, GraphTemp, GraphCPU
 from plugins.clock import Clock
 import time
 
@@ -48,6 +48,7 @@ menu = Menu({
     'Space Invader':my_invader,
     'Clock':Clock(),
     'Status': {
+      'IP':IPAddress(),
       'CPU':GraphCPU(),
       'Temp':GraphTemp()
     },
