@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
-import dot3k, time
+import dot3k.lcd as lcd
+import dot3k.backlight as backlight 
+import time
 from threading import Thread
 
 pirate = [
@@ -13,25 +15,25 @@ pirate = [
 def get_anim_frame(anim, fps):
   return anim[ int(round(time.time()*fps) % len(anim)) ]
 
-dot3k.lcd.set_cursor_position(1,0)
-dot3k.lcd.write('Display-o-tron')
-dot3k.lcd.write('      ' + chr(0) + '3000  ')
-dot3k.lcd.create_char(0,get_anim_frame(pirate,4))
+lcd.set_cursor_position(1,0)
+lcd.write('Display-o-tron')
+lcd.write('      ' + chr(0) + '3000  ')
+lcd.create_char(0,get_anim_frame(pirate,4))
 
 
 
 while 1:
-  dot3k.backlight.rgb(255,0,0)
+  backlight.rgb(255,0,0)
   time.sleep(1)
-  dot3k.backlight.rgb(0,255,0)
+  backlight.rgb(0,255,0)
   time.sleep(1)
-  dot3k.backlight.rgb(0,0,255)
+  backlight.rgb(0,0,255)
   time.sleep(1)
-  dot3k.backlight.rgb(255,255,255)
+  backlight.rgb(255,255,255)
   time.sleep(1)
   for i in range(0,360):
-    dot3k.backlight.hue(i/360.0)
+    backlight.hue(i/360.0)
     time.sleep(0.01)
   for i in range(0,360):
-    dot3k.backlight.sweep(i/360.0)
+    backlight.sweep(i/360.0)
     time.sleep(0.01)

@@ -7,12 +7,13 @@ remote control support, and more.
 
 If you've got a Rii keyboard, plug it in and give this a whirl!
 """
+print("To use this example you need a Rii keyboard plugged into USB!")
 
 import dot3k.lcd as lcd
 import dot3k.backlight as backlight
 import dot3k.joystick as joystick
 import utils.usbkeyboard as keyboard
-from dot3k.menu import Menu, MenuOption
+from menu import Menu, MenuOption
 from plugins.text import Text
 from plugins.deluge import Deluge
 from plugins import Volume, Backlight, Contrast, GraphTemp, GraphCPU, Clock, Radio, Stocks
@@ -41,7 +42,7 @@ menu = Menu(structure={
   input_handler=Text())
 
 """
-usbkeyboard provides the same methods as dot3k.joystick
+usbkeyboard provides the same methods as joystick
 so it's a drop-in replacement!
 """
 @keyboard.on(keyboard.UP)
