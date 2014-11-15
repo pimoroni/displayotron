@@ -1,10 +1,11 @@
 #!/usr/bin/env python
-import dot3k, time, datetime, copy, math, psutil
+import dot3k.lcd as lcd
+import dot3k.backlight as backlight
+import time, datetime, copy, math, psutil
 
-dot3k.lcd.write(chr(0) + 'Ooo! Such time' + chr(0))
-dot3k.lcd.set_cursor_position(0,2)
-dot3k.lcd.write(chr(1) + chr(4) + ' Very Wow! ' + chr(3) + chr(2) + chr(5))
-
+lcd.write(chr(0) + 'Ooo! Such time' + chr(0))
+lcd.set_cursor_position(0,2)
+lcd.write(chr(1) + chr(4) + ' Very Wow! ' + chr(3) + chr(2) + chr(5))
 
 pirate = [
 	[0x00,0x1f,0x0b,0x03,0x00,0x04,0x11,0x1f],
@@ -58,26 +59,26 @@ cpu_samples = [0] * cpu_sample_count
 hue = 0.0
 while True:
 	hue += 0.008
-	dot3k.backlight.sweep(hue)
-	#dot3k.backlight.rgb(0,0,255)
+	backlight.sweep(hue)
+	#backlight.rgb(0,0,255)
 
 	cpu_samples.append(psutil.cpu_percent() / 100.0)
 	cpu_samples.pop(0)
 
 	cpu_avg = sum(cpu_samples) / cpu_sample_count
-	dot3k.backlight.set_graph(cpu_avg)
+	backlight.set_graph(cpu_avg)
 
 	if hue > 1.0:
 		hue = 0.0
 
-	dot3k.lcd.create_char(0,getAnimFrame(char,4))
-	dot3k.lcd.create_char(1,getAnimFrame(arr,16))
-	dot3k.lcd.create_char(2,getAnimFrame(raa,8))
-	dot3k.lcd.create_char(3,getAnimFrame(pirate,2))
-	dot3k.lcd.create_char(4,getAnimFrame(heart,4))
-	dot3k.lcd.create_char(5,getAnimFrame(pacman,3))
-	dot3k.lcd.set_cursor_position(0,1)
+	lcd.create_char(0,getAnimFrame(char,4))
+	lcd.create_char(1,getAnimFrame(arr,16))
+	lcd.create_char(2,getAnimFrame(raa,8))
+	lcd.create_char(3,getAnimFrame(pirate,2))
+	lcd.create_char(4,getAnimFrame(heart,4))
+	lcd.create_char(5,getAnimFrame(pacman,3))
+	lcd.set_cursor_position(0,1)
 	t = datetime.datetime.now().strftime("%H:%M:%S.%f")
-	dot3k.lcd.write(t)
+	lcd.write(t)
 
 	time.sleep(0.005)

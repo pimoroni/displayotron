@@ -5,8 +5,10 @@ import dot3k.lcd as lcd
 import dot3k.backlight as backlight
 from dot3k.menu import Menu
 from plugins.utils import Backlight, Contrast
+from plugins.volume import Volume
 from plugins.clock import Clock
-from plugins import Radio, Volume, GraphCPU, GraphTemp
+from plugins.radio import Radio
+from plugins.graph import GraphCPU, GraphTemp
 import time
 
 # We want to use clock both as an option
