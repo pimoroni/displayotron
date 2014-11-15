@@ -9,6 +9,7 @@ if sys.version_info[0] >= 3:
     from .clock import Clock
     from .stocks import Stocks
     from .transmission import Transmission
+    from .wlan import Wlan
 else:
     from radio import Radio
     from volume import Volume
@@ -18,3 +19,4 @@ else:
     from clock import Clock
     from stocks import Stocks
     from transmission import Transmission
+    from wlan import Wlan

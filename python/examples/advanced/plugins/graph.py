@@ -4,9 +4,9 @@ from dot3k.menu import MenuOption
 import dot3k.backlight
 
 def run_cmd(cmd):  
-   p = Popen(cmd, shell=True, stdout=PIPE, stderr=STDOUT)  
+   p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)  
    output = p.communicate()[0]  
-   return output  
+   return output 
 
 class IPAddress(MenuOption):
   """
@@ -135,8 +135,7 @@ class GraphNetTrans(MenuOption):
     show_ul_hr = "ifconfig eth0 | grep bytes | cut -d')' -f2 | cut -d'(' -f2"
     hr_ul = run_cmd(show_ul_hr) 
     return hr_ul
-
-    
+ 
   def redraw(self, menu):
     now = self.millis()
     if now - self.last < 1000:
@@ -157,46 +156,60 @@ class GraphNetSpeed(MenuOption):
     self.last_update = 0
     self.raw_dlold = 0
     self.raw_ulold = 0
+    self.dlspeed = 0
+    self.ulspeed = 0
+    self.iface='eth0'
     MenuOption.__init__(self)
 
-  def get_current_down(self):
-    show_dl_raw = "ifconfig eth0 | grep bytes | cut -d':' -f2 | cut -d' ' -f1"
+  def get_current_down(self, iface='eth0'):
+    show_dl_raw = "ifconfig " + iface + " | grep bytes | cut -d':' -f2 | cut -d' ' -f1"
     raw_dl = run_cmd(show_dl_raw) 
-    return raw_dl
+    return raw_dl[:-1]
 
-  def get_current_up(self):
-    show_ul_raw = "ifconfig eth0 | grep bytes | cut -d':' -f3 | cut -d' ' -f1"
+  def get_current_up(self, iface='eth0'):
+    show_ul_raw = "ifconfig " + iface + " | grep bytes | cut -d':' -f3 | cut -d' ' -f1"
     raw_ul = run_cmd(show_ul_raw) 
-    return raw_ul
-   
-  def redraw(self, menu, force = False):
+    return raw_ul[:-1]
+
+  def up(self):
+    self.iface='eth0'
+
+  def down(self):
+    self.iface='wlan0' 
+
+  def redraw(self, menu):
     now = self.millis()
  
     #if now - self.last < 1000:
     #  return false
  
-    if self.millis() - self.last_update < 1000*1 and not force:
-      return False
+    if self.millis() - self.last_update > 1000:
 
-    tdelta = self.millis() - self.last_update
-    self.last_update = self.millis()
+      tdelta = self.millis() - self.last_update
+      self.last_update = self.millis()
  
-    raw_dlnew = self.get_current_down()[:-1]
-    raw_ulnew = self.get_current_up()[:-1]
+      raw_dlnew = self.get_current_down(self.iface)
+      raw_ulnew = self.get_current_up(self.iface)
+   
+      self.dlspeed = 0
+      self.ulspeed = 0
     
-    ddelta = int(raw_dlnew) - int(self.raw_dlold)
-    udelta = int(raw_ulnew) - int(self.raw_ulold)
+      try:
+        ddelta = int(raw_dlnew) - int(self.raw_dlold)
+        udelta = int(raw_ulnew) - int(self.raw_ulold)
     
-    dlspeed = round(float(ddelta) / float(tdelta),1)
-    ulspeed = round(float(udelta) / float(tdelta),1)    
+        self.dlspeed = round(float(ddelta) / float(tdelta),1)
+        self.ulspeed = round(float(udelta) / float(tdelta),1)    
+      except ValueError:
+        pass    
+ 
+      self.raw_dlold = raw_dlnew
+      self.raw_ulold = raw_ulnew
     
-    menu.write_row(0,'ETH0 Speed')
-    menu.write_row(1,str('Dn:'+ str(dlspeed) + 'kB/s'))
-    menu.write_row(2,str('Up:'+ str(ulspeed) + 'kB/s'))
-    
-    self.raw_dlold = raw_dlnew
-    self.raw_ulold = raw_ulnew
-    
+    menu.write_row(0,self.iface + ' Speed')
+    menu.write_row(1,str('Dn:'+ str(self.dlspeed) + 'kB/s'))
+    menu.write_row(2,str('Up:'+ str(self.ulspeed) + 'kB/s'))
+   
 class GraphSysShutdown(MenuOption):
   """
   Shutsdown the Raspberry Pi

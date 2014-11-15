@@ -5,8 +5,9 @@ import dot3k.lcd as lcd
 import dot3k.backlight as backlight
 from dot3k.menu import Menu, MenuOption
 from plugins.utils import Backlight, Contrast
-from plugins.graph import IPAddress, GraphTemp, GraphCPU
+from plugins.graph import IPAddress, GraphTemp, GraphCPU, GraphNetSpeed
 from plugins.clock import Clock
+from plugins.wlan import Wlan
 import time
 
 class SpaceInvader(MenuOption):

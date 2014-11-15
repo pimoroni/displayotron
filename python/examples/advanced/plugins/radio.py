@@ -189,7 +189,7 @@ class Radio(MenuOption):
         return True
         break
       except socket.error:
-        time.sleep(0.5)
+        time.sleep(1)
     try:
       self.socket.recv(0)
     except socket.error:
