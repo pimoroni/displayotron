@@ -35,4 +35,8 @@ To run this example, you'll need to install python-uinput and some dependencies:
     sudo apt-get install libudev-dev
     sudo pip install python-uinput
 
+You also need to make sure the uinput module is running on your Pi:
+
+    sudo modprobe uinput
+
 Then run mouse.py and move the joystick on your dot3k to control the mouse.
