@@ -12,6 +12,20 @@ LED_L_R = 0x06
 LED_L_G = 0x07
 LED_L_B = 0x08
 
+"""
+Swaps the Green and Blue channels on the LED backlight
+
+Use if you have a first batch Display-o-Tron 3K
+"""
+def use_rbg():
+  global LED_R_G, LED_R_B
+  global LED_M_G, LED_M_B
+  global LED_L_G, LED_L_B
+
+  (LED_R_G, LED_R_B) = (LED_R_B, LED_R_G)
+  (LED_M_G, LED_M_B) = (LED_M_B, LED_M_G)
+  (LED_L_G, LED_L_B) = (LED_L_B, LED_L_G)
+
 leds = [0x00] * 18
 
 # set gamma correction for backlight to normalise brightness
