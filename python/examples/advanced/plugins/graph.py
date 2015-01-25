@@ -245,7 +245,7 @@ class GraphSysReboot(MenuOption):
     
     now = self.millis()
     if now - self.last < 1000*5:
-      return false
+      return False
 
     a = run_cmd(reboot)
 
