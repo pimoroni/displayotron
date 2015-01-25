@@ -78,7 +78,7 @@ class GraphCPU(MenuOption):
 
     menu.write_row(0, 'CPU Load')
     menu.write_row(1, str(self.cpu_avg) + '%')
-    menu.-write_row(2, '#' * int(16*(self.cpu_avg/100.0)))
+    menu.write_row(2, '#' * int(16*(self.cpu_avg/100.0)))
     
     dot3k.backlight.set_graph(self.cpu_avg/100.0)
 
@@ -183,7 +183,7 @@ class GraphNetSpeed(MenuOption):
     #if now - self.last < 1000:
     #  return false
  
-    if sel=f.millis() - self.last_update > 1000:
+    if self.millis() - self.last_update > 1000:
 
       tdelta = self.millis() - self.last_update
       self.last_update = self.millis()
