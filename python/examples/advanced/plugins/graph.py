@@ -219,11 +219,11 @@ class GraphSysShutdown(MenuOption):
     MenuOption.__init__(self)  
 
   def redraw(self, menu):
-    shutdown  = "sudo shutdown now"  
+    shutdown  = "sudo shutdown -h now"  
     
     now = self.millis()
     if now - self.last < 1000*5:
-      return false
+      return False
 
     a = run_cmd(shutdown)
 
