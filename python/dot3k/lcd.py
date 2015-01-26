@@ -82,4 +82,4 @@ def create_char(char_pos, char_map):
     char_pos (int): Value from 0-7, to save char in dot3k memory
     char_map (list): List of 8, 8-bit integers describing the character
   """
-  lcd.create_char()
+  lcd.create_char(char_pos, char_map)
