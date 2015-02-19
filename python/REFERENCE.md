@@ -45,6 +45,9 @@ Advances all animations by one frame- this updates the character corresponding t
 
 #Backlight
 
+##use_rbg()
+Changes the backlight driver to RBG mode ( instead of RGB ) for early Display-o-Tron boards with reversed B/G channels. Call once after importing dot3k.backlight.
+
 ###hue(hue)
 Sets the backlight LEDs to supplied hue
 
