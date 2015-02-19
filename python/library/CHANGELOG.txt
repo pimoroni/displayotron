@@ -1,6 +1,12 @@
 Changelog
 ---------
 
+1.8.1
+-----
+
+* Backlight now has off() method shortcut for turning lights off
+* Added a use_brg() method for old Dot3ks with different pixel order
+
 1.8.0
 -----
 
