@@ -1,3 +1,47 @@
+#LCD
+
+##write(value)
+Writes a string to the LCD at the current cursor position.
+
+You can use chr(0) to chr(7) to place custom characters and animations.
+
+**Args**
+* value (string): The string to write
+
+##clear()
+Clears the display
+
+##set_contrast(contrast)
+Sets the display contrast
+
+**Args**
+* contrast (int): contrast value
+* Must be in the range 0 to 63
+
+##set_cursor_position(column, row)
+Sets the cursor position to column,row
+
+**Args**
+* column (int): column ( horizontal ) position from 0 to 15
+* row (int): row ( vertical ) position from 0 to 2
+
+##create_char(char_pos, char_map)
+Create a custom character and save into dot3k memory.
+
+**Args**
+* char_pos (int): Value from 0-7
+* char_map (list): LIst of 8, 8-bit integers describing the character
+
+##create_animation(anim_pos, anim_map, frame_rate):
+Create a custom animation. These are saved in the same memory locations as characters and will overwrite a slot used by create_char.
+
+**Args**
+* char_pos (int): Value from 0-7, to save animation in dot3k memory
+* anim_map (list): List of 8, 8-bit integers describing the animation
+* frame_rate (int): Animation speed in FPS
+
+##update_animations()
+Advances all animations by one frame- this updates the character corresponding to each animation with the correct frame.
 
 #Backlight
 
