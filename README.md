@@ -17,6 +17,8 @@ curl get.pimoroni.com/dot3k | bash
 
 If you choose to download examples you'll find them in `~/Pimoroni/dot3k`, but you can also check out the Basic and Advanced examples in: [python/examples](python/examples)
 
+We've also created a full [function reference](python/REFERENCE.md).
+
 Credits
 =======
 
