@@ -9,14 +9,13 @@ http://shop.pimoroni.com/products/displayotron-3000
 Using python?
 =============
 
-You can just:
+We've created a super-easy installation script that will install all pre-requisites and get your Dot3k up and running in a jiffy, just type this into a terminal or LXTerminal:
 
-    sudo apt-get install python-dev python-pip python-smbus
-    sudo pip install dot3k
+```bash
+curl get.pimoroni.com/dot3k | bash
+```
 
-To get started!
-
-Then you can check out the Basic and Advanced examples in: [python/examples](python/examples)
+If you choose to download examples you'll find them in `~/Pimoroni/dot3k`, but you can also check out the Basic and Advanced examples in: [python/examples](python/examples)
 
 Credits
 =======
