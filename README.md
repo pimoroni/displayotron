@@ -1,13 +1,11 @@
-Display-o-tron 3000
-===================
+#Display-o-tron 3000
 
 Library and examples for the Display-o-tron Raspberry Pi add-on board from Pimoroni
 
 http://shop.pimoroni.com/products/displayotron-3000
 
 
-Using python?
-=============
+##Using python?
 
 We've created a super-easy installation script that will install all pre-requisites and get your Dot3k up and running in a jiffy, just type this into a terminal or LXTerminal:
 
@@ -19,8 +17,11 @@ If you choose to download examples you'll find them in `~/Pimoroni/dot3k`, but y
 
 We've also created a full [function reference](python/REFERENCE.md).
 
-Credits
-=======
+##Resources
+
+* http://www.lcd-module.com/eng/pdf/doma/dog-me.pdf - DOG LCD Datasheet ( Includes character table )
+
+##Credits
 
 * http://www.jan-holst.dk/pi-radio/pi-radio.html - for initial inspiration to do a Radio plugin
 
