@@ -1,66 +1,12 @@
-# dot3k
+# Display-o-Tron 3000
 
-## Hardware Requirements
+## Installing
 
-You'll need to enable spi.
-
-```bash
-sudo raspi-config
-```
-
-Then head into `Advanced Options -> SPI -> Yes`.
-
-And i2c.
+We've created a super-easy installation script that will install all pre-requisites and get your Dot3k up and running in a jiffy, just type this into a terminal or LXTerminal:
 
 ```bash
-sudo nano /etc/modprobe.d/raspi-blacklist.conf
+curl get.pimoroni.com/dot3k | bash
 ```
-
-And comment out (place a `#` before):
-
-```
-blacklist i2c-bcm2708
-```
-
-And also:
-
-```bash
-sudo nano /etc/modules
-```
-
-Add the line:
-   
-```
-i2c-dev
-```
-
-Reboot to make these changes take effect:
-
-```bash
-sudo reboot
-```
-
-## Software Requirements
-
-Next you should install python-smbus and python-dev via apt:
-
-```bash
-sudo apt-get install python-smbus python-dev
-```
-
-And pip, if you don't have it:
-
-```bash
-sudo apt-get install python-pip
-```
-
-Then install st7036 and sn3218 using pip:
-
-```bash
-sudo pip install st7036 sn3218
-```
-
-You can run the `requirements.sh` file to do this for you!
 
 ## Usage
 
