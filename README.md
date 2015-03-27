@@ -2,7 +2,7 @@
 
 Library and examples for the Display-o-tron Raspberry Pi add-on board from Pimoroni
 
-http://shop.pimoroni.com/products/displayotron-3000
+Available from Pimoroni: http://shop.pimoroni.com/products/displayotron-3000
 
 
 ##Using python?
