@@ -1,4 +1,4 @@
-#Display-o-tron 3000
+![Display-o-Tron 3000](display-o-tron-logo.png)
 
 Library and examples for the Display-o-tron Raspberry Pi add-on board from Pimoroni
 
