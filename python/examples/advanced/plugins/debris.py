@@ -4,7 +4,7 @@ import random, time
 
 class Debris(MenuOption):
   def __init__(self):
-    self.debug = True
+    self.debug = False
     self.star_seed = 'thestarsmydestination'
     self.debris_seed = 'piratemonkeyrobotninja'
     self.debris = []
