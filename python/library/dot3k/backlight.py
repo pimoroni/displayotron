@@ -79,6 +79,7 @@ def set(index, value):
         value (int): brightness value from 0 to 255
     """
     leds[index] = value
+    update()
 
 def set_bar(index, value):
     """
@@ -89,10 +90,10 @@ def set_bar(index, value):
         value (int or list): a single int, or list of brightness values from 0 to 255
     """
     if isinstance(value, int):
-        set(LED_L_B + 1 + index, value)
+        set(LED_R_R + 9 + (index%9), value)
     if isinstance(value, list):
         for i, v in enumerate(value):
-            set(LED_L_B + 1 + ((index + i)%9), v)
+            set(LED_R_R + 9 + ((index + i)%9), v)
     update()
     
 def hue_to_rgb( hue ):
