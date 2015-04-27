@@ -1,6 +1,12 @@
 Changelog
 ---------
 
+1.8.2
+-----
+
+* Fixed bug in screensaver functionality so it works with non-keyword args
+* Added new "add_item" feature so that menu items can be kept in order
+
 1.8.1
 -----
 

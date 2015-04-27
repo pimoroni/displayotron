@@ -1,4 +1,5 @@
 import time, os, atexit, sys
+from collections import OrderedDict
 
 if sys.version_info[0] >= 3:
     import configparser as ConfigParser
@@ -23,7 +24,7 @@ class Menu():
     """
     structure, lcd, idle_handler = None, idle_time = 60
     """
-    self.menu_options = {}
+    self.menu_options = OrderedDict()
     self.lcd = None
     self.idle_handler = None
     self.input_handler = None
@@ -34,16 +35,16 @@ class Menu():
     self.last_text = ['','','']
     self.last_change = [0,0,0]
 
-    if len(args) > 0:
+    if len(args) > 0 and not args[0] == None:
       self.menu_options = args[0]
     if len(args) > 1:
       self.lcd = args[1]
     if len(args) > 2:
-      idle_handler = args[2]
+      self.idle_handler = args[2]
     if len(args) > 3:
-      idle_time = args[3]*1000
+      self.idle_time = args[3]*1000
 
-    if 'structure' in kwargs.keys():
+    if 'structure' in kwargs.keys() and not kwargs['structure'] == None:
       self.menu_options = kwargs['structure']
     if 'lcd' in kwargs.keys():
       self.lcd = kwargs['lcd']
@@ -64,7 +65,8 @@ class Menu():
     self.config = ConfigParser.ConfigParser()
     self.config.read([self.config_file, os.path.expanduser('~/.' + self.config_file)])
 
-    self.setup_menu(self.menu_options)
+    if type(self.menu_options) is dict or type(self.menu_options) is OrderedDict:
+      self._setup_menu(self.menu_options)
    
     self.last_action = self.millis()
 
@@ -72,6 +74,23 @@ class Menu():
 
   def millis(self):
     return int(round(time.time() * 1000))
+
+  def add_item(self, path, handler):
+    if not type(path) is list:
+      path = path.split('/')
+    loc = self.menu_options
+    last = path.pop()
+    
+    while len(path) > 0:
+      key = path.pop()
+      if not key in loc:
+        loc[key] = OrderedDict()
+      loc = loc[key]
+
+    loc[last] = handler 
+
+    if isinstance(loc[last],MenuOption):
+      loc[last].setup(self.config)
 
   def save(self):
     if sys.version_info[0] >= 3:
@@ -81,11 +100,11 @@ class Menu():
         self.config.write(configfile)
         print('Config saved to dot3k.cfg')
 
-  def setup_menu(self, menu):
+  def _setup_menu(self, menu):
     for key in menu:
       value = menu[key]
-      if type(value) is dict:
-        self.setup_menu(value)
+      if type(value) is dict or type(value) is OrderedDict:
+        self._setup_menu(value)
       elif isinstance(value,MenuOption):
         value.setup(self.config)
 
@@ -123,7 +142,7 @@ class Menu():
     """
     Navigate into, or handle selected menu option accordingly
     """
-    if type(self.current_value()) is dict:
+    if type(self.current_value()) is dict or type(self.current_value()) is OrderedDict:
       self.list_location.append( self.current_position )
       self.current_position = 0
     elif isinstance(self.current_value(),MenuOption):
