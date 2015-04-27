@@ -4,7 +4,9 @@ import random, time
 
 class Debris(MenuOption):
   def __init__(self):
-    self.debug = False
+    self.debug = True
+    self.star_seed = 'thestarsmydestination'
+    self.debris_seed = 'piratemonkeyrobotninja'
     self.debris = []
     self.stars = []
     self.running = False
@@ -20,6 +22,8 @@ class Debris(MenuOption):
 
       [30,5 ,7 ,30,14,31,31,14], # 4: Ship above debris
       [14,31,31,14,30,5 ,7, 30], # 5: Ship below debris
+
+      [0, 14,31,31,31,31,14, 0]  # 6: Giant debris
     ]
     self.width  = 16
     self.height = 5 # Two rows per char
@@ -50,14 +54,21 @@ class Debris(MenuOption):
     self.last_update = 0
   
   def fill_stars(self):
+    random.seed(self.star_seed)
     self.stars = []
     while len(self.stars) < self.max_stars:
-      self.stars.append((random.randint(3,15),random.randint(0,2)))
+      new = (random.randint(0,15), random.randint(0,2))
+      if not new in self.stars:
+        self.stars.append(new)
 
   def fill_debris(self):
+    random.seed(self.debris_seed)
     self.debris = []
     while len(self.debris) < self.max_debris:
-      self.debris.append((random.randint(8,15),random.randint(0,self.height)))
+      new = (random.randint(5,15),random.randint(0,self.height))
+      if not new in self.debris:
+        self.debris.append(new)
+    print(self.debris)
 
   def left(self):
     if not self.running:
@@ -111,10 +122,6 @@ class Debris(MenuOption):
         time.sleep(0.5)
       dot3k.backlight.hue(0.5)
       self.time_start = self.millis()
-
-    self.current_player_x   = int(self.player_x)
-    self.current_player_y   = int(self.player_y / 2)
-    self.current_player_pos = (self.player_y % 2)
  
     # Move all stars left
     for idx, star in enumerate(self.stars):
@@ -124,26 +131,23 @@ class Debris(MenuOption):
     for idx, rock in enumerate(self.debris):
       self.debris[idx] = (rock[0] - 1, rock[1])
       debris_x   = int(rock[0])
-      debris_y   = int(rock[1] / 2)
-      debris_pos = (rock[1] % 2)
+      debris_y   = int(rock[1])
+
+      if debris_x < 0:
+        continue
      
-      if (debris_x,debris_y,debris_pos) == (self.current_player_x,self.current_player_y,self.current_player_pos):
+      if debris_x == self.player_x and debris_y == self.player_y:
         # Boom!
         menu.lcd.set_cursor_position(5,1)
         menu.lcd.write(' BOOM!')
 
         if self.debug:
-          print(debris_x,debris_y,debris_pos)
-          print(self.current_player_x, 
-                self.current_player_y,
-                self.current_player_pos)
-
-          print(self.player_x, self.player_y)
+          print(debris_x,debris_y)
+          print(self.player_x, 
+                self.player_y)
           exit()
 
         self.running = False
-        #time.sleep(1)
-        #self.reset()
         return False
 
     # Remove off-screen debris
@@ -179,22 +183,26 @@ class Debris(MenuOption):
     for idx, rock in enumerate(self.stars):
       buffer[rock[1]][int(rock[0])] = '.'
     
-    #player_y      = int(self.player_y / 2)
-    #player_x      = self.player_x
-    player_sprite = 2 + self.current_player_pos
+    player_v = (self.player_y % 2)
 
-    buffer[self.current_player_y][self.current_player_x] = chr(player_sprite)
+    buffer[int(self.player_y / 2)][self.player_x] = chr(2 + player_v)
 
     for idx, rock in enumerate(self.debris):
       debris_x = int(rock[0])
-      debris_y = int(rock[1] / 2)
-      debris_sprite = (rock[1] % 2)
+      debris_y = int(rock[1])
+      debris_v = (debris_y % 2)
 
-      if (debris_y, debris_x) == (self.current_player_y, self.current_player_x):
-        if (rock[1] % 2) != self.current_player_pos:
-          debris_sprite = 2 + player_sprite
+      debris_sprite = debris_v
 
-      buffer[debris_y][debris_x] = chr(debris_sprite)
+      if int(debris_y/2) == int(self.player_y/2) and debris_x == self.player_x and debris_v != player_v:
+        debris_sprite = 4 + player_v
+
+      current = buffer[int(debris_y / 2)][debris_x]
+   
+      if current == chr(0) or current == chr(1):
+        debris_sprite = 6 # Giant Debris!
+      
+      buffer[int(debris_y / 2)][debris_x] = chr(debris_sprite)
 
     # Draw elapsed seconds
     buffer[0][16-len(game_time):len(game_time)] = game_time
