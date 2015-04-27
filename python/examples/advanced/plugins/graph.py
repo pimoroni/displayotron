@@ -20,7 +20,7 @@ class IPAddress(MenuOption):
       return socket.inet_ntoa(fcntl.ioctl(
         s.fileno(),
         0x8915, # SIOCGIFADDR
-        struct.pack('256s', ifname[:15])
+        struct.pack('256s', ifname[:15].encode('utf-8'))
       )[20:24])
     except IOError:
       return 'Not Found!'
@@ -76,6 +76,8 @@ class GraphCPU(MenuOption):
     self.cpu_samples.pop(0)
     self.cpu_avg = sum(self.cpu_samples) / len(self.cpu_samples)
 
+    self.cpu_avg = round(self.cpu_avg * 100.0) / 100.0
+
     menu.write_row(0, 'CPU Load')
     menu.write_row(1, str(self.cpu_avg) + '%')
     menu.write_row(2, '#' * int(16*(self.cpu_avg/100.0)))
@@ -104,6 +106,7 @@ class GraphTemp(MenuOption):
   def get_gpu_temp(self):
     proc = subprocess.Popen( ['/opt/vc/bin/vcgencmd', 'measure_temp'], stdout=subprocess.PIPE )
     out, err = proc.communicate()
+    out = out.decode('utf-8')
     gpu_temp = out.replace( 'temp=', '' ).replace( '\'C', '' )
     return float(gpu_temp)
 

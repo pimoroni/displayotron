@@ -80,7 +80,7 @@ class Wlan(MenuOption):
         menu.lcd.create_char(4,[0,4,14,0,0,14,4,0]) # Up down arrow
         menu.lcd.create_char(5,[0,0,10,27,10,0,0,0]) # Left right arrow
 
-	self.scan()
+        self.scan()
 
         self.is_setup = True
    
