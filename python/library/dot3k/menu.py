@@ -10,6 +10,22 @@ _MODE_NAV = 'navigate'
 _MODE_ADJ = 'adjust'
 _MODE_TXT = 'entry'
 
+class MenuIcon():
+  arrow_left       = [0,0,8,24,8,0,0,0]
+  arrow_right      = [0,0,2,3,2,0,0,0]
+  arrow_up         = [0,4,14,0,0,0,0,0]
+  arrow_down       = [0,0,0,0,0,14,4,0]
+  arrow_left_right = [0,0,10,27,10,0,0,0]
+  arrow_up_down    = [0,4,14,0,0,14,4,0]
+  play             = [0,24,30,31,30,24,0,0]
+  pause            = [0,27,27,27,27,27,0,0]
+  back             = [0,8,30,9,1,1,14,0]
+  bar_left         = [0,3,2,2,2,2,3,0]
+  bar_right        = [0,24,8,8,8,8,24,0]
+  bar_full         = [0,31,0,31,31,0,31,0]
+  bar_empty        = [0,32,0,0,0,0,32,0]
+  
+
 class Menu():
   """
   This class accepts a list of menu items,

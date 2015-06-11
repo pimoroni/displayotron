@@ -7,6 +7,7 @@ from dot3k.menu import Menu, MenuOption
 from plugins.utils import Backlight, Contrast
 from plugins.graph import IPAddress, GraphTemp, GraphCPU, GraphNetSpeed
 from plugins.clock import Clock
+from plugins.volume import Volume
 from plugins.wlan import Wlan
 import time
 
@@ -54,6 +55,7 @@ menu = Menu({
       'Temp':GraphTemp()
     },
     'Settings': {
+      'Volume': Volume(),
       'Display': {
         'Contrast':Contrast(lcd),
         'Backlight':Backlight(backlight)

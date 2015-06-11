@@ -158,7 +158,7 @@ class Radio(MenuOption):
   def send(self, command):
     try:
       if sys.version_info[0] >= 3:
-        self.socket.send(encode(command + "\n"))
+        self.socket.send((command + "\n").encode('utf-8'))
       else:
         self.socket.send(command + "\n")
     except socket.error:
@@ -202,7 +202,7 @@ class Radio(MenuOption):
         if sys.version_info[0] >= 3:
             self.pid = int(return_value.decode('utf-8').split(' ')[0])
         else:
-            self.pid = int(return_value.split(' ')[0])
+            self.pid = int(return_value.decode('utf-8').split(' ')[0])
         print('Found VLC with PID: ' + str(self.pid))
         if self.connect():
           return True
@@ -211,7 +211,7 @@ class Radio(MenuOption):
 
       try:
         return_value = subprocess.check_output(['./vlc.sh'])
-        pids = return_value.split('\n')[0]
+        pids = return_value.decode('utf-8').split('\n')[0]
         self.pid = int(pids.split(' ')[0])
         self.started_vlc_instance = True
         print('VLC started with PID: ' + str(self.pid))  

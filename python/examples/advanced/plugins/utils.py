@@ -1,4 +1,5 @@
 from dot3k.menu import MenuOption
+from dot3k.menu import MenuIcon
 import colorsys
 
 class Backlight(MenuOption):
@@ -8,8 +9,9 @@ class Backlight(MenuOption):
     self.sat = 100
     self.val = 100
     self.mode = 0
-    self.modes = ['h','s','v','r','g','b']
+    self.modes = ['h','s','v','r','g','b','e']
     self.from_hue()
+    self._icons_setup = False
     MenuOption.__init__(self)
 
   def from_hue(self):
@@ -23,6 +25,7 @@ class Backlight(MenuOption):
 
   def setup(self, config):
     self.config = config
+    self.mode = 0
 
     self.r = int(self.get_option('Backlight','r',255))
     self.g = int(self.get_option('Backlight','g',255))
@@ -34,6 +37,12 @@ class Backlight(MenuOption):
 
     self.backlight.rgb(self.r,self.g,self.b)
 
+  def setup_icons(self, menu):
+    menu.lcd.create_char(0,MenuIcon.arrow_left_right)
+    menu.lcd.create_char(1,MenuIcon.arrow_up_down)
+    menu.lcd.create_char(2,MenuIcon.arrow_left)
+    self._icons_setup = True
+
   def update_bl(self):
     self.set_option('Backlight','r',str(self.r))
     self.set_option('Backlight','g',str(self.g))
@@ -44,19 +53,22 @@ class Backlight(MenuOption):
 
     self.backlight.rgb(self.r,self.g,self.b)
 
-  def right(self):
+  def down(self):
     self.mode+=1
     if self.mode >= len(self.modes):
      self.mode = 0
     return True
 
-  def left(self):
+  def up(self):
     self.mode-=1
     if self.mode < 0:
      self.mode = len(self.modes)-1
     return True
 
-  def up(self):
+  def right(self):
+    if self.mode == 6:
+      return False
+
     if self.mode == 0:
       self.hue += (1.0/359.0)
       if self.hue > 1:
@@ -94,7 +106,7 @@ class Backlight(MenuOption):
     self.update_bl()
     return True
 
-  def down(self):    
+  def left(self):    
     if self.mode == 0:
       self.hue -= (1.0/359.0)
       if self.hue < 0:
@@ -132,41 +144,54 @@ class Backlight(MenuOption):
     self.update_bl()
     return True
 
+
+  def cleanup(self):
+    self._icons_setup = False
+    self.mode = 0
+
   def redraw(self, menu):
-    menu.write_row(0,'Backlight')
-    row_1 = 'HSV: ' + str(int(self.hue*359)).zfill(3) + ' ' + str(self.sat).zfill(3) + ' ' + str(self.val).zfill(3)
-    row_2 = 'RGB: ' + str(self.r).zfill(3) + ' ' + str(self.g).zfill(3) + ' ' + str(self.b).zfill(3)
+    if not self._icons_setup:
+      self.setup_icons(menu)
 
-    # Position the arrow
-    if self.mode == 0: # hue
-      #menu.lcd.set_cursor_position(4,1)
-      row_1 = row_1[:4] + chr(252) + row_1[5:]
-    elif self.mode == 1: # sat
-      #menu.lcd.set_cursor_position(8,1)
-      row_1 = row_1[:8] + chr(252) + row_1[9:]
-    elif self.mode == 2: # val
-      #menu.lcd.set_cursor_position(12,1)
-      row_1 = row_1[:12] + chr(252) + row_1[13:]
-    elif self.mode == 3: # r
-      #menu.lcd.set_cursor_position(4,2)
-      row_2 = row_2[:4] + chr(252) + row_2[5:]
-    elif self.mode == 4: # g
-      #menu.lcd.set_cursor_position(8,2)
-      row_2 = row_2[:8] + chr(252) + row_2[9:]
-    elif self.mode == 5: # b
-      #menu.lcd.set_cursor_position(12,2)
-      row_2 = row_2[:12] + chr(252) + row_2[13:]
-
-    # Write the little arrow!
-    #menu.lcd.write(chr(252))
-
-    menu.write_row(1, row_1)
-    menu.write_row(2, row_2)
+    menu.write_row(0,chr(1) + 'Backlight')
+    if self.mode < 6:
+      row_1 = 'HSV: ' + str(int(self.hue*359)).zfill(3) + ' ' + str(self.sat).zfill(3) + ' ' + str(self.val).zfill(3)
+      row_2 = 'RGB: ' + str(self.r).zfill(3) + ' ' + str(self.g).zfill(3) + ' ' + str(self.b).zfill(3)
+    
+      row_1 = list(row_1)
+      row_2 = list(row_2)
  
+      icon_char = 0
+
+      # Position the arrow
+      if self.mode == 0: # hue
+        row_1[4] = chr(icon_char)
+      elif self.mode == 1: # sat
+        row_1[8] = chr(icon_char)
+      elif self.mode == 2: # val
+        row_1[12] = chr(icon_char)
+      elif self.mode == 3: # r
+        row_2[4] = chr(icon_char)
+      elif self.mode == 4: # g
+        row_2[8] = chr(icon_char)
+      elif self.mode == 5: # b
+        row_2[12] = chr(icon_char)
+
+
+      # Write the little arrow!
+      #menu.lcd.write(chr(252))
+
+      menu.write_row(1,''.join(row_1))
+      menu.write_row(2,''.join(row_2))
+    else:
+      menu.write_row(1,chr(2) + 'Exit')
+      menu.clear_row(2) 
+
 class Contrast(MenuOption):
   def __init__(self, lcd):
     self.lcd = lcd
     self.contrast = 30
+    self._icons_setup = False
     MenuOption.__init__(self)
 
   def right(self):
@@ -183,6 +208,15 @@ class Contrast(MenuOption):
     self.update_contrast()
     return True
 
+  def setup_icons(self, menu):
+    menu.lcd.create_char(0,MenuIcon.arrow_left_right)
+    menu.lcd.create_char(1,MenuIcon.arrow_up_down)
+    menu.lcd.create_char(2,MenuIcon.arrow_left)
+    self._icons_setup = True
+
+  def cleanup(self):
+    self._icons_setup = False
+
   def setup(self, config):
     self.config = config
     self.contrast = int(self.get_option('Display','contrast',40))
@@ -193,6 +227,9 @@ class Contrast(MenuOption):
     self.lcd.set_contrast(self.contrast)
 
   def redraw(self, menu):
+    if not self._icons_setup:
+      self.setup_icons(menu)
+
     menu.write_row(0,'Contrast')
-    menu.write_row(1,'Value: ' + str(self.contrast))
+    menu.write_row(1,chr(0) + 'Value: ' + str(self.contrast))
     menu.clear_row(2)
