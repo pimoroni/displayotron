@@ -232,6 +232,20 @@ class Menu():
       if self.input_handler.select():
         self.finish_input()
 
+  def cancel(self):
+    self.last_action = self.millis()
+    if self.idle:
+      self.idle = False
+      self.idle_handler.cleanup()
+      self.idle_handler.idling = False
+      return True
+    
+    if self.mode == _MODE_NAV:
+      self.exit_option()
+    if self.mode == _MODE_ADJ:
+      self.current_value().cleanup()
+      self.mode = _MODE_NAV
+
   def up(self):
     self.last_action = self.millis()
     if self.idle:
