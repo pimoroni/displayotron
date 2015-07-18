@@ -1,4 +1,4 @@
-from cap1xxx import Cap1166, Detect, PID_CAP1166
+from cap1xxx import Cap1166, PID_CAP1166
 
 I2C_ADDR = 0x2c
 
@@ -11,11 +11,14 @@ CANCEL = 0
 
 _cap1166 = None
 
-if Detect(I2C_ADDR, PID_CAP1166):
-    _cap1166 = Cap1166(I2C_ADDR)
-    _cap1166.enable_led_linking(0b00000000)
-else:
-    print("Display-o-Tron 4000 Cap Touch Not Found!")
+#if Detect(I2C_ADDR, PID_CAP1166):
+_cap1166 = Cap1166(i2c_addr=I2C_ADDR)
+for x in range(6):
+    _cap1166.set_led_linking(x,False)
+_cap1166._write_byte(0x00, 0b11000000)
+_cap1166._write_byte(0x1f, 0b00000000)
+#else:
+#    print("Display-o-Tron 4000 Cap Touch Not Found!")
 
 def _handle_touch(channel,event):
     print("{}, {}".format(channel, event))
