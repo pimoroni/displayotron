@@ -1,9 +1,9 @@
 import sn3218, colorsys, math
 import cap1xxx
 
-cap = cap1xxx.Cap1166(i2c_addr=0x2C)
-cap._write_byte(0x00, 0b00000000)
-cap._write_byte(0x1f, 0b00010000)
+cap = cap1xxx.Cap1166(i2c_addr=0x2C, skip_init=True)
+#cap._write_byte(0x00, 0b00000000)
+#cap._write_byte(0x1f, 0b00010000)
 
 R_RAMPRATES   = 0x94 # Always 0b00000000 for 0ms/0ms
 R_MODE        = 0x81 # Always 0b00000000 for Direct
@@ -112,16 +112,7 @@ def hue( hue ):
     rgb( col_rgb[0], col_rgb[1], col_rgb[2] )
 
 
-def sweepfull( hue, sweep_range = 0.0833 ):
-    global leds
-    for x in range(0,18,3):
-        rgb = hue_to_rgb( (hue + (sweep_range*(x/3))) % 1 )
-        rgb.reverse()
-        leds[x:x+3] = rgb
-    update()
-        
-
-def sweep( hue, range = 0.08 ):
+def sweep( hue, sweep_range = 0.0833 ):
     """
     Sets the backlight LEDs to a gradient centered on supplied hue
     
@@ -131,9 +122,12 @@ def sweep( hue, range = 0.08 ):
         hue (float): hue value between 0.0 and 1.0
         range (float): range value to deviate the left and right hue
     """
-    left_hue( (hue-range) % 1 )
-    mid_hue( hue )
-    right_hue( (hue+range) % 1 )
+    global leds
+    for x in range(0,18,3):
+        rgb = hue_to_rgb( (hue + (sweep_range*(x/3))) % 1 )
+        rgb.reverse()
+        leds[x:x+3] = rgb
+    update()
 
 def left_hue( hue ):
     """

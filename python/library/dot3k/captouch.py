@@ -9,23 +9,16 @@ RIGHT  = 5
 BUTTON = 4
 CANCEL = 0
 
-_cap1166 = None
-
-#if Detect(I2C_ADDR, PID_CAP1166):
 _cap1166 = Cap1166(i2c_addr=I2C_ADDR)
 for x in range(6):
     _cap1166.set_led_linking(x,False)
-_cap1166._write_byte(0x00, 0b11000000)
-_cap1166._write_byte(0x1f, 0b00000000)
-#else:
-#    print("Display-o-Tron 4000 Cap Touch Not Found!")
+
+def high_sensitivity():
+    _cap1166._write_byte(0x00, 0b11000000)
+    _cap1166._write_byte(0x1f, 0b00000000)
 
 def _handle_touch(channel,event):
     print("{}, {}".format(channel, event))
-
-#for channel in range(6):
-#    for event in ['press','release','held']:
-#        _cap1166.on(channel=channel, event=event, handler=_handle_touch)
 
 def on(buttons, bounce=-1):
     """
