@@ -1,13 +1,14 @@
 from dot3k.menu import MenuOption
-import dot3k.backlight
+#import dot3k.backlight
 import time
 
 class Clock(MenuOption):
-  def __init__(self):
+  def __init__(self, backlight = None):
     self.modes = ['date','week','binary','dim','bright']
     self.mode = 0
     self.binary = True
     self.running = False
+    self.backlight = backlight
 
     self.option_time = 0
 
@@ -33,7 +34,8 @@ class Clock(MenuOption):
     r = int(int(self.get_option('Backlight','r')) * brightness)
     g = int(int(self.get_option('Backlight','g')) * brightness)
     b = int(int(self.get_option('Backlight','b')) * brightness)
-    dot3k.backlight.rgb(r,g,b)
+    if not self.backlight == None:
+      self.backlight.rgb(r,g,b)
 
   def update_options(self):
     self.set_option('Clock','dim',self.dim_hour)

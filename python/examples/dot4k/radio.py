@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 
 # Include advanced so Python can find the plugins
-#import sys
-#sys.path.append("../advanced/")
+import sys
+sys.path.append("../advanced/")
 
 import dot3k.captouch as captouch
 import dot3k.lcd as lcd
-import dot3k.backlight as backlight
+import dot3k.hatbacklight as backlight
 from dot3k.menu import Menu
 from plugins.utils import Backlight, Contrast
 from plugins.volume import Volume
@@ -17,7 +17,7 @@ import time
 
 # We want to use clock both as an option
 # and as the idle plugin
-clock = Clock()
+clock = Clock(backlight)
 
 """
 Using a set of nested dictionaries you can describe
@@ -30,7 +30,7 @@ A function name will call that function.
 menu = Menu({
     'Clock':clock,
     'Radio Stream':Radio(),
-    'Volume':Volume(),
+    'Volume':Volume(backlight),
     'Status': {
       'CPU':GraphCPU(),
       'Temp':GraphTemp()

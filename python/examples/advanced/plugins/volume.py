@@ -1,11 +1,11 @@
 from dot3k.menu import MenuOption
-import dot3k.backlight
 import subprocess, os, sys
 class Volume(MenuOption):
 
-  def __init__(self):
+  def __init__(self, backlight = None):
     MenuOption.__init__(self)
     self.volume = None
+    self.backlight = backlight
     self.actual_volume = 0
     self.last_update = 0
 
@@ -16,7 +16,8 @@ class Volume(MenuOption):
     self.actual_volume = self.get_volume()
   
   def left(self):
-    dot3k.backlight.set_graph(0)
+    if not self.backlight == None:
+      self.backlight.set_graph(0)
     return False
 
   def get_volume(self):
@@ -25,6 +26,11 @@ class Volume(MenuOption):
         return actual_volume.strip().decode('utf-8')
     else:
         return actual_volume.strip()
+
+
+  def cleanup(self):
+    if not self.backlight == None:
+      self.backlight.set_graph(0)
    
   def set_volume(self):
     self.set_option('Sound','volume',str(self.volume))
@@ -53,6 +59,7 @@ class Volume(MenuOption):
       self.actual_volume = self.get_volume()
       self.last_update = self.millis()
 
-      dot3k.backlight.set_graph(float(self.actual_volume)/100.0)
+      if not self.backlight == None:
+        self.backlight.set_graph(float(self.actual_volume)/100.0)
 
 

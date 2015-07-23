@@ -13,7 +13,7 @@ import time
 
 # We want to use clock both as an option
 # and as the idle plugin
-clock = Clock()
+clock = Clock(backlight)
 
 """
 Using a set of nested dictionaries you can describe
@@ -26,9 +26,9 @@ A function name will call that function.
 menu = Menu({
     'Clock':clock,
     'Radio Stream':Radio(),
-    'Volume':Volume(),
+    'Volume':Volume(backlight),
     'Status': {
-      'CPU':GraphCPU(),
+      'CPU':GraphCPU(backlight),
       'Temp':GraphTemp()
     },
     'Settings': {

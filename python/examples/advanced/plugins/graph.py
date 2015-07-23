@@ -1,7 +1,7 @@
 import os, math, psutil, subprocess, time
 import socket, fcntl, struct
 from dot3k.menu import MenuOption
-import dot3k.backlight
+#import dot3k.backlight
 
 def run_cmd(cmd):  
    p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)  
@@ -62,7 +62,8 @@ class GraphCPU(MenuOption):
   A simple "plug-in" example, this gets the CPU load
   and draws it to the LCD when active
   """
-  def __init__(self):
+  def __init__(self, backlight = None):
+    self.backlight = backlight
     self.cpu_samples = [0,0,0,0,0]
     self.last = self.millis()
     MenuOption.__init__(self)
@@ -82,10 +83,12 @@ class GraphCPU(MenuOption):
     menu.write_row(1, str(self.cpu_avg) + '%')
     menu.write_row(2, '#' * int(16*(self.cpu_avg/100.0)))
     
-    dot3k.backlight.set_graph(self.cpu_avg/100.0)
+    if not backlight == None:
+      self.backlight.set_graph(self.cpu_avg/100.0)
 
   def left(self):
-    dot3k.backlight.set_graph(0)
+    if not self.backlight == None:
+      self.backlight.set_graph(0)
     return False
 
 class GraphTemp(MenuOption):
