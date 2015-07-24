@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+import sys
+sys.path.append('../../')
+
 import dot3k.joystick as joystick
 import dot3k.lcd as lcd
 import dot3k.backlight as backlight

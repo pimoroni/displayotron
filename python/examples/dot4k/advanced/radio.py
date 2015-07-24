@@ -1,8 +1,12 @@
 #!/usr/bin/env python
 
-import dot3k.joystick as joystick
+# Include advanced so Python can find the plugins
+import sys
+sys.path.append("../../")
+
+import dot3k.captouch as captouch
 import dot3k.lcd as lcd
-import dot3k.backlight as backlight
+import dot3k.hatbacklight as backlight
 from dot3k.menu import Menu
 from plugins.utils import Backlight, Contrast
 from plugins.volume import Volume
@@ -10,6 +14,8 @@ from plugins.clock import Clock
 from plugins.radio import Radio
 from plugins.graph import GraphCPU, GraphTemp
 import time
+
+captouch.enable_repeat(True)
 
 # We want to use clock both as an option
 # and as the idle plugin
@@ -28,7 +34,7 @@ menu = Menu({
     'Radio Stream':Radio(),
     'Volume':Volume(backlight),
     'Status': {
-      'CPU':GraphCPU(backlight),
+      'CPU':GraphCPU(),
       'Temp':GraphTemp()
     },
     'Settings': {
@@ -41,37 +47,33 @@ menu = Menu({
   10     # Idle after 10 seconds
 )
 
+
 """
 You can use anything to control dot3k.menu,
-but you'll probably want to use dot3k.joystick
-
-Repeat delay determines how quickly holding the joystick
-in a direction will start to trigger repeats
+but you'll probably want to use dot3k.captouch
 """
-REPEAT_DELAY = 0.5
-
-@joystick.on(joystick.UP)
-def handle_up(pin):
+@captouch.on(captouch.UP)
+def handle_up(ch,evt):
   menu.up()
-  joystick.repeat(joystick.UP,menu.up,REPEAT_DELAY,0.9)
 
-@joystick.on(joystick.DOWN)
-def handle_down(pin):
+@captouch.on(captouch.CANCEL)
+def handle_cancel(ch,evt):
+  menu.cancel()
+
+@captouch.on(captouch.DOWN)
+def handle_down(ch,evt):
   menu.down()
-  joystick.repeat(joystick.DOWN,menu.down,REPEAT_DELAY,0.9)
 
-@joystick.on(joystick.LEFT)
-def handle_left(pin):
+@captouch.on(captouch.LEFT)
+def handle_left(ch,evt):
   menu.left()
-  joystick.repeat(joystick.LEFT,menu.left,REPEAT_DELAY,0.9)
 
-@joystick.on(joystick.RIGHT)
-def handle_right(pin):
+@captouch.on(captouch.RIGHT)
+def handle_right(ch,evt):
   menu.right()
-  joystick.repeat(joystick.RIGHT,menu.right,REPEAT_DELAY,0.9)
 
-@joystick.on(joystick.BUTTON)
-def handle_button(pin):
+@captouch.on(captouch.BUTTON)
+def handle_button(ch,evt):
   menu.select()
 
 while 1:

@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 
-# Include advanced so Python can find the plugins
 import sys
-sys.path.append("../advanced/")
+sys.path.append('../../')
 
-import dot3k.captouch as captouch
+import dot3k.joystick as joystick
 import dot3k.lcd as lcd
 import dot3k.backlight as backlight
 from dot3k.menu import Menu, MenuOption
@@ -70,31 +69,31 @@ menu = Menu({
 
 """
 You can use anything to control dot3k.menu,
-but you'll probably want to use dot3k.captouch
+but you'll probably want to use dot3k.joystick
 """
 REPEAT_DELAY = 0.5
-@captouch.on(captouch.UP)
-def handle_up(ch,evt):
+@joystick.on(joystick.UP)
+def handle_up(pin):
   menu.up()
+  joystick.repeat(joystick.UP,menu.up,REPEAT_DELAY,0.9)
 
-@captouch.on(captouch.CANCEL)
-def handle_cancel(ch,evt):
-  menu.cancel()
-
-@captouch.on(captouch.DOWN)
-def handle_down(ch,evt):
+@joystick.on(joystick.DOWN)
+def handle_down(pin):
   menu.down()
+  joystick.repeat(joystick.DOWN,menu.down,REPEAT_DELAY,0.9)
 
-@captouch.on(captouch.LEFT)
-def handle_left(ch,evt):
+@joystick.on(joystick.LEFT)
+def handle_left(pin):
   menu.left()
+  joystick.repeat(joystick.LEFT,menu.left,REPEAT_DELAY,0.9)
 
-@captouch.on(captouch.RIGHT)
-def handle_right(ch,evt):
+@joystick.on(joystick.RIGHT)
+def handle_right(pin):
   menu.right()
+  joystick.repeat(joystick.RIGHT,menu.right,REPEAT_DELAY,0.9)
 
-@captouch.on(captouch.BUTTON)
-def handle_button(ch,evt):
+@joystick.on(joystick.BUTTON)
+def handle_button(pin):
   menu.select()
 
 while 1:
