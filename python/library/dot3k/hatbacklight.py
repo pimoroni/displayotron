@@ -60,9 +60,9 @@ def set_graph(percentage):
     set_duty     = 0 # Value from 0 to 15
     for x in range(NUM_LEDS):
         if actual_value >= STEP_VALUE:
-            set_polarity |= 1 << x
+            set_polarity |= 1 << (NUM_LEDS-1-x)
         if actual_value < STEP_VALUE and actual_value > 0:
-            set_state |= 1 << x
+            set_state |= 1 << (NUM_LEDS-1-x)
             set_duty = actual_value << 4
         actual_value -= STEP_VALUE
     cap._write_byte(R_DIRECT_DUTY, set_duty)
