@@ -47,6 +47,6 @@ setup(name		= 'dot3k',
 	keywords	= 'Raspberry Pi ST7036 SN3218 LCD',
 	url		= 'http://www.pimoroni.com',
 	classifiers     = classifiers,
-	packages	= ['dot3k'],
+	packages	= ['dot3k','dothat'],
 	install_requires= ['st7036','sn3218']
 )

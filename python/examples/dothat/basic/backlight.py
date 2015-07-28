@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
-import dot3k.hatbacklight as backlight
-import dot3k.lcd as lcd
+import dothat.backlight as backlight
+import dothat.lcd as lcd
 import time
 import math
 

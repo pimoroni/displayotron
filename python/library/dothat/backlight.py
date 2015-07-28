@@ -2,15 +2,6 @@ import sn3218, colorsys, math
 import cap1xxx
 
 cap = cap1xxx.Cap1166(i2c_addr=0x2C, skip_init=True)
-#cap._write_byte(0x00, 0b00000000)
-#cap._write_byte(0x1f, 0b00010000)
-
-R_RAMPRATES   = 0x94 # Always 0b00000000 for 0ms/0ms
-R_MODE        = 0x81 # Always 0b00000000 for Direct
-R_MODE_2      = 0x82 # Always 0b00000000 for Direct
-R_DIRECT_DUTY = 0x93 # Always 0bXXXX0000 for XXXX = Brightness, 0000 = Min = Off
-R_POLARITY    = 0x73 # 1 for ON 0 for OFF
-R_STATE       = 0x74 # Always 0 except for brightness controlled LED
 
 NUM_LEDS      = 6
 STEP_VALUE    = 16
@@ -27,6 +18,10 @@ for x in range(0,18,3):
 
 sn3218.enable()
 
+graph_set_led_state    = cap.set_led_state
+graph_set_led_polarity = cap.set_led_polarity
+graph_set_led_duty     = cap.set_led_direct_duty
+
 def use_rbg():
     """
     Swaps the Green and Blue channels on the LED backlight
@@ -36,8 +31,8 @@ def use_rbg():
     pass
 
 def graph_off():
-    cap._write_byte(R_DIRECT_POLARITY, 0b00000000)
-    cap._write_byte(R_DIRECT_STATE, 0b00000000)
+    cap._write_byte(cap1xxx.R_LED_POLARITY,   0b00000000)
+    cap._write_byte(cap1xxx.R_LED_OUTPUT_CON, 0b00000000)
 
 def set_graph(percentage):
     """
@@ -49,9 +44,9 @@ def set_graph(percentage):
     Todo:
         Reimplement using CAP
     """
-    cap._write_byte(R_RAMPRATES, 0b00000000)
-    cap._write_byte(R_MODE,      0b00000000)
-    cap._write_byte(R_MODE_2,    0b00000000)
+    cap._write_byte(cap1xxx.R_LED_DIRECT_RAMP, 0b00000000)
+    cap._write_byte(cap1xxx.R_LED_BEHAVIOUR_1, 0b00000000)
+    cap._write_byte(cap1xxx.R_LED_BEHAVIOUR_2, 0b00000000)
 
     total_value = STEP_VALUE*NUM_LEDS
     actual_value = int(total_value * percentage)
@@ -65,9 +60,9 @@ def set_graph(percentage):
             set_state |= 1 << (NUM_LEDS-1-x)
             set_duty = actual_value << 4
         actual_value -= STEP_VALUE
-    cap._write_byte(R_DIRECT_DUTY, set_duty)
-    cap._write_byte(R_POLARITY,    set_polarity)
-    cap._write_byte(R_STATE,       set_state)
+    cap._write_byte(cap1xxx.R_LED_DIRECT_DUT, set_duty)
+    cap._write_byte(cap1xxx.R_LED_POLARITY,   set_polarity)
+    cap._write_byte(cap1xxx.R_LED_OUTPUT_CON, set_state)
 
 def set(index, value):
     """
@@ -77,7 +72,9 @@ def set(index, value):
         index (int): index of the LED from 0 to 18
         value (int): brightness value from 0 to 255
     """
-    leds[index] = value
+    index = index if isinstance(index, list) else [index]
+    for i in index:
+        leds[i] = value
     update()
 
 def set_bar(index, value):
@@ -171,8 +168,8 @@ def left_rgb( r, g, b ):
         g (int): green value between 0 and 255
         b (int): blue value between 0 and 255
     """
-    single_rgb(0, r, g, b)
-    single_rgb(1, r, g, b)
+    single_rgb(0, r, g, b, False)
+    single_rgb(1, r, g, b, False)
     update()
 
 def mid_rgb( r, g, b ):
@@ -184,8 +181,8 @@ def mid_rgb( r, g, b ):
         g (int): green value between 0 and 255
         b (int): blue value between 0 and 255
     """
-    single_rgb(2, r, g, b)
-    single_rgb(3, r, g, b)
+    single_rgb(2, r, g, b, False)
+    single_rgb(3, r, g, b, False)
     update()
 
 def right_rgb( r, g, b ):
@@ -197,16 +194,18 @@ def right_rgb( r, g, b ):
         g (int): green value between 0 and 255
         b (int): blue value between 0 and 255
     """
-    single_rgb(4, r, g, b)
-    single_rgb(5, r, g, b)
+    single_rgb(4, r, g, b, False)
+    single_rgb(5, r, g, b, False)
     update()
 
 
-def single_rgb( led, r, g, b ):
+def single_rgb( led, r, g, b, auto_update=True ):
     global leds
-    leds[led]   = b
-    leds[led+1] = g
-    leds[led+2] = r
+    leds[(led*3)]   = b
+    leds[(led*3)+1] = g
+    leds[(led*3)+2] = r
+    if auto_update:
+        update()
 
 def rgb( r, g, b ):
     """

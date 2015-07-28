@@ -13,13 +13,13 @@ The example file `basic/captouch.py` demonstrates how you can use the new `capto
 #### Import The Library
 
 ```python
-import dot3k.captouch
+import dothat.touch
 ```
 
 #### Enable/disable auto-repeat
 
 ```python
-dot3k.captouch.enable_repeat()
+dothat.touch.enable_repeat()
 ```
 
 #### Enable High-Sensitivity mode
@@ -27,7 +27,7 @@ dot3k.captouch.enable_repeat()
 Great for using the touch buttons through a lid:
 
 ```python
-dot3k.captouch.high_sensitivity()
+dothat.touch.high_sensitivity()
 ```
 
 #### Bind menu defaults
@@ -35,18 +35,18 @@ dot3k.captouch.high_sensitivity()
 Bind all the default actions to a `dot3k.menu` instance:
 
 ```python
-dot3k.captouch.bind_defaults(my_custom_menu)
+dothat.touch.bind_defaults(my_custom_menu)
 ```
 
 #### Bind a single action
 
 ```python
-@dot3k.captouch.on(dot3k.captouch.LEFT)
+@dothat.touch.on(dothat.touch.LEFT)
 def handle_left(channel, event):
     print("Left Pressed!")
 ```
 
-`channel` will be a number from 0 to 5 corresponding to `dot3k.captouch.LEFT/UP/DOWN/etc`
+`channel` will be a number from 0 to 5 corresponding to `dothat.touch.LEFT/UP/DOWN/etc`
 
 `event` will either be `press` or `held` depending on whether an initial touch has been detected, or a continuous hold.
 
@@ -61,7 +61,7 @@ The methods `left_rgb`, `mid_rgb` and `right_rgb` still work, however they each 
 #### Import The Library
 
 ```python
-import dot3k.hatbacklight
+import dothat.backlight
 ```
 
 #### Set a single RGB LED
@@ -69,7 +69,7 @@ import dot3k.hatbacklight
 Set a single channel to an RGB colour of your choice:
 
 ```python
-dot3k.hatbacklight.single_rgb(channel, r, g, b)
+dothat.backlight.single_rgb(channel, r, g, b)
 ```
 
 `channel` should be a number between 0 and 5, where 0 is the left-most RGB LEd and 5 is the right-most.
@@ -81,7 +81,7 @@ dot3k.hatbacklight.single_rgb(channel, r, g, b)
 Set all channels to the same RGB colour:
 
 ```python
-dot3k.hatbacklight.rgb(r,g,b)
+dothat.backlight.rgb(r,g,b)
 ```
 
 Again, `r`, `g`, and `b` should be numbers between 0 and 255. `255,0,255` would be a lovely purple!
@@ -89,13 +89,13 @@ Again, `r`, `g`, and `b` should be numbers between 0 and 255. `255,0,255` would 
 #### Turn all LEDS off
 
 ```python
-dot3k.hatbacklight.off()
+dothat.backlight.off()
 ```
 
 #### Display a percentage on the 6-LED graph
 
 ```python
-dot3k.hatbacklight.set_graph(0.5) # 50%
+dothat.backlight.set_graph(0.5) # 50%
 ```
 
 Pass a number between 0 and 1 to set all the graph LEDs either on, off, or somewhere in between.
@@ -103,7 +103,7 @@ Pass a number between 0 and 1 to set all the graph LEDs either on, off, or somew
 #### Set a single LED
 
 ```python
-dot3k.hatbacklight.set(channel, brightness)
+dothat.backlight.set(channel, brightness)
 ```
 
 `channel` should be a value from 0 to 18. The LED channels go in the order: `bgrbgrbgrbgrbgrbgr`

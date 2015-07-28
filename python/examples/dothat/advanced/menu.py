@@ -4,9 +4,9 @@
 import sys
 sys.path.append("../../")
 
-import dot3k.captouch as captouch
-import dot3k.lcd as lcd
-import dot3k.hatbacklight as backlight
+import dothat.touch as touch
+import dothat.lcd as lcd
+import dothat.backlight as backlight
 from dot3k.menu import Menu, MenuOption
 from plugins.utils import Backlight, Contrast
 from plugins.graph import IPAddress, GraphTemp, GraphCPU, GraphNetSpeed
@@ -72,7 +72,7 @@ menu = Menu({
 You can use anything to control dot3k.menu,
 but you'll probably want to use dot3k.captouch
 """
-captouch.bind_defaults(menu)
+touch.bind_defaults(menu)
 
 while 1:
   menu.redraw()

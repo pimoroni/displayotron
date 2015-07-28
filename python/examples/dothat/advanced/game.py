@@ -5,14 +5,14 @@ import sys
 sys.path.append("../../")
 
 # Import the dot3k libraries
-import dot3k.lcd as lcd
+import dothat.lcd as lcd
 from dot3k.menu import Menu
 
 # Use "captouch" for dot4k
-import dot3k.captouch as captouch
+import dothat.touch as touch
 
 # Use "hatbacklight" for dot4k
-import dot3k.hatbacklight as backlight
+import dothat.backlight as backlight
 
 # Import some plugins
 from plugins.utils import Backlight, Contrast
@@ -33,7 +33,7 @@ menu = Menu({
   lcd)
 
 # Hook captouch into menu with default settings
-captouch.bind_defaults(menu)
+touch.bind_defaults(menu)
 
 # Start the menu redraw loop
 menu.run()

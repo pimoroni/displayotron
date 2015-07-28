@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-import dot3k.captouch as j
-import dot3k.lcd as l
-import dot3k.backlight as b
+import dothat.touch as j
+import dothat.lcd as l
+import dothat.backlight as b
 import signal
 
 """

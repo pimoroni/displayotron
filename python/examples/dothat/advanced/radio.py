@@ -4,9 +4,9 @@
 import sys
 sys.path.append("../../")
 
-import dot3k.captouch as captouch
-import dot3k.lcd as lcd
-import dot3k.hatbacklight as backlight
+import dothat.touch as touch
+import dothat.lcd as lcd
+import dothat.backlight as backlight
 from dot3k.menu import Menu
 from plugins.utils import Backlight, Contrast
 from plugins.volume import Volume
@@ -15,7 +15,7 @@ from plugins.radio import Radio
 from plugins.graph import GraphCPU, GraphTemp
 import time
 
-captouch.enable_repeat(True)
+touch.enable_repeat(True)
 
 # We want to use clock both as an option
 # and as the idle plugin
@@ -50,29 +50,29 @@ menu = Menu({
 
 """
 You can use anything to control dot3k.menu,
-but you'll probably want to use dot3k.captouch
+but you'll probably want to use dot3k.touch
 """
-@captouch.on(captouch.UP)
+@touch.on(touch.UP)
 def handle_up(ch,evt):
   menu.up()
 
-@captouch.on(captouch.CANCEL)
+@touch.on(touch.CANCEL)
 def handle_cancel(ch,evt):
   menu.cancel()
 
-@captouch.on(captouch.DOWN)
+@touch.on(touch.DOWN)
 def handle_down(ch,evt):
   menu.down()
 
-@captouch.on(captouch.LEFT)
+@touch.on(touch.LEFT)
 def handle_left(ch,evt):
   menu.left()
 
-@captouch.on(captouch.RIGHT)
+@touch.on(touch.RIGHT)
 def handle_right(ch,evt):
   menu.right()
 
-@captouch.on(captouch.BUTTON)
+@touch.on(touch.BUTTON)
 def handle_button(ch,evt):
   menu.select()
 
