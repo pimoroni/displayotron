@@ -10,6 +10,8 @@ BUTTON = 4
 CANCEL = 0
 
 _cap1166 = Cap1166(i2c_addr=I2C_ADDR)
+_cap1166._write_byte(0x26, 0b00111111) # Force recalibration
+
 for x in range(6):
     _cap1166.set_led_linking(x,False)
 
