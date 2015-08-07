@@ -83,7 +83,7 @@ class GraphCPU(MenuOption):
     menu.write_row(1, str(self.cpu_avg) + '%')
     menu.write_row(2, '#' * int(16*(self.cpu_avg/100.0)))
     
-    if not backlight == None:
+    if not self.backlight == None:
       self.backlight.set_graph(self.cpu_avg/100.0)
 
   def left(self):
