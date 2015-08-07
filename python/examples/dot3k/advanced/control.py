@@ -9,6 +9,10 @@ If you've got a Rii keyboard, plug it in and give this a whirl!
 """
 print("To use this example you need a Rii keyboard plugged into USB!")
 
+
+import sys
+sys.path.append('../../')
+
 import dot3k.lcd as lcd
 import dot3k.backlight as backlight
 import dot3k.joystick as joystick

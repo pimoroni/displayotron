@@ -16,7 +16,7 @@ EDIT_EXIT   = 2
 
 class Volume(MenuOption):
 
-  def __init__(self):
+  def __init__(self, backlight = None):
     MenuOption.__init__(self)
     self.output_options = {
                            MODE_AUTO: 'Auto',
@@ -25,6 +25,7 @@ class Volume(MenuOption):
                           }
     self.output_mode = -1
     self.volume = None
+    self.backlight = backlight
     self.actual_volume = 0
     self.last_update = 0
     self.edit_mode = EDIT_VOLUME
@@ -57,6 +58,10 @@ class Volume(MenuOption):
     #dot3k.backlight.set_graph(0)
     self.edit_mode += 1
     self.edit_mode %= 3
+
+  def left(self):
+    if not self.backlight == None:
+      self.backlight.set_graph(0)
     return False
 
   def up(self):
@@ -78,6 +83,11 @@ class Volume(MenuOption):
         return actual_volume.strip().decode('utf-8')
     else:
         return actual_volume.strip()
+
+
+  def cleanup(self):
+    if not self.backlight == None:
+      self.backlight.set_graph(0)
    
   def set_volume(self):
     self.set_option('Sound','volume',str(self.volume))
@@ -134,6 +144,6 @@ class Volume(MenuOption):
       self.actual_volume = self.get_volume()
       self.last_update = self.millis()
 
-      dot3k.backlight.set_graph(float(self.actual_volume)/100.0)
-
+      if not self.backlight == None:
+        self.backlight.set_graph(float(self.actual_volume)/100.0)
 

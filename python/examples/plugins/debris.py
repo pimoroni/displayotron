@@ -1,9 +1,14 @@
 from dot3k.menu import MenuOption
-import dot3k.backlight
+#import dot3k.backlight
 import random, time
 
 class Debris(MenuOption):
-  def __init__(self):
+  def __init__(self, backlight = None):
+    if backlight == None:
+        import dot3k.backlight
+        self.backlight = dot3k.backlight
+    else:
+        self.backlight = backlight
     self.debug = False
     self.star_seed = 'thestarsmydestination'
     self.debris_seed = 'piratemonkeyrobotninja'
@@ -42,7 +47,7 @@ class Debris(MenuOption):
   def begin(self):
     self.running = False
     self.reset()
-    dot3k.backlight.hue(0.0)
+    self.backlight.hue(0.0)
 
   def reset(self):
     self.player_x = 1
@@ -75,7 +80,7 @@ class Debris(MenuOption):
       r = int(self.get_option('Backlight','r'))
       g = int(self.get_option('Backlight','g'))
       b = int(self.get_option('Backlight','b'))
-      dot3k.backlight.rgb(r,g,b)
+      self.backlight.rgb(r,g,b)
       return False
     self.player_x -= 1
     if self.player_x < 0:
@@ -120,7 +125,7 @@ class Debris(MenuOption):
         menu.lcd.set_cursor_position(5,1)
         menu.lcd.write('  0' + str(3-x) + '! ')
         time.sleep(0.5)
-      dot3k.backlight.hue(0.5)
+      self.backlight.hue(0.5)
       self.time_start = self.millis()
  
     # Move all stars left
@@ -174,7 +179,7 @@ class Debris(MenuOption):
       self.last_update = self.millis()
 
     game_time = str(int((self.millis()-self.time_start)/1000)).zfill(3)
-    dot3k.backlight.sweep(((self.millis()-self.time_start)/500 % 360)/359.0)
+    self.backlight.sweep(((self.millis()-self.time_start)/500 % 360)/359.0)
 
     buffer = []
     for i in range(3):

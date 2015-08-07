@@ -3,8 +3,12 @@
 This example uses automation to advance through each
 menu item in Dot3k.
 
+<<<<<<< HEAD:python/examples/advanced/automenu.py
 It doesn't accept any user input.
 '''
+import sys
+sys.path.append('../../')
+
 import dot3k.joystick as joystick
 import dot3k.lcd as lcd
 import dot3k.backlight as backlight

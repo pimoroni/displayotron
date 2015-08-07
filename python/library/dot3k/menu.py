@@ -1,5 +1,6 @@
 import time, os, atexit, sys
 from collections import OrderedDict
+import threading
 
 if sys.version_info[0] >= 3:
     import configparser as ConfigParser
@@ -25,6 +26,34 @@ class MenuIcon():
   bar_full         = [0,31,0,31,31,0,31,0]
   bar_empty        = [0,32,0,0,0,0,32,0]
   
+class StoppableThread(threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
+        self.stop_event = threading.Event()
+        self.daemon = True         
+
+    def start(self):
+        if self.isAlive() == False:
+            self.stop_event.clear()
+            threading.Thread.start(self)
+
+    def stop(self):
+        if self.isAlive() == True:
+            # set event to signal thread to terminate
+            self.stop_event.set()
+            # block calling thread until thread really has terminated
+            self.join()
+
+class AsyncWorker(StoppableThread):
+    def __init__(self, todo):
+        StoppableThread.__init__(self)
+        self.todo = todo
+
+    def run(self):
+        while self.stop_event.is_set() == False:
+            if self.todo() == False:
+                self.stop_event.set()
+                break
 
 class Menu():
   """
@@ -85,8 +114,19 @@ class Menu():
       self._setup_menu(self.menu_options)
    
     self.last_action = self.millis()
-
+    self._thread = AsyncWorker(self._update)
     atexit.register(self.save)
+
+  def run(self):
+    self._thread.start()
+    atexit.register(self.stop)
+
+  def stop(self):
+    self._thread.stop()
+
+  def _update(self):
+    self.redraw()
+    time.sleep(0.05)
 
   def millis(self):
     return int(round(time.time() * 1000))
@@ -311,13 +351,13 @@ class Menu():
 
   def clear_row(self,row):
     self.lcd.set_cursor_position(0,row)
-    self.lcd.write(' '*16)
+    self.lcd.write(' '*self.lcd.COLS)
   
   def write_row(self,row,text):
     self.lcd.set_cursor_position(0,row)
-    while len(text) < 16:
+    while len(text) < self.lcd.COLS:
       text += ' '
-    self.lcd.write(text[0:16])
+    self.lcd.write(text[0:self.lcd.COLS])
 
   #def write_option(self,row,text,icon=' ',margin=1):
   def write_option(self, *args, **kwargs):

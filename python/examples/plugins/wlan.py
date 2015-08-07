@@ -3,17 +3,18 @@ Plugin for managing connections to wifi networks
 """
 
 from dot3k.menu import MenuOption
-import dot3k.backlight
 import wifi, threading
 
 
 class Wlan(MenuOption):
-  def __init__(self):
+  def __init__(self, backlight=None):
     self.items = []
 
     self.selected_item = 0
 
     self.scanning = False
+
+    self.backlight = backlight
 
     MenuOption.__init__(self)
     
@@ -29,6 +30,8 @@ class Wlan(MenuOption):
     pass
 
   def cleanup(self):
+    if not self.backlight == None:
+      self.backlight.set_graph(0)
     self.is_setup = False
   
   def select(self):
@@ -98,7 +101,8 @@ class Wlan(MenuOption):
       signal = float(item.quality.split('/')[0])
       noise = float(item.quality.split('/')[1])
 
-      dot3k.backlight.set_graph(signal/noise)
+      if not self.backlight == None:
+          self.backlight.set_graph(signal/noise)
 
     else:
       menu.clear_row(0)

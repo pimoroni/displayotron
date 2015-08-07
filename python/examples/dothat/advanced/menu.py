@@ -1,13 +1,16 @@
 #!/usr/bin/env python
 
-import dot3k.joystick as joystick
-import dot3k.lcd as lcd
-import dot3k.backlight as backlight
+# Include advanced so Python can find the plugins
+import sys
+sys.path.append("../../")
+
+import dothat.touch as touch
+import dothat.lcd as lcd
+import dothat.backlight as backlight
 from dot3k.menu import Menu, MenuOption
 from plugins.utils import Backlight, Contrast
 from plugins.graph import IPAddress, GraphTemp, GraphCPU, GraphNetSpeed
 from plugins.clock import Clock
-from plugins.volume import Volume
 from plugins.wlan import Wlan
 import time
 
@@ -48,14 +51,13 @@ my_invader = SpaceInvader()
 
 menu = Menu({
     'Space Invader':my_invader,
-    'Clock':Clock(),
+    'Clock':Clock(backlight),
     'Status': {
       'IP':IPAddress(),
-      'CPU':GraphCPU(),
+      'CPU':GraphCPU(backlight),
       'Temp':GraphTemp()
     },
     'Settings': {
-      'Volume': Volume(),
       'Display': {
         'Contrast':Contrast(lcd),
         'Backlight':Backlight(backlight)
@@ -68,32 +70,9 @@ menu = Menu({
 
 """
 You can use anything to control dot3k.menu,
-but you'll probably want to use dot3k.joystick
+but you'll probably want to use dot3k.captouch
 """
-REPEAT_DELAY = 0.5
-@joystick.on(joystick.UP)
-def handle_up(pin):
-  menu.up()
-  joystick.repeat(joystick.UP,menu.up,REPEAT_DELAY,0.9)
-
-@joystick.on(joystick.DOWN)
-def handle_down(pin):
-  menu.down()
-  joystick.repeat(joystick.DOWN,menu.down,REPEAT_DELAY,0.9)
-
-@joystick.on(joystick.LEFT)
-def handle_left(pin):
-  menu.left()
-  joystick.repeat(joystick.LEFT,menu.left,REPEAT_DELAY,0.9)
-
-@joystick.on(joystick.RIGHT)
-def handle_right(pin):
-  menu.right()
-  joystick.repeat(joystick.RIGHT,menu.right,REPEAT_DELAY,0.9)
-
-@joystick.on(joystick.BUTTON)
-def handle_button(pin):
-  menu.select()
+touch.bind_defaults(menu)
 
 while 1:
   menu.redraw()

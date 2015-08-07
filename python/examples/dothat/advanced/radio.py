@@ -1,8 +1,12 @@
 #!/usr/bin/env python
 
-import dot3k.joystick as joystick
-import dot3k.lcd as lcd
-import dot3k.backlight as backlight
+# Include advanced so Python can find the plugins
+import sys
+sys.path.append("../../")
+
+import dothat.touch as touch
+import dothat.lcd as lcd
+import dothat.backlight as backlight
 from dot3k.menu import Menu
 from plugins.utils import Backlight, Contrast
 from plugins.volume import Volume
@@ -11,9 +15,11 @@ from plugins.radio import Radio
 from plugins.graph import GraphCPU, GraphTemp
 import time
 
+touch.enable_repeat(True)
+
 # We want to use clock both as an option
 # and as the idle plugin
-clock = Clock()
+clock = Clock(backlight)
 
 """
 Using a set of nested dictionaries you can describe
@@ -26,7 +32,7 @@ A function name will call that function.
 menu = Menu({
     'Clock':clock,
     'Radio Stream':Radio(),
-    'Volume':Volume(),
+    'Volume':Volume(backlight),
     'Status': {
       'CPU':GraphCPU(),
       'Temp':GraphTemp()
@@ -41,37 +47,33 @@ menu = Menu({
   10     # Idle after 10 seconds
 )
 
+
 """
 You can use anything to control dot3k.menu,
-but you'll probably want to use dot3k.joystick
-
-Repeat delay determines how quickly holding the joystick
-in a direction will start to trigger repeats
+but you'll probably want to use dot3k.touch
 """
-REPEAT_DELAY = 0.5
-
-@joystick.on(joystick.UP)
-def handle_up(pin):
+@touch.on(touch.UP)
+def handle_up(ch,evt):
   menu.up()
-  joystick.repeat(joystick.UP,menu.up,REPEAT_DELAY,0.9)
 
-@joystick.on(joystick.DOWN)
-def handle_down(pin):
+@touch.on(touch.CANCEL)
+def handle_cancel(ch,evt):
+  menu.cancel()
+
+@touch.on(touch.DOWN)
+def handle_down(ch,evt):
   menu.down()
-  joystick.repeat(joystick.DOWN,menu.down,REPEAT_DELAY,0.9)
 
-@joystick.on(joystick.LEFT)
-def handle_left(pin):
+@touch.on(touch.LEFT)
+def handle_left(ch,evt):
   menu.left()
-  joystick.repeat(joystick.LEFT,menu.left,REPEAT_DELAY,0.9)
 
-@joystick.on(joystick.RIGHT)
-def handle_right(pin):
+@touch.on(touch.RIGHT)
+def handle_right(ch,evt):
   menu.right()
-  joystick.repeat(joystick.RIGHT,menu.right,REPEAT_DELAY,0.9)
 
-@joystick.on(joystick.BUTTON)
-def handle_button(pin):
+@touch.on(touch.BUTTON)
+def handle_button(ch,evt):
   menu.select()
 
 while 1:
