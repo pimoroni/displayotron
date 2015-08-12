@@ -38,9 +38,10 @@ class Backlight(MenuOption):
     self.backlight.rgb(self.r,self.g,self.b)
 
   def setup_icons(self, menu):
-    menu.lcd.create_char(0,MenuIcon.arrow_left_right)
-    menu.lcd.create_char(1,MenuIcon.arrow_up_down)
-    menu.lcd.create_char(2,MenuIcon.arrow_left)
+    menu_icon = MenuIcon()
+    menu.lcd.create_char(0,menu_icon.arrow_left_right)
+    menu.lcd.create_char(1,menu_icon.arrow_up_down)
+    menu.lcd.create_char(2,menu_icon.arrow_left)
     self._icons_setup = True
 
   def update_bl(self):
@@ -209,9 +210,10 @@ class Contrast(MenuOption):
     return True
 
   def setup_icons(self, menu):
-    menu.lcd.create_char(0,MenuIcon.arrow_left_right)
-    menu.lcd.create_char(1,MenuIcon.arrow_up_down)
-    menu.lcd.create_char(2,MenuIcon.arrow_left)
+    menu_icon = MenuIcon()
+    menu.lcd.create_char(0,menu_icon.arrow_left_right)
+    menu.lcd.create_char(1,menu_icon.arrow_up_down)
+    menu.lcd.create_char(2,menu_icon.arrow_left)
     self._icons_setup = True
 
   def cleanup(self):

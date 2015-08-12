@@ -40,14 +40,15 @@ class Volume(MenuOption):
     self.output_mode = self.get_mode()
   
   def setup_icons(self, menu):
-    menu.lcd.create_char(0,MenuIcon.arrow_left_right) # Left/right arrow
-    menu.lcd.create_char(1,MenuIcon.arrow_up_down)  # Up/Down arrow
-    menu.lcd.create_char(2,MenuIcon.back)
-    menu.lcd.create_char(3,MenuIcon.arrow_left)
-    menu.lcd.create_char(4,MenuIcon.bar_left)
-    menu.lcd.create_char(5,MenuIcon.bar_right)
-    menu.lcd.create_char(6,MenuIcon.bar_full)
-    menu.lcd.create_char(7,MenuIcon.bar_empty)
+    menu_icon = MenuIcon()
+    menu.lcd.create_char(0,menu_icon.arrow_left_right) # Left/right arrow
+    menu.lcd.create_char(1,menu_icon.arrow_up_down)  # Up/Down arrow
+    menu.lcd.create_char(2,menu_icon.back)
+    menu.lcd.create_char(3,menu_icon.arrow_left)
+    menu.lcd.create_char(4,menu_icon.bar_left)
+    menu.lcd.create_char(5,menu_icon.bar_right)
+    menu.lcd.create_char(6,menu_icon.bar_full)
+    menu.lcd.create_char(7,menu_icon.bar_empty)
     self._icons_setup = True
 
   def cleanup(self):
