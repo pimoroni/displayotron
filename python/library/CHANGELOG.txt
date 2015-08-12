@@ -1,6 +1,18 @@
 Changelog
 ---------
 
+2.0.1
+-----
+
+* Now handles reset pin for Display-o-Tron HAT
+* Added cap1xxx as a dependency
+
+2.0.0
+-----
+
+* Added support for Display-o-Tron HAT
+* Misc fixes and improvements
+
 1.9.0
 -----
 

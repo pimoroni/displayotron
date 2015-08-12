@@ -38,7 +38,7 @@ classifiers = ['Development Status :: 5 - Production/Stable',
                'Topic :: System :: Hardware']
 
 setup(name		= 'dot3k',
-	version		= '1.9.0',
+	version		= '2.0.1',
 	author		= 'Philip Howard',
 	author_email	= 'phil@pimoroni.com',
 	description	= 'Display-o-Tron 3000 Driver',
@@ -48,5 +48,5 @@ setup(name		= 'dot3k',
 	url		= 'http://www.pimoroni.com',
 	classifiers     = classifiers,
 	packages	= ['dot3k','dothat'],
-	install_requires= ['st7036','sn3218']
+	install_requires= ['st7036','sn3218','cap1xxx']
 )
