@@ -17,6 +17,10 @@ If you choose to download examples you'll find them in `~/Pimoroni/dot3k`, but y
 
 We've also created a full [function reference](python/REFERENCE.md).
 
+##Other Languages
+
+* NodeJS: https://github.com/jorisvervuurt/JVSDisplayOTron
+
 ##Resources
 
 * http://www.lcd-module.com/eng/pdf/doma/dog-me.pdf - DOG LCD Datasheet ( Includes character table )
