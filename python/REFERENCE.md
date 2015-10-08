@@ -187,3 +187,60 @@ backlight.set_graph(value)
 Lights a number of bargraph LEDs depending upon value
 
 * value (float): percentage between 0.0 and 1.0
+
+##Touch
+
+For Display-o-Tron HAT only:
+
+```python
+import dothat.touch as touch
+```
+
+###Constants
+
+Constants are defined for all the buttons, giving them friendly names like so:
+
+```python
+touch.UP
+touch.DOWN
+touch.LEFT
+touch.RIGHT
+touch.BUTTON
+touch.CANCEL
+```
+
+###Methods
+
+```python
+touch.high_sensitivity()
+```
+
+Call once to enable high sensitivty mode.
+
+```python
+touch.enable_repeat(enable)
+```
+
+Pass true to enable repeat events (held buttons will re-trigger).
+
+* enable (boolean): enable or disable repeat
+
+```python
+touch.on(buttons, bounce=1)
+```
+
+Used as a decorator to bind a function to a particular button, you should generally use it like so:
+
+```
+@touch.on(touch.LEFT)
+def touch_left(channel, event):
+    print(channel, event)
+```
+
+* buttons - list of, or single, button constant, one of: touch.UP, touch.DOWN, ... etc
+
+```python
+touch.bind_defaults(menu)
+```
+
+Pass an instance of a dot3k.menu class to bind all the default functions automatically for each button. This is much neater than creating your own button handlers. Binds Up, Down, Left, Right, Menu and Cancel.
