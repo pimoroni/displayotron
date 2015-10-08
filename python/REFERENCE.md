@@ -2,8 +2,22 @@
 
 ##LCD
 
+For Display-o-Tron HAT:
+
 ```python
-write(value)
+import dothat.lcd as lcd
+```
+
+For Display-o-Tron 3000:
+
+```python
+import dot3k.lcd as lcd
+```
+
+###Methods
+
+```python
+lcd.write(value)
 ```
 Writes a string to the LCD at the current cursor position.
 
@@ -12,12 +26,12 @@ You can use chr(0) to chr(7) to place custom characters and animations.
 * value (string): The string to write
 
 ```python
-clear()
+lcd.clear()
 ```
 Clears the display
 
 ```python
-set_contrast(contrast)
+lcd.set_contrast(contrast)
 ```
 Sets the display contrast
 
@@ -25,7 +39,7 @@ Sets the display contrast
 * Must be in the range 0 to 63
 
 ```python
-set_cursor_position(column, row)
+lcd.set_cursor_position(column, row)
 ```
 Sets the cursor position to column,row
 
@@ -33,7 +47,7 @@ Sets the cursor position to column,row
 * row (int): row ( vertical ) position from 0 to 2
 
 ```python
-create_char(char_pos, char_map)
+lcd.create_char(char_pos, char_map)
 ```
 Create a custom character and save into dot3k memory.
 
@@ -41,7 +55,7 @@ Create a custom character and save into dot3k memory.
 * char_map (list): LIst of 8, 8-bit integers describing the character
 
 ```python
-create_animation(anim_pos, anim_map, frame_rate):
+lcd.create_animation(anim_pos, anim_map, frame_rate):
 ```
 Create a custom animation. These are saved in the same memory locations as characters and will overwrite a slot used by create_char.
 
@@ -50,70 +64,84 @@ Create a custom animation. These are saved in the same memory locations as chara
 * frame_rate (int): Animation speed in FPS
 
 ```python
-update_animations()
+lcd.update_animations()
 ```
 Advances all animations by one frame- this updates the character corresponding to each animation with the correct frame.
 
 ##Backlight
 
-```python
-use_rbg()
-```
-Changes the backlight driver to RBG mode ( instead of RGB ) for early Display-o-Tron boards with reversed B/G channels. Call once after importing dot3k.backlight.
+For Display-o-Tron HAT:
 
 ```python
-hue(hue)
+import dothat.backlight as backlight
+```
+
+For Display-o-Tron 3000:
+
+```python
+import dot3k.backlight as backlight
+```
+
+###Methods
+
+```python
+backlight.use_rbg()
+```
+Applies to the Dot3k only. Changes the backlight driver to RBG mode ( instead of RGB ) for early Display-o-Tron boards with reversed B/G channels. Call once after importing dot3k.backlight.
+
+```python
+backlight.hue(hue)
 ```
 Sets the backlight LEDs to supplied hue
 
 * hue (float): hue value between 0.0 and 1.0
 
 ```python
-hue_to_rgb(hue)
+backlight.hue_to_rgb(hue)
 ```
 Converts a hue to RGB brightness values
 
 * hue (float): hue value between 0.0 and 1.0
 
 ```python
-left_hue(hue)
+backlight.left_hue(hue)
 ```
 Set the left backlight to supplied hue
 
 * hue (float): hue value between 0.0 and 1.0
 
 ```python
-left_rgb(r, g, b)
+backlight.left_rgb(r, g, b)
 ```
-Set the left backlight to supplied r, g, b colour
+Set the left backlight to supplied r, g, b colour. Will set the left-most two LEDs on DotHAT.
 
 * r (int): red value between 0 and 255
 * g (int): green value between 0 and 255
 * b (int): blue value between 0 and 255
 
 ```python
-mid_hue(hue)
+backlight.mid_hue(hue)
 ```
-Set the middle backlight to supplied hue
+Set the middle backlight to supplied hue. Will set the middle two LEDs on DotHAT.
 
 * hue (float): hue value between 0.0 and 1.0
 
 ```python
-mid_rgb(r, g, b)
+backlight.mid_rgb(r, g, b)
 ```
-Set the middle backlight to supplied r, g, b colour
+Set the middle backlight to supplied r, g, b colour. Will set the right-most two LEDs on DotHAT.
 
 * r (int): red value between 0 and 255
 * g (int): green value between 0 and 255
 * b (int): blue value between 0 and 255
 
 ```python
-off()
+backlight.off()
 ```
 Turns off the backlight.
 
 ```python
-rgb(r, g, b)
+backlight.rgb(r, g, b)
 ```
 Sets all backlights to supplied r, g, b colour
 
@@ -122,14 +150,14 @@ Sets all backlights to supplied r, g, b colour
 * b (int): blue value between 0 and 255
 
 ```python
-right_hue(hue)
+backlight.right_hue(hue)
 ```
 Set the right backlight to supplied hue
 
 * hue (float): hue value between 0.0 and 1.0
 
 ```python
-right_rgb(r, g, b)
+backlight.right_rgb(r, g, b)
 ```
 Set the right backlight to supplied r, g, b colour
 
@@ -138,7 +166,7 @@ Set the right backlight to supplied r, g, b colour
 * b (int): blue value between 0 and 255
 
 ```python
-set(index, value)
+backlight.set(index, value)
 ```
 Set a specific LED to a value
 
@@ -146,7 +174,7 @@ Set a specific LED to a value
 * value (int): brightness value from 0 to 255
 
 ```python
-set_bar(index, value)
+backlight.set_bar(index, value)
 ```
 Set a value or values to one or more LEDs
 
@@ -154,7 +182,7 @@ Set a value or values to one or more LEDs
 * value (int or list): a single int, or list of brightness values from 0 to 255
 
 ```python
-set_graph(value)
+backlight.set_graph(value)
 ```
 Lights a number of bargraph LEDs depending upon value
 
