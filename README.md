@@ -1,13 +1,13 @@
 ![Display-o-Tron 3000](display-o-tron-logo.png)
 
-Library and examples for the Display-o-tron Raspberry Pi add-on board from Pimoroni
+Library and examples for the Display-o-Tron 3000 and Display-o-Tron HAT Raspberry Pi add-on boards from Pimoroni
 
-Available from Pimoroni: http://shop.pimoroni.com/products/displayotron-3000
-
+* Display-o-Tron 3000 ( for all Pi models ): http://shop.pimoroni.com/products/displayotron-3000
+* Display-o-Tron HAT ( for A+, B+ and Pi 2 ): https://shop.pimoroni.com/products/display-o-tron-hat
 
 ##Using python?
 
-We've created a super-easy installation script that will install all pre-requisites and get your Dot3k up and running in a jiffy. To run it fire up Terminal which you'll find in Menu -> Accessories -> Terminal on your Raspberry Pi desktop like so:
+We've created a super-easy installation script that will install all pre-requisites and get your Display-o-Tron up and running in a jiffy. To run it fire up Terminal which you'll find in Menu -> Accessories -> Terminal on your Raspberry Pi desktop like so:
 
 ![Finding the terminal](terminal.jpg)
 
