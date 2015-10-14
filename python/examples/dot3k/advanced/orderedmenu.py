@@ -6,6 +6,10 @@ It gives you an example of a menu created with a specific order.
 Press CTRL+C to exit.
 """)
 
+import sys
+
+sys.path.append("../../")
+
 import dot3k.joystick as joystick
 import dot3k.lcd as lcd
 import dot3k.backlight as backlight
