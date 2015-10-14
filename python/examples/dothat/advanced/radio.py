@@ -1,7 +1,14 @@
 #!/usr/bin/env python
+print("""
+This advanced example uses the menu framework.
+Providing you have VLC and extra dependencies installed, it should function as an internet radio!
+
+Press CTRL+C to exit.
+""")
 
 # Include advanced so Python can find the plugins
 import sys
+
 sys.path.append("../../")
 
 import dothat.touch as touch
@@ -30,53 +37,60 @@ An instance of a plugin class ( derived from MenuOption ) can be used for things
 A function name will call that function.
 """
 menu = Menu({
-    'Clock':clock,
-    'Radio Stream':Radio(),
-    'Volume':Volume(backlight),
-    'Status': {
-      'CPU':GraphCPU(),
-      'Temp':GraphTemp()
+        'Clock': clock,
+        'Radio Stream': Radio(),
+        'Volume': Volume(backlight),
+        'Status': {
+            'CPU': GraphCPU(),
+            'Temp': GraphTemp()
+        },
+        'Settings': {
+            'Contrast': Contrast(lcd),
+            'Backlight': Backlight(backlight)
+        }
     },
-    'Settings': {
-      'Contrast':Contrast(lcd),
-      'Backlight':Backlight(backlight)
-    }
-  },
-  lcd,   # Draw to dot3k.lcd
-  clock, # Idle with the clock plugin,
-  10     # Idle after 10 seconds
+    lcd,  # Draw to dot3k.lcd
+    clock,  # Idle with the clock plugin,
+    10  # Idle after 10 seconds
 )
-
 
 """
 You can use anything to control dot3k.menu,
 but you'll probably want to use dot3k.touch
 """
+
+
 @touch.on(touch.UP)
-def handle_up(ch,evt):
-  menu.up()
+def handle_up(ch, evt):
+    menu.up()
+
 
 @touch.on(touch.CANCEL)
-def handle_cancel(ch,evt):
-  menu.cancel()
+def handle_cancel(ch, evt):
+    menu.cancel()
+
 
 @touch.on(touch.DOWN)
-def handle_down(ch,evt):
-  menu.down()
+def handle_down(ch, evt):
+    menu.down()
+
 
 @touch.on(touch.LEFT)
-def handle_left(ch,evt):
-  menu.left()
+def handle_left(ch, evt):
+    menu.left()
+
 
 @touch.on(touch.RIGHT)
-def handle_right(ch,evt):
-  menu.right()
+def handle_right(ch, evt):
+    menu.right()
+
 
 @touch.on(touch.BUTTON)
-def handle_button(ch,evt):
-  menu.select()
+def handle_button(ch, evt):
+    menu.select()
+
 
 while 1:
-  # Redraw the menu, since we don't want to hand this off to a thread
-  menu.redraw()
-  time.sleep(0.05)
+    # Redraw the menu, since we don't want to hand this off to a thread
+    menu.redraw()
+    time.sleep(0.05)

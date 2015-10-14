@@ -1,7 +1,14 @@
 #!/usr/bin/env python
+print("""
+This advanced example uses the menu framework.
+It loads the debris game plugin. Your score is time survived in seconds, see how well you can do!
+
+Press CTRL+C to exit.
+""")
 
 # Add the root examples dir so Python can find the plugins
 import sys
+
 sys.path.append("../../")
 
 # Import the dot3k libraries
@@ -22,15 +29,15 @@ import signal
 
 # Build your menu!
 menu = Menu({
-    'Debris Game':Debris(backlight),
-    'Settings': {
-      'Display': {
-        'Contrast':Contrast(lcd),
-        'Backlight':Backlight(backlight)
-      }
-    }
-  },
-  lcd)
+        'Debris Game': Debris(backlight),
+        'Settings': {
+            'Display': {
+                'Contrast': Contrast(lcd),
+                'Backlight': Backlight(backlight)
+            }
+        }
+    },
+    lcd)
 
 # Hook captouch into menu with default settings
 touch.bind_defaults(menu)

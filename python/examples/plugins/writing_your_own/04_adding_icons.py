@@ -1,27 +1,28 @@
 #!/usr/bin/env python
-'''
+"""
 Building upon our doing stuff example, we'll now add icons to show
 when things are running.
-'''
+"""
 from dot3k.menu import MenuOption
-import threading, subprocess
+import threading
+import subprocess
 
 class HelloWorld(MenuOption):
 
-  '''
+  """
   If you're not sure what's going on here, see 02_handling_options.py
-  '''
+  """
   def __init__(self):
     self.selected_option = 0
 
-    '''
+    """
     Python has no "switch" so we'll store an array of functions
     to call when an option is selected.
 
     We've added icons to this example, so instead of two arrays
     we've collected all the related stuff into an array of
     dictionaries.
-    '''
+    """
     self.options = [
       {'title': 'Pirate', 'action': self.handle_pirate,   'icon': ' '}
       {'title': 'Pirate', 'action': self.handle_monkey,   'icon': ' '}
@@ -32,7 +33,7 @@ class HelloWorld(MenuOption):
 
     MenuOption.__init__(self)
 
-  '''
+  """
   Here we'll define the things each menu option will do.
 
   Our up/down/left/right and select methods are *never* passed
@@ -44,15 +45,15 @@ class HelloWorld(MenuOption):
   user-interface with time.sleep, icky!
 
   Instead, we should hand anything complex to a thread or state change.
-  '''
+  """
 
-  '''
+  """
   When the pirate option is selected, we want to update something
   in the background. We can use a thread for that.
 
   We'll update the pirate icon to indicate that it's busy
   and so we know something is happening.
-  '''
+  """
   def handle_pirate(self):
     print('Arrr! Doing pirate stuff!')
     self.icons[0] = '!'
@@ -60,11 +61,11 @@ class HelloWorld(MenuOption):
     update.daemon = True
     update.start()
 
-  '''
+  """
   This is the method we call in our thread.
   After we're done pinging google, print out the last line of the result
   and clear the icon.
-  '''
+  """
   def do_pirate_update(self):
     result = subprocess.check_output(['/bin/ping','google.com','-c','4'])
     result = result.split("\n")
@@ -87,10 +88,10 @@ class HelloWorld(MenuOption):
   def handle_dolphin(self):
     print('Bubble bubble bubble!')
 
-  '''
+  """
   To run an option we can simply call its associated function.
   This can be done by adding brackets to the action.
-  '''
+  """
   def select_option(self):
     self.actions[ self.selected_option ]['action']()
 
@@ -106,10 +107,10 @@ class HelloWorld(MenuOption):
   def down(self):
     self.next_option()
 
-  '''
+  """
   The "right" direction is much easier to press than select, 
   so I tend to use it as the "action" button for selecting options
-  '''
+  """
   def right(self):
     self.select_option()
 
@@ -122,9 +123,9 @@ class HelloWorld(MenuOption):
   def get_prev_option(self):
     return self.options[ (self.selected_option - 1) % len(self.options) ]['title']
 
-  '''
+  """
   A few helpers for getting the icons couldn't hurt either!
-  '''
+  """
   def get_current_icon(self):
     return self.options[ self.selected_option ]['icon']
 
@@ -174,10 +175,10 @@ menu = Menu(
 )
 
 
-'''
+"""
 We'll virtually press "right" to
 enter your plugin:
-'''
+"""
 menu.right()
 
 
@@ -190,18 +191,18 @@ def handle_down(pin):
   menu.down()
 
 
-'''
+"""
 We need to handle right, to let us select options
-'''
+"""
 @dot3k.joystick.on(dot3k.joystick.RIGHT)
 def handle_right(pin):
   menu.right()
 
 
-'''
+"""
 You can decide when the menu is redrawn, but
 you'll usually want to do this:
-'''
+"""
 while 1:
   menu.redraw()
   time.sleep(0.01)
