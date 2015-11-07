@@ -1,20 +1,27 @@
 import sn3218
 import colorsys
-import math
+import cap1xxx
 
-LED_R_R = 0x00
-LED_R_G = 0x01
-LED_R_B = 0x02
+cap = cap1xxx.Cap1166(i2c_addr=0x2C, skip_init=True)
 
-LED_M_R = 0x03
-LED_M_G = 0x04
-LED_M_B = 0x05
+NUM_LEDS = 6
+STEP_VALUE = 16
 
-LED_L_R = 0x06
-LED_L_G = 0x07
-LED_L_B = 0x08
+leds = [0x00] * 18  # B G R, B G R, B G R, B G R, B G R, B G R
 
-leds = [0x00] * 18
+# set gamma correction for backlight to normalise brightness
+g_channel_gamma = [int(value / 1.6) for value in sn3218.default_gamma_table]
+r_channel_gamma = [int(value / 1.4) for value in sn3218.default_gamma_table]
+
+for x in range(0, 18, 3):
+    sn3218.channel_gamma(x + 1, g_channel_gamma)
+    sn3218.channel_gamma(x + 2, r_channel_gamma)
+
+sn3218.enable()
+
+graph_set_led_state = cap.set_led_state
+graph_set_led_polarity = cap.set_led_polarity
+graph_set_led_duty = cap.set_led_direct_duty
 
 
 def use_rbg():
@@ -23,39 +30,43 @@ def use_rbg():
   
     Use if you have a first batch Display-o-Tron 3K
     """
-    global LED_R_G, LED_R_B
-    global LED_M_G, LED_M_B
-    global LED_L_G, LED_L_B
-
-    (LED_R_G, LED_R_B) = (LED_R_B, LED_R_G)
-    (LED_M_G, LED_M_B) = (LED_M_B, LED_M_G)
-    (LED_L_G, LED_L_B) = (LED_L_B, LED_L_G)
+    pass
 
 
-def set_graph(value):
+def graph_off():
+    cap._write_byte(cap1xxx.R_LED_POLARITY, 0b00000000)
+    cap._write_byte(cap1xxx.R_LED_OUTPUT_CON, 0b00000000)
+
+
+def set_graph(percentage):
     """
     Lights a number of bargraph LEDs depending upon value
     
     Args:
         value (float): percentage between 0.0 and 1.0
+
+    Todo:
+        Reimplement using CAP
     """
-    value *= 9
+    cap._write_byte(cap1xxx.R_LED_DIRECT_RAMP, 0b00000000)
+    cap._write_byte(cap1xxx.R_LED_BEHAVIOUR_1, 0b00000000)
+    cap._write_byte(cap1xxx.R_LED_BEHAVIOUR_2, 0b00000000)
 
-    if value > 9:
-        value = 9
-
-    for i in range(9):
-        leds[9 + i] = 0
-
-    lit = int(math.floor(value))
-    for i in range(lit):
-        leds[9 + i] = 255
-
-        partial = lit
-        if partial < 9:
-            leds[9 + partial] = int((value % 1) * 255)
-
-    update()
+    total_value = STEP_VALUE * NUM_LEDS
+    actual_value = int(total_value * percentage)
+    set_polarity = 0b00000000
+    set_state = 0b00000000
+    set_duty = 0  # Value from 0 to 15
+    for x in range(NUM_LEDS):
+        if actual_value >= STEP_VALUE:
+            set_polarity |= 1 << (NUM_LEDS - 1 - x)
+        if 0 < actual_value < STEP_VALUE:
+            set_state |= 1 << (NUM_LEDS - 1 - x)
+            set_duty = actual_value << 4
+        actual_value -= STEP_VALUE
+    cap._write_byte(cap1xxx.R_LED_DIRECT_DUT, set_duty)
+    cap._write_byte(cap1xxx.R_LED_POLARITY, set_polarity)
+    cap._write_byte(cap1xxx.R_LED_OUTPUT_CON, set_state)
 
 
 def set(index, value):
@@ -66,7 +77,9 @@ def set(index, value):
         index (int): index of the LED from 0 to 18
         value (int): brightness value from 0 to 255
     """
-    leds[index] = value
+    index = index if isinstance(index, list) else [index]
+    for i in index:
+        leds[i] = value
     update()
 
 
@@ -78,12 +91,7 @@ def set_bar(index, value):
         index (int): starting index
         value (int or list): a single int, or list of brightness values from 0 to 255
     """
-    if isinstance(value, int):
-        set(LED_R_R + 9 + (index % 9), value)
-    if isinstance(value, list):
-        for i, v in enumerate(value):
-            set(LED_R_R + 9 + ((index + i) % 9), v)
-    update()
+    pass
 
 
 def hue_to_rgb(hue):
@@ -109,7 +117,7 @@ def hue(hue):
     rgb(col_rgb[0], col_rgb[1], col_rgb[2])
 
 
-def sweep(hue, range=0.08):
+def sweep(hue, sweep_range=0.0833):
     """
     Sets the backlight LEDs to a gradient centered on supplied hue
     
@@ -119,9 +127,12 @@ def sweep(hue, range=0.08):
         hue (float): hue value between 0.0 and 1.0
         range (float): range value to deviate the left and right hue
     """
-    left_hue((hue - range) % 1)
-    mid_hue(hue)
-    right_hue((hue + range) % 1)
+    global leds
+    for x in range(0, 18, 3):
+        rgb = hue_to_rgb((hue + (sweep_range * (x / 3))) % 1)
+        rgb.reverse()
+        leds[x:x + 3] = rgb
+    update()
 
 
 def left_hue(hue):
@@ -169,9 +180,8 @@ def left_rgb(r, g, b):
         g (int): green value between 0 and 255
         b (int): blue value between 0 and 255
     """
-    set(LED_L_R, r)
-    set(LED_L_B, b)
-    set(LED_L_G, g)
+    single_rgb(0, r, g, b, False)
+    single_rgb(1, r, g, b, False)
     update()
 
 
@@ -184,9 +194,8 @@ def mid_rgb(r, g, b):
         g (int): green value between 0 and 255
         b (int): blue value between 0 and 255
     """
-    set(LED_M_R, r)
-    set(LED_M_B, b)
-    set(LED_M_G, g)
+    single_rgb(2, r, g, b, False)
+    single_rgb(3, r, g, b, False)
     update()
 
 
@@ -199,10 +208,18 @@ def right_rgb(r, g, b):
         g (int): green value between 0 and 255
         b (int): blue value between 0 and 255
     """
-    set(LED_R_R, r)
-    set(LED_R_B, b)
-    set(LED_R_G, g)
+    single_rgb(4, r, g, b, False)
+    single_rgb(5, r, g, b, False)
     update()
+
+
+def single_rgb(led, r, g, b, auto_update=True):
+    global leds
+    leds[(led * 3)] = b
+    leds[(led * 3) + 1] = g
+    leds[(led * 3) + 2] = r
+    if auto_update:
+        update()
 
 
 def rgb(r, g, b):
@@ -214,9 +231,9 @@ def rgb(r, g, b):
         g (int): green value between 0 and 255
         b (int): blue value between 0 and 255
     """
-    left_rgb(r, g, b)
-    mid_rgb(r, g, b)
-    right_rgb(r, g, b)
+    global leds
+    leds = [b, g, r] * 6
+    update()
 
 
 def off():
@@ -231,21 +248,3 @@ def update():
     Update backlight with changes to the LED buffer
     """
     sn3218.output(leds)
-
-
-# set gamma correction for backlight to normalise brightness
-g_channel_gamma = [int(value / 1.6) for value in sn3218.default_gamma_table]
-sn3218.channel_gamma(1, g_channel_gamma)
-sn3218.channel_gamma(4, g_channel_gamma)
-sn3218.channel_gamma(7, g_channel_gamma)
-
-r_channel_gamma = [int(value / 1.4) for value in sn3218.default_gamma_table]
-sn3218.channel_gamma(0, r_channel_gamma)
-sn3218.channel_gamma(3, r_channel_gamma)
-sn3218.channel_gamma(6, r_channel_gamma)
-
-w_channel_gamma = [int(value / 24) for value in sn3218.default_gamma_table]
-for i in range(9, 18):
-    sn3218.channel_gamma(i, w_channel_gamma)
-
-sn3218.enable()

@@ -38,15 +38,15 @@ classifiers = ['Development Status :: 5 - Production/Stable',
                'Topic :: System :: Hardware']
 
 setup(name		= 'dot3k',
-	version		= '1.8.2',
+	version		= '2.0.1',
 	author		= 'Philip Howard',
 	author_email	= 'phil@pimoroni.com',
-	description	= 'Display-o-Tron 3000 Driver',
+	description	= 'Display-o-Tron 3000/HAT Driver',
 	long_description= open('README.md').read() + open('CHANGELOG.txt').read(),
 	license		= 'MIT',
 	keywords	= 'Raspberry Pi ST7036 SN3218 LCD',
 	url		= 'http://www.pimoroni.com',
 	classifiers     = classifiers,
-	packages	= ['dot3k'],
-	install_requires= ['st7036','sn3218']
+	packages	= ['dot3k','dothat'],
+	install_requires= ['st7036','sn3218','cap1xxx']
 )
