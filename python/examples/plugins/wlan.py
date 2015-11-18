@@ -5,15 +5,21 @@ Plugin for managing connections to wifi networks
 from dot3k.menu import MenuOption
 import wifi
 import threading
-
+import subprocess
 
 class Wlan(MenuOption):
-    def __init__(self, backlight=None):
+    def __init__(self, backlight=None, interface='wlan0'):
         self.items = []
+        self.interface = interface
+
+        self.wifi_pass = ""
 
         self.selected_item = 0
 
+        self.connecting = False
         self.scanning = False
+        self.has_error = False
+        self.error_text = ""
 
         self.backlight = backlight
 
@@ -22,6 +28,7 @@ class Wlan(MenuOption):
         self.is_setup = False
 
     def begin(self):
+        self.has_errror = False
         pass
 
     def setup(self, config):
@@ -34,23 +41,73 @@ class Wlan(MenuOption):
         if self.backlight is not None:
             self.backlight.set_graph(0)
         self.is_setup = False
+        self.has_error = False
 
     def select(self):
-        return False
+        return True
 
     def left(self):
         return False
 
     def right(self):
+        self.connect()
         return True
 
     def up(self):
-        self.selected_item = (self.selected_item - 1) % len(self.items)
+        if len(self.items):
+            self.selected_item = (self.selected_item - 1) % len(self.items)
         return True
 
     def down(self):
-        self.selected_item = (self.selected_item + 1) % len(self.items)
+        if len(self.items):
+            self.selected_item = (self.selected_item + 1) % len(self.items)
         return True
+
+    @property
+    def current_network(self):
+        if self.selected_item < len(self.items):
+            return self.items[self.selected_item]
+
+        return None
+
+    def input_prompt(self):
+        return 'Password:'
+
+    def connect(self):
+        self.request_input()
+
+    def receive_input(self, value):
+        self.wifi_pass = value
+
+        print("Connecting to {}".format(self.current_network.ssid))
+        t = threading.Thread(None, self.perform_connection)
+        t.daemon = True
+        t.start()
+
+    def perform_connection(self):
+        self.connecting = True
+        network = self.current_network
+        scheme = wifi.Scheme.find(self.interface, network.ssid)
+        
+        if scheme is None:
+            scheme = wifi.Scheme.for_cell(
+                self.interface,
+                network.ssid,
+                network,
+                passkey=self.wifi_pass)
+            #scheme.save()
+
+        try:
+            scheme.activate()
+            scheme.save()
+        except wifi.scheme.ConnectionError:
+            self.error('Connection Failed!')
+
+        self.connecting = False
+
+    def error(self, text):
+        self.has_error = True
+        self.error_text = text
 
     def scan(self):
         update = threading.Thread(None, self.do_scan)
@@ -63,18 +120,35 @@ class Wlan(MenuOption):
 
         self.scanning = True
 
-        result = wifi.scan.Cell.all('wlan0')
-        self.items = result
+        try:
+            result = wifi.scan.Cell.all(self.interface)
+            self.items = result
+            print(result)
 
-        print(result)
+        except wifi.scan.InterfaceError as e:
+            self.error("Interface Error!")
+            print(e)
+
 
         self.scanning = False
 
     def redraw(self, menu):
+        if self.has_error:
+            menu.write_option(row=0, text='Error:')
+            menu.write_option(row=1, text=self.error_text)
+            menu.clear_row(2)
+            return True
+
         if self.scanning:
             menu.clear_row(0)
             menu.write_option(row=1, text='Scanning...')
-            menu.clear_row(1)
+            menu.clear_row(2)
+            return True
+
+        if self.connecting:
+            menu.clear_row(0)
+            menu.write_option(row=1, text='Connecting...')
+            menu.clear_row(2)
             return True
 
         if not self.is_setup:
@@ -88,8 +162,8 @@ class Wlan(MenuOption):
 
             self.is_setup = True
 
-        if len(self.items):
-            item = self.items[self.selected_item]
+        if self.current_network is not None:
+            item = self.current_network
 
             status = 'Open'
             if item.encrypted:
