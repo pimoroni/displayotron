@@ -27,6 +27,16 @@ class Wlan(MenuOption):
 
         self.is_setup = False
 
+    def run_cmd(self, cmd):
+        result = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+        stdout = result.stdout.read().decode()
+        stderr = result.stderr.read().decode()
+
+        return (stdout, stderr)
+        #print("stdout >> ", stdout)
+        #print("stderr >> ", stderr)
+
     def begin(self):
         self.has_errror = False
         pass
@@ -76,6 +86,9 @@ class Wlan(MenuOption):
     def connect(self):
         self.request_input()
 
+    def initial_value(self):
+        return ""
+
     def receive_input(self, value):
         self.wifi_pass = value
 
@@ -88,8 +101,12 @@ class Wlan(MenuOption):
         self.connecting = True
         network = self.current_network
         scheme = wifi.Scheme.find(self.interface, network.ssid)
-        
+        new = False
+
+        print("Using Password: \"{}\"".format(self.wifi_pass))
+ 
         if scheme is None:
+            new = True
             scheme = wifi.Scheme.for_cell(
                 self.interface,
                 network.ssid,
@@ -99,11 +116,20 @@ class Wlan(MenuOption):
 
         try:
             scheme.activate()
-            scheme.save()
-        except wifi.scheme.ConnectionError:
+        except wifi.scheme.ConnectionError as e:
             self.error('Connection Failed!')
+            print(e)
+            self.connecting = False
+            return
 
+        if new:
+            scheme.save()
+ 
         self.connecting = False
+
+    def clear_error(self):
+        self.has_error = False
+        self.error_text = ""
 
     def error(self, text):
         self.has_error = True
@@ -119,6 +145,13 @@ class Wlan(MenuOption):
             return False
 
         self.scanning = True
+
+        result = self.run_cmd(["sudo ifup {}".format(self.interface)])
+
+        if "Ignoring unknown interface" in result[1]:
+            self.error("{} not found!".format(self.interface))
+            self.scanning = False
+            return
 
         try:
             result = wifi.scan.Cell.all(self.interface)
