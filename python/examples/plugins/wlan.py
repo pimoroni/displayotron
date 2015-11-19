@@ -84,7 +84,15 @@ class Wlan(MenuOption):
         return 'Password:'
 
     def connect(self):
-        self.request_input()
+        network = self.current_network
+        scheme = wifi.Scheme.find(self.interface, network.ssid)
+        if scheme is None:
+            self.request_input()
+        else: 
+            print("Connecting to {}".format(self.current_network.ssid))
+            t = threading.Thread(None, self.perform_connection)
+            t.daemon = True
+            t.start()
 
     def initial_value(self):
         return ""
@@ -93,6 +101,8 @@ class Wlan(MenuOption):
         self.wifi_pass = value
 
         print("Connecting to {}".format(self.current_network.ssid))
+        print("Using Password: \"{}\"".format(self.wifi_pass))
+
         t = threading.Thread(None, self.perform_connection)
         t.daemon = True
         t.start()
@@ -103,7 +113,6 @@ class Wlan(MenuOption):
         scheme = wifi.Scheme.find(self.interface, network.ssid)
         new = False
 
-        print("Using Password: \"{}\"".format(self.wifi_pass))
  
         if scheme is None:
             new = True
