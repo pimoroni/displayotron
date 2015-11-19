@@ -112,7 +112,7 @@ class Wlan(MenuOption):
                 network.ssid,
                 network,
                 passkey=self.wifi_pass)
-            #scheme.save()
+            scheme.save()
 
         try:
             scheme.activate()
@@ -120,11 +120,10 @@ class Wlan(MenuOption):
             self.error('Connection Failed!')
             print(e)
             self.connecting = False
+            if new:
+                scheme.delete()
             return
 
-        if new:
-            scheme.save()
- 
         self.connecting = False
 
     def clear_error(self):
