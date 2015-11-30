@@ -18,6 +18,8 @@ from dot3k.menu import Menu, MenuOption
 from plugins.utils import Backlight, Contrast
 from plugins.graph import IPAddress, GraphTemp, GraphCPU, GraphNetSpeed
 from plugins.clock import Clock
+from plugins.wlan import Wlan
+from plugins.text import Text
 import time
 
 
@@ -57,7 +59,9 @@ See GraphTemp, GraphCPU, Contrast and Backlight for examples.
 """
 my_invader = SpaceInvader()
 
-menu = Menu({
+menu = Menu(
+    structure={
+        'WiFi': Wlan(),
         'Space Invader': my_invader,
         'Clock': Clock(backlight),
         'Status': {
@@ -72,9 +76,10 @@ menu = Menu({
             }
         }
     },
-    lcd,
-    my_invader,
-    30)
+    lcd=lcd,
+    idle_handler=my_invader,
+    idle_timeout=30,
+    input_handler=Text())
 
 """
 You can use anything to control dot3k.menu,
