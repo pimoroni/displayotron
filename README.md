@@ -14,14 +14,14 @@ We've created a super-easy installation script that will install all pre-requisi
 In the new terminal window type:
 
 ```bash
-curl get.pimoroni.com/dot3k | bash
+curl get.pimoroni.com/displayotron | bash
 ```
 
-If you choose to download examples you'll find them in `/home/pi/Pimoroni/dot3k`, but you can also check out the Basic and Advanced examples for both DotHAT and Dot3k in: [python/examples](python/examples)
+If you choose to download examples you'll find them in `/home/pi/Pimoroni/displayotron`, but you can also check out the Basic and Advanced examples for both DotHAT and Dot3k in: [python/examples](python/examples)
 
 We've also created a full [function reference](python/REFERENCE.md).
 
-*Make sure you run the right examples for your product, if you've got a Display-o-Tron 3000 you should be using the examples in `/home/pi/Pimoroni/dot3k/dot3k` and if you have a Display-o-Tron HAT you should be using the ones in `/home/pi/Pimoroni/dot3k/dothat`*
+*Make sure you run the right examples for your product, if you've got a Display-o-Tron 3000 you should be using the examples in `/home/pi/Pimoroni/displayotron/dot3k` and if you have a Display-o-Tron HAT you should be using the ones in `/home/pi/Pimoroni/displayotron/dothat`*
 
 ##Other Languages
 
