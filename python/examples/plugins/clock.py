@@ -43,9 +43,9 @@ class Clock(MenuOption):
             self.backlight.rgb(r, g, b)
 
     def update_options(self):
-        self.set_option('Clock', 'dim', self.dim_hour)
-        self.set_option('Clock', 'bright', self.bright_hour)
-        self.set_option('Clock', 'binary', self.binary)
+        self.set_option('Clock', 'dim', str(self.dim_hour))
+        self.set_option('Clock', 'bright', str(self.bright_hour))
+        self.set_option('Clock', 'binary', str(self.binary))
 
     def load_options(self):
         self.dim_hour = int(self.get_option('Clock', 'dim', str(self.dim_hour)))
