@@ -14,7 +14,7 @@ We've created a super-easy installation script that will install all pre-requisi
 In the new terminal window type:
 
 ```bash
-curl get.pimoroni.com/displayotron | bash
+curl -sS get.pimoroni.com/displayotron | bash
 ```
 
 If you choose to download examples you'll find them in `/home/pi/Pimoroni/displayotron`, but you can also check out the Basic and Advanced examples for both DotHAT and Dot3k in: [python/examples](python/examples)
