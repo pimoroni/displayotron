@@ -41,7 +41,7 @@ menu = Menu(structure={
 },
     lcd=lcd,
     idle_handler=my_clock,
-    idle_time=3,
+    idle_timeout=3,
     input_handler=Text())
 
 """

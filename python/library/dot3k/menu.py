@@ -74,13 +74,13 @@ class Menu:
 
     def __init__(self, *args, **kwargs):
         """
-        structure, lcd, idle_handler = None, idle_time = 60
+        structure, lcd, idle_handler = None, idle_timeout = 60
         """
         self.menu_options = OrderedDict()
         self.lcd = None
         self.idle_handler = None
         self.input_handler = None
-        self.idle_time = 60 * 1000
+        self.idle_timeout = 60 * 1000
         self.config_file = 'dot3k.cfg'
 
         # Track displayed text for auto-scroll
@@ -94,7 +94,7 @@ class Menu:
         if len(args) > 2:
             self.idle_handler = args[2]
         if len(args) > 3:
-            self.idle_time = args[3] * 1000
+            self.idle_timeout = args[3] * 1000
 
         if 'structure' in kwargs.keys() and kwargs['structure'] is not None:
             self.menu_options = kwargs['structure']
@@ -102,8 +102,8 @@ class Menu:
             self.lcd = kwargs['lcd']
         if 'idle_handler' in kwargs.keys():
             self.idle_handler = kwargs['idle_handler']
-        if 'idle_time' in kwargs.keys():
-            self.idle_time = kwargs['idle_time'] * 1000
+        if 'idle_timeout' in kwargs.keys():
+            self.idle_timeout = kwargs['idle_timeout'] * 1000
         if 'input_handler' in kwargs.keys():
             self.input_handler = kwargs['input_handler']
         if 'config_file' in kwargs.keys():
@@ -486,7 +486,7 @@ class Menu:
             self.input_handler.redraw(self)
 
     def can_idle(self):
-        if self.millis() - self.last_action >= self.idle_time:
+        if self.millis() - self.last_action >= self.idle_timeout:
             if self.mode == _MODE_NAV:
                 return True
             if self.mode == _MODE_ADJ and self.current_value().can_idle:
