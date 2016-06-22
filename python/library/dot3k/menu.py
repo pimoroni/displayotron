@@ -145,7 +145,7 @@ class Menu:
         last = path.pop()
 
         while len(path) > 0:
-            key = path.pop()
+            key = path.pop(0)
             if key not in loc:
                 loc[key] = OrderedDict()
             loc = loc[key]
