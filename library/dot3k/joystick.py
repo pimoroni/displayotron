@@ -62,9 +62,11 @@ def repeat(button, handler, delay=0.1, ramp=1.0):
     repeat_status[button] = True
     last_trigger = millis()
     while GPIO.input(button) == 0:
-        if millis() - last_trigger >= (delay * 1000):
+        m = millis()
+        if m - last_trigger >= (delay * 1000):
             handler()
             delay *= ramp
+            last_trigger = m
     repeat_status[button] = False
 
 
@@ -73,3 +75,4 @@ down = GPIO.setup(DOWN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 left = GPIO.setup(LEFT, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 right = GPIO.setup(RIGHT, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 button = GPIO.setup(BUTTON, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+
