@@ -24,7 +24,7 @@ dot3k (1.8.2) UNRELEASED; urgency=low
   * Fixed bug in screensaver functionality so it works with non-keyword args
   * Added new "add_item" feature so that menu items can be kept in order
 
- -- Phil Howard <phil@pimoroni.com>  xxx, xx xxx xxxx 00:00:00 +0000
+ -- Phil Howard <phil@pimoroni.com>  Mon, 27 Apr 2015 00:00:00 +0000
 
 dot3k (1.8.1) UNRELEASED; urgency=low
 
@@ -51,7 +51,7 @@ dot3k (1.7.0) UNRELEASED; urgency=low
   * Added input handling plugin support
   * Remapped parameters to args/kwargs to make menu initialisation less mystifying
 
- -- Phil Howard <phil@pimoroni.com>  xxx, xx xxx xxxx 00:00:00 +0000
+ -- Phil Howard <phil@pimoroni.com>  Tue, 16 Sep 2014 00:00:00 +0000
 
 dot3k (1.6.1) UNRELEASED; urgency=low
 
@@ -63,26 +63,26 @@ dot3k (1.6.0) UNRELEASED; urgency=low
 
   * Added support for an "idle" plugin which shows after a customisable amount of seconds
 
- -- Phil Howard <phil@pimoroni.com>  xxx, xx xxx xxxx 00:00:00 +0000
+ -- Phil Howard <phil@pimoroni.com>  Sat, 13 Sep 2014 00:00:00 +0000
 
 dot3k (1.5.0) UNRELEASED; urgency=low
 
   * Fixed joystick repeat using delta timing instead of delays
 
- -- Phil Howard <phil@pimoroni.com>  xxx, xx xxx xxxx 00:00:00 +0000
+ -- Phil Howard <phil@pimoroni.com>  Fri, 12 Sep 2014 12:00:00 +0000
 
 dot3k (1.4.0) UNRELEASED; urgency=low
 
   * Bugfix of menu.py line-endings
   * Attempt to fix joystick.repeat to prevent multiple repeats firing at once
 
- -- Phil Howard <phil@pimoroni.com>  xxx, xx xxx xxxx 00:00:00 +0000
+ -- Phil Howard <phil@pimoroni.com>  Fri, 12 Sep 2014 00:00:00 +0000
 
 dot3k (1.3.0) UNRELEASED; urgency=low
 
   * Removed plugins from dot3k.menu into examples/plugins folder
 
- -- Phil Howard <phil@pimoroni.com>  xxx, xx xxx xxxx 00:00:00 +0000
+ -- Phil Howard <phil@pimoroni.com>  Thu, 11 Sep 2014 12:00:00 +0000
 
 dot3k (1.2.0) UNRELEASED; urgency=low
 
@@ -90,16 +90,16 @@ dot3k (1.2.0) UNRELEASED; urgency=low
   * Many fixes to redraw calls
   * Plugin redraw method is now passed the "menu" instance
 
- -- Phil Howard <phil@pimoroni.com>  xxx, xx xxx xxxx 00:00:00 +0000
+ -- Phil Howard <phil@pimoroni.com>  Thu, 11 Sep 2014 00:00:00 +0000
 
 dot3k (1.1.0) UNRELEASED; urgency=low
 
   * Fix for joystick on Rev 1 Pi
 
- -- Phil Howard <phil@pimoroni.com>  xxx, xx xxx xxxx 00:00:00 +0000
+ -- Phil Howard <phil@pimoroni.com>  Tue, 09 Sep 2014 00:00:00 +0000
 
 dot3k (1.0.0) UNRELEASED; urgency=low
 
   * Initial Release
 
- -- Phil Howard <phil@pimoroni.com>  xxx, xx xxx xxxx 00:00:00 +0000
+ -- Phil Howard <phil@pimoroni.com>  Mon, 08 Sep 2014 00:00:00 +0000
