@@ -1,0 +1,105 @@
+dot3k (2.0.1) UNRELEASED; urgency=low
+
+  * Now handles reset pin for Display-o-Tron HAT
+  * Added cap1xxx as a dependency
+
+ -- Phil Howard <phil@pimoroni.com>  Wed, 12 Aug 2015 00:00:00 +0000
+
+dot3k (2.0.0) UNRELEASED; urgency=low
+
+  * Added support for Display-o-Tron HAT
+  * Misc fixes and improvements
+
+ -- Phil Howard <phil@pimoroni.com>  Fri, 07 Aug 2015 00:00:00 +0000
+
+dot3k (1.9.0) UNRELEASED; urgency=low
+
+  * Added new MenuIcon class with pre-made icons for use in plugins/menus
+  * Added "cancel" method which can be called to immediately exit any menu item
+
+ -- Phil Howard <phil@pimoroni.com>  Thu, 11 Jun 2015 00:00:00 +0000
+
+dot3k (1.8.2) UNRELEASED; urgency=low
+
+  * Fixed bug in screensaver functionality so it works with non-keyword args
+  * Added new "add_item" feature so that menu items can be kept in order
+
+ -- Phil Howard <phil@pimoroni.com>  Mon, 27 Apr 2015 00:00:00 +0000
+
+dot3k (1.8.1) UNRELEASED; urgency=low
+
+  * Backlight now has off() method shortcut for turning lights off
+  * Added a use_brg() method for old Dot3ks with different pixel order
+
+ -- Phil Howard <phil@pimoroni.com>  Thu, 19 Feb 2015 00:00:00 +0000
+
+dot3k (1.8.0) UNRELEASED; urgency=low
+
+  * Significant, possibly breaking, change to __init__.py to remove redundant imports
+  * lcd and joystick should work with Python 3, backlight still requires smbus
+
+ -- Phil Howard <phil@pimoroni.com>  Fri, 07 Nov 2014 00:00:00 +0000
+
+dot3k (1.7.1) UNRELEASED; urgency=low
+
+  * Sane defaults for write_option(), now no longer defauts to 1 margin and blank icon
+
+ -- Phil Howard <phil@pimoroni.com>  Thu, 18 Sep 2014 00:00:00 +0000
+
+dot3k (1.7.0) UNRELEASED; urgency=low
+
+  * Added input handling plugin support
+  * Remapped parameters to args/kwargs to make menu initialisation less mystifying
+
+ -- Phil Howard <phil@pimoroni.com>  Tue, 16 Sep 2014 00:00:00 +0000
+
+dot3k (1.6.1) UNRELEASED; urgency=low
+
+  * Fixed bug in set_bar which cased the left blue backlight to light
+
+ -- Phil Howard <phil@pimoroni.com>  Mon, 15 Sep 2014 00:00:00 +0000
+
+dot3k (1.6.0) UNRELEASED; urgency=low
+
+  * Added support for an "idle" plugin which shows after a customisable amount of seconds
+
+ -- Phil Howard <phil@pimoroni.com>  Sat, 13 Sep 2014 00:00:00 +0000
+
+dot3k (1.5.0) UNRELEASED; urgency=low
+
+  * Fixed joystick repeat using delta timing instead of delays
+
+ -- Phil Howard <phil@pimoroni.com>  Fri, 12 Sep 2014 12:00:00 +0000
+
+dot3k (1.4.0) UNRELEASED; urgency=low
+
+  * Bugfix of menu.py line-endings
+  * Attempt to fix joystick.repeat to prevent multiple repeats firing at once
+
+ -- Phil Howard <phil@pimoroni.com>  Fri, 12 Sep 2014 00:00:00 +0000
+
+dot3k (1.3.0) UNRELEASED; urgency=low
+
+  * Removed plugins from dot3k.menu into examples/plugins folder
+
+ -- Phil Howard <phil@pimoroni.com>  Thu, 11 Sep 2014 12:00:00 +0000
+
+dot3k (1.2.0) UNRELEASED; urgency=low
+
+  * Breaking changes with plugin compatibility vs version 1.1
+  * Many fixes to redraw calls
+  * Plugin redraw method is now passed the "menu" instance
+
+ -- Phil Howard <phil@pimoroni.com>  Thu, 11 Sep 2014 00:00:00 +0000
+
+dot3k (1.1.0) UNRELEASED; urgency=low
+
+  * Fix for joystick on Rev 1 Pi
+
+ -- Phil Howard <phil@pimoroni.com>  Tue, 09 Sep 2014 00:00:00 +0000
+
+dot3k (1.0.0) UNRELEASED; urgency=low
+
+  * Initial Release
+
+ -- Phil Howard <phil@pimoroni.com>  Mon, 08 Sep 2014 00:00:00 +0000

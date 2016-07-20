@@ -1,6 +1,3 @@
-Changelog
----------
-
 2.0.1
 -----
 
@@ -42,8 +39,8 @@ Changelog
 
 * Sane defaults for write_option(), now no longer defauts to 1 margin and blank icon
 
-1.7
----
+1.7.0
+-----
 
 * Added input handling plugin support
 * Remapped parameters to args/kwargs to make menu initialisation less mystifying
@@ -53,40 +50,41 @@ Changelog
 
 * Fixed bug in set_bar which cased the left blue backlight to light
 
-1.6
----
+1.6.0
+-----
 
 * Added support for an "idle" plugin which shows after a customisable amount of seconds
 
-1.5
----
+1.5.0
+-----
 
 * Fixed joystick repeat using delta timing instead of delays
 
-1.4
----
+1.4.0
+-----
 
 * Bugfix of menu.py line-endings
 * Attempt to fix joystick.repeat to prevent multiple repeats firing at once
 
-1.3
----
+1.3.0
+-----
 
 * Removed plugins from dot3k.menu into examples/plugins folder
 
-1.2
----
+1.2.0
+-----
 
 * Breaking changes with plugin compatibility vs version 1.1
 * Many fixes to redraw calls
 * Plugin redraw method is now passed the "menu" instance
 
-1.1
----
+1.1.0
+-----
 
 * Fix for joystick on Rev 1 Pi
 
-1.0dev
-------
+1.0.0
+-----
 
 * Initial Release
+
