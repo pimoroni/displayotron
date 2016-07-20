@@ -1,0 +1,13 @@
+README
+
+The Display-O-Tron is a stylish and capable 3x16 character display with RGB backlights and LED bar graph.
+
+Learn more: https://shop.pimoroni.com/products/display-o-tron-hat
+For example scripts run: `curl -sS get.pimoroni.com/displayotron | bash`
+
+IMPORTANT
+
+The Display-O-Tron requires both i2c and spi.
+To enable run `curl get.pimoroni.com/i2c | bash`
+as well as `curl get.pimoroni.com/spi | bash`
+or use raspi-config and reboot your Raspberry Pi.

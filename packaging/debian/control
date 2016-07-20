@@ -1,0 +1,31 @@
+Source: dot3k
+Maintainer: Phil Howard <phil@pimoroni.com>
+Homepage: https://github.com/pimoroni/dot3k
+Section: python
+Priority: optional
+Build-Depends: debhelper (>= 9.0.0), dh-python, python-all (>= 2.7), python-setuptools, python3-all (>= 3.4), python3-setuptools
+Standards-Version: 3.9.6
+X-Python-Version: >= 2.7
+X-Python3-Version: >= 3.4
+
+Package: python-displayotron
+Architecture: all
+Section: python
+Depends: ${misc:Depends}, ${python:Depends}, python-cap1xxx, python-sn3218, python-st7036
+Suggests: i2c-tools, python-psutil
+Description: python library designed to control the Display-O-Tron HAT and 3000.
+ The Display-O-Tron is a stylish and capable 3x16 character display
+ with RGB backlights and LED bar graph.
+ .
+ This is the Python 2 version of the package.
+
+Package: python3-displayotron
+Architecture: all
+Section: python
+Depends: ${misc:Depends}, ${python3:Depends}, python3-cap1xxx, python3-sn3218, python3-st7036
+Suggests: i2c-tools, python3-psutil
+Description: python library designed to control the Display-O-Tron HAT and 3000.
+ The Display-O-Tron is a stylish and capable 3x16 character display
+ with RGB backlights and LED bar graph.
+ .
+ This is the Python 3 version of the package.
