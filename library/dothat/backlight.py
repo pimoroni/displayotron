@@ -1,6 +1,15 @@
-import sn3218
 import colorsys
-import cap1xxx
+
+try:
+    import sn3218
+except ImportError:
+    exit("This library requires the sn3218 module\nInstall with: sudo pip install sn3218")
+
+try:
+    import cap1xxx
+except ImportError:
+    exit("This library requires the cap1xxx module\nInstall with: sudo pip install cap1xxx")
+
 
 cap = cap1xxx.Cap1166(i2c_addr=0x2C, skip_init=True)
 
