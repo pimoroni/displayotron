@@ -1,4 +1,8 @@
-from cap1xxx import Cap1166, PID_CAP1166
+try:
+    from cap1xxx import Cap1166, PID_CAP1166
+except ImportError:
+    exit("This library requires the cap1xxx module\nInstall with: sudo pip install cap1xxx")
+
 
 I2C_ADDR = 0x2c
 
