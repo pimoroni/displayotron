@@ -1,6 +1,7 @@
+import threading
+
 import usb.core
 import usb.util
-import threading
 
 
 class StoppableThread(threading.Thread):

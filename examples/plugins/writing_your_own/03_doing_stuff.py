@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+
 """
 Building upon our options example, we'll now explore running
 scynronous ( short ) and asyncronous/background ( long ) tasks
@@ -14,9 +15,11 @@ and updating some stored information for display.
 The code in this example is a decent way to handle options and actions,
 but it's far from the only way.
 """
-from dot3k.menu import MenuOption
-import threading
+
 import subprocess
+import threading
+
+from dot3k.menu import MenuOption
 
 
 class HelloWorld(MenuOption):

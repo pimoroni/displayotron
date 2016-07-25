@@ -3,10 +3,11 @@ Stocks plugin, ported from Facelessloser's Atmega_screen
 https://github.com/facelessloser/Atmega_screen/blob/master/arduino_python_files/stock-ticker/atmega_screen_stock_ticker.py
 """
 
-from dot3k.menu import MenuOption
-import urllib
 import json
 import threading
+import urllib
+
+from dot3k.menu import MenuOption
 
 
 class Stocks(MenuOption):

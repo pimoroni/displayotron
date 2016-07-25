@@ -1,14 +1,17 @@
 #!/usr/bin/env python
+
+import time
+
+import dot3k.backlight as backlight
+import dot3k.lcd as lcd
+
+
 print("""
 This example shows a range of different backlight techniques for Display-o-Tron.
 You should see the backlight go Red, Green, Blue, White and then Rainbow!
 
 Press CTRL+C to exit.
 """)
-
-import dot3k.lcd as lcd
-import dot3k.backlight as backlight
-import time
 
 pirate = [
     [0x00, 0x1f, 0x0b, 0x03, 0x00, 0x04, 0x11, 0x1f],

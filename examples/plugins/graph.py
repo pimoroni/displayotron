@@ -1,9 +1,14 @@
-import psutil
+import fcntl
+import socket
+import struct
 import subprocess
 import time
-import socket
-import fcntl
-import struct
+
+try:
+    import psutil
+except ImportError:
+    exit("This library requires the psutil module\nInstall with: sudo pip install psutil")
+
 from dot3k.menu import MenuOption
 
 

@@ -2,10 +2,16 @@
 Plugin for managing connections to wifi networks
 """
 
-from dot3k.menu import MenuOption
-import wifi
-import threading
 import subprocess
+import threading
+
+try:
+    import wifi
+except ImportError:
+    exit("This library requires the wifi module\nInstall with: sudo pip install wifi")
+
+from dot3k.menu import MenuOption
+
 
 class Wlan(MenuOption):
     def __init__(self, backlight=None, interface='wlan0'):

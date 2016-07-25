@@ -1,15 +1,18 @@
 #!/usr/bin/env python
+
+import signal
+
+import dothat.backlight as backlight
+import dothat.lcd as lcd
+import dothat.touch as nav
+
+
 print("""
 This example shows the Display-o-Tron HAT touch inputs in action.
 Touch an input and you should see the LCD change accordingly.
 
 Press CTRL+C to exit.
 """)
-
-import dothat.touch as j
-import dothat.lcd as l
-import dothat.backlight as b
-import signal
 
 """
 Captouch provides the @captouch.on() decorator
@@ -23,52 +26,52 @@ button ID ) and "event" ( corresponding to press/release ) arguments.
 """
 
 
-@j.on(j.UP)
+@nav.on(nav.UP)
 def handle_up(ch, evt):
     print("Up pressed!")
-    l.clear()
-    b.rgb(255, 0, 0)
-    l.write("Up up and away!")
+    lcd.clear()
+    backlight.rgb(255, 0, 0)
+    lcd.write("Up up and away!")
 
 
-@j.on(j.DOWN)
+@nav.on(nav.DOWN)
 def handle_down(ch, evt):
     print("Down pressed!")
-    l.clear()
-    b.rgb(0, 255, 0)
-    l.write("Down down doobie down!")
+    lcd.clear()
+    backlight.rgb(0, 255, 0)
+    lcd.write("Down down doobie down!")
 
 
-@j.on(j.LEFT)
+@nav.on(nav.LEFT)
 def handle_left(ch, evt):
     print("Left pressed!")
-    l.clear()
-    b.rgb(0, 0, 255)
-    l.write("Leftie left left!")
+    lcd.clear()
+    backlight.rgb(0, 0, 255)
+    lcd.write("Leftie left left!")
 
 
-@j.on(j.RIGHT)
+@nav.on(nav.RIGHT)
 def handle_right(ch, evt):
     print("Right pressed!")
-    l.clear()
-    b.rgb(0, 255, 255)
-    l.write("Rightie tighty!")
+    lcd.clear()
+    backlight.rgb(0, 255, 255)
+    lcd.write("Rightie tighty!")
 
 
-@j.on(j.BUTTON)
+@nav.on(nav.BUTTON)
 def handle_button(ch, evt):
     print("Button pressed!")
-    l.clear()
-    b.rgb(255, 255, 255)
-    l.write("Ouch!")
+    lcd.clear()
+    backlight.rgb(255, 255, 255)
+    lcd.write("Ouch!")
 
 
-@j.on(j.CANCEL)
+@nav.on(nav.CANCEL)
 def handle_cancel(ch, evt):
     print("Cancel pressed!")
-    l.clear()
-    b.rgb(0, 0, 0)
-    l.write("Boom!")
+    lcd.clear()
+    backlight.rgb(0, 0, 0)
+    lcd.write("Boom!")
 
 
 # Prevent the script exiting!

@@ -1,10 +1,12 @@
-from dot3k.menu import MenuOption
-from dot3k.menu import MenuIcon
-import dot3k.backlight
-import subprocess
 import os
+import subprocess
 import sys
 import time
+
+import dot3k.backlight
+from dot3k.menu import MenuIcon
+from dot3k.menu import MenuOption
+
 
 MODE_AUTO = 0
 MODE_HEADPHONES = 1

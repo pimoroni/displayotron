@@ -1,14 +1,15 @@
-import time
-import os
 import atexit
+import os
 import sys
-from collections import OrderedDict
 import threading
+import time
+from collections import OrderedDict
 
 if sys.version_info[0] >= 3:
     import configparser as ConfigParser
 else:
     import ConfigParser
+
 
 _MODE_NAV = 'navigate'
 _MODE_ADJ = 'adjust'

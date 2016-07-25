@@ -1,4 +1,17 @@
 #!/usr/bin/env python
+
+import sys
+import signal
+
+import dothat.backlight as backlight
+import dothat.lcd as lcd
+import dothat.touch as nav
+from dot3k.menu import Menu
+
+from plugins.debris import Debris
+from plugins.utils import Backlight, Contrast
+
+
 print("""
 This advanced example uses the menu framework.
 It loads the debris game plugin. Your score is time survived in seconds, see how well you can do!
@@ -7,25 +20,7 @@ Press CTRL+C to exit.
 """)
 
 # Add the root examples dir so Python can find the plugins
-import sys
-
 sys.path.append("../../")
-
-# Import the dot3k libraries
-import dothat.lcd as lcd
-from dot3k.menu import Menu
-
-# Use "captouch" for dot4k
-import dothat.touch as touch
-
-# Use "hatbacklight" for dot4k
-import dothat.backlight as backlight
-
-# Import some plugins
-from plugins.utils import Backlight, Contrast
-from plugins.debris import Debris
-
-import signal
 
 # Build your menu!
 menu = Menu({
@@ -40,7 +35,7 @@ menu = Menu({
     lcd)
 
 # Hook captouch into menu with default settings
-touch.bind_defaults(menu)
+nav.bind_defaults(menu)
 
 # Start the menu redraw loop
 menu.run()

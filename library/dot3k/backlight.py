@@ -1,6 +1,11 @@
-import sn3218
 import colorsys
 import math
+
+try:
+    import sn3218
+except ImportError:
+    exit("This library requires the sn3218 module\nInstall with: sudo pip install sn3218")
+
 
 LED_R_R = 0x00
 LED_R_G = 0x01

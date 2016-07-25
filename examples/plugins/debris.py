@@ -1,6 +1,7 @@
-from dot3k.menu import MenuOption
 import random
 import time
+
+from dot3k.menu import MenuOption
 
 
 class Debris(MenuOption):

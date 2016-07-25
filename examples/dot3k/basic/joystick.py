@@ -1,4 +1,12 @@
 #!/usr/bin/env python
+
+import signal
+
+import dot3k.backlight as backlight
+import dot3k.joystick as nav
+import dot3k.lcd as lcd
+
+
 print("""
 This example shows you how to use the Display-o-Tron 3000 Joystick.
 If you press a joystick direction, you should see the LCD change accordingly.
@@ -6,55 +14,50 @@ If you press a joystick direction, you should see the LCD change accordingly.
 Press CTRL+C to exit.
 """)
 
-import dot3k.joystick as j
-import dot3k.lcd as l
-import dot3k.backlight as b
-import signal
-
 """
 The joystick provides the @joystick.on() decorator
 to make it super easy to attach handlers to each button.
 """
 
 
-@j.on(j.UP)
+@nav.on(nav.UP)
 def handle_up(pin):
     print("Up pressed!")
-    l.clear()
-    b.rgb(255, 0, 0)
-    l.write("Up up and away!")
+    lcd.clear()
+    backlight.rgb(255, 0, 0)
+    lcd.write("Up up and away!")
 
 
-@j.on(j.DOWN)
+@nav.on(nav.DOWN)
 def handle_down(pin):
     print("Down pressed!")
-    l.clear()
-    b.rgb(0, 255, 0)
-    l.write("Down down doobie down!")
+    lcd.clear()
+    backlight.rgb(0, 255, 0)
+    lcd.write("Down down doobie down!")
 
 
-@j.on(j.LEFT)
+@nav.on(nav.LEFT)
 def handle_left(pin):
     print("Left pressed!")
-    l.clear()
-    b.rgb(0, 0, 255)
-    l.write("Leftie left left!")
+    lcd.clear()
+    backlight.rgb(0, 0, 255)
+    lcd.write("Leftie left left!")
 
 
-@j.on(j.RIGHT)
+@nav.on(nav.RIGHT)
 def handle_right(pin):
     print("Right pressed!")
-    l.clear()
-    b.rgb(0, 255, 255)
-    l.write("Rightie tighty!")
+    lcd.clear()
+    backlight.rgb(0, 255, 255)
+    lcd.write("Rightie tighty!")
 
 
-@j.on(j.BUTTON)
+@nav.on(nav.BUTTON)
 def handle_button(pin):
     print("Button pressed!")
-    l.clear()
-    b.rgb(255, 255, 255)
-    l.write("Ouch!")
+    lcd.clear()
+    backlight.rgb(255, 255, 255)
+    lcd.write("Ouch!")
 
 
 # Prevent the script exiting!
