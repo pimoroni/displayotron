@@ -1,4 +1,8 @@
-import st7036
+try:
+    import st7036
+except ImportError:
+    exit("This library requires the st7036 module\nInstall with: sudo pip install st7036")
+
 
 ROWS = 3
 COLS = 16
