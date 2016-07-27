@@ -17,9 +17,9 @@ In the new terminal window type:
 curl -sS get.pimoroni.com/displayotron | bash
 ```
 
-If you choose to download examples you'll find them in `/home/pi/Pimoroni/displayotron`, but you can also check out the Basic and Advanced examples for both DotHAT and Dot3k in: [python/examples](python/examples)
+If you choose to download examples you'll find them in `/home/pi/Pimoroni/displayotron`, but you can also check out the Basic and Advanced examples for both DotHAT and Dot3k in: [examples](examples)
 
-We've also created a full [function reference](python/REFERENCE.md).
+We've also created a full [function reference](documentation/REFERENCE.md).
 
 *Make sure you run the right examples for your product, if you've got a Display-o-Tron 3000 you should be using the examples in `/home/pi/Pimoroni/displayotron/dot3k` and if you have a Display-o-Tron HAT you should be using the ones in `/home/pi/Pimoroni/displayotron/dothat`*
 
