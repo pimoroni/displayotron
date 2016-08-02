@@ -26,6 +26,7 @@ We've also created a full [function reference](documentation/REFERENCE.md).
 ##Other Languages
 
 * NodeJS: https://github.com/jorisvervuurt/JVSDisplayOTron
+* C/C++: https://github.com/akx/dot3k-c
 
 ##Resources
 
