@@ -5,13 +5,13 @@
 For Display-o-Tron HAT:
 
 ```python
-import dothat.lcd as lcd
+from dothat import lcd
 ```
 
 For Display-o-Tron 3000:
 
 ```python
-import dot3k.lcd as lcd
+from dot3k import lcd
 ```
 
 ###Methods
@@ -73,13 +73,13 @@ Advances all animations by one frame- this updates the character corresponding t
 For Display-o-Tron HAT:
 
 ```python
-import dothat.backlight as backlight
+from dothat import backlight
 ```
 
 For Display-o-Tron 3000:
 
 ```python
-import dot3k.backlight as backlight
+from dot3k import backlight
 ```
 
 ###Methods
@@ -193,7 +193,7 @@ Lights a number of bargraph LEDs depending upon value
 For Display-o-Tron HAT only:
 
 ```python
-import dothat.touch as touch
+from dothat import touch
 ```
 
 ###Constants
