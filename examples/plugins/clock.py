@@ -1,5 +1,6 @@
-from dot3k.menu import MenuOption
 import time
+
+from dot3k.menu import MenuOption
 
 
 class Clock(MenuOption):

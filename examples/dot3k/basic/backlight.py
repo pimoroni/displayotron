@@ -1,14 +1,17 @@
 #!/usr/bin/env python
+
+import time
+
+import dot3k.backlight as backlight
+import dot3k.lcd as lcd
+
+
 print("""
 This example shows you a feature of the Dot HAT backlight.
 You should see the backlight go white, then multi-coloured.
 
 Press CTRL+C to exit.
 """)
-
-import dot3k.lcd as lcd
-import dot3k.backlight as backlight
-import time
 
 # Clear the LCD and display Hello World
 lcd.clear()

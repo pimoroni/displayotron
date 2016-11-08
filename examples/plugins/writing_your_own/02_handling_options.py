@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+
 """
 This example builds upon our hello_world plugin,
 now we're going to add some options to cycle though.
@@ -10,6 +11,7 @@ multiple lines of text.
 
 In this example, we're going to to the latter!
 """
+
 from dot3k.menu import MenuOption
 
 

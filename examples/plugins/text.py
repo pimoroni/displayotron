@@ -1,5 +1,6 @@
 from dot3k.menu import MenuOption
 
+
 _MODE_CONFIRM = 1
 _MODE_ENTRY = 0
 

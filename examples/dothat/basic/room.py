@@ -1,15 +1,18 @@
 #!/usr/bin/env python
+
+import atexit
+import time
+
+import dothat.backlight as backlight
+import dothat.lcd as lcd
+
+
 print("""
 This is a really experimental example that doesn't do much!
 Do not adjust the horizontal, or the vertical!
 
 Press CTRL+C to exit.
 """)
-
-import dothat.backlight as backlight
-import dothat.lcd as lcd
-import atexit
-import time
 
 rain = [
     [1, 0, 0, 0, 0, 0, 0, 0],

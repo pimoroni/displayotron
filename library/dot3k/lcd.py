@@ -1,3 +1,5 @@
+from sys import exit
+
 try:
     import st7036
 except ImportError:

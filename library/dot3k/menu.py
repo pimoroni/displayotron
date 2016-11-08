@@ -1,11 +1,11 @@
 import atexit
 import os
-import sys
 import threading
 import time
 from collections import OrderedDict
+from sys import version_info
 
-if sys.version_info[0] >= 3:
+if version_info[0] >= 3:
     import configparser as ConfigParser
 else:
     import ConfigParser
@@ -157,7 +157,7 @@ class Menu:
             loc[last].setup(self.config)
 
     def save(self):
-        if sys.version_info[0] >= 3:
+        if version_info[0] >= 3:
             with open('dot3k.cfg', 'wt', encoding='utf-8') as configfile:
                 self.config.write(configfile)
         else:

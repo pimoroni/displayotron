@@ -1,6 +1,6 @@
 #!/bin/bash
 
-gettools="yes"
+gettools="no"
 setup="yes"
 cleanup="yes"
 pkgfiles=( "build" "changes" "deb" "dsc" "tar.xz" )
@@ -16,7 +16,7 @@ if [ $setup == "yes" ]; then
     cp -R ./debian/ ../library/
 fi
 
-cd ../library && debuild
+cd ../library && debuild -aarmhf
 
 for file in ${pkgfiles[@]}; do
     mv ../*.$file ../packaging

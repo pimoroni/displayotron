@@ -1,5 +1,6 @@
 import colorsys
 import math
+from sys import exit
 
 try:
     import sn3218

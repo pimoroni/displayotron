@@ -1,4 +1,17 @@
 #!/usr/bin/env python
+
+import sys
+import time
+
+import dot3k.backlight as backlight
+import dot3k.joystick as nav
+import dot3k.lcd as lcd
+from dot3k.menu import Menu
+
+from plugins.debris import Debris
+from plugins.utils import Backlight, Contrast
+
+
 print("""
 This advanced example uses the menu framework.
 It loads the debris game plugin. Your score is time survived in seconds, see how well you can do!
@@ -6,17 +19,7 @@ It loads the debris game plugin. Your score is time survived in seconds, see how
 Press CTRL+C to exit.
 """)
 
-import sys
-
 sys.path.append('../../')
-
-import dot3k.joystick as joystick
-import dot3k.lcd as lcd
-import dot3k.backlight as backlight
-from dot3k.menu import Menu
-from plugins.utils import Backlight, Contrast
-from plugins.debris import Debris
-import time
 
 menu = Menu({
         'Debris Game': Debris(),
@@ -32,31 +35,31 @@ menu = Menu({
 REPEAT_DELAY = 0.5
 
 
-@joystick.on(joystick.UP)
+@nav.on(nav.UP)
 def handle_up(pin):
     menu.up()
-    joystick.repeat(joystick.UP, menu.up, REPEAT_DELAY, 0.9)
+    nav.repeat(nav.UP, menu.up, REPEAT_DELAY, 0.9)
 
 
-@joystick.on(joystick.DOWN)
+@nav.on(nav.DOWN)
 def handle_down(pin):
     menu.down()
-    joystick.repeat(joystick.DOWN, menu.down, REPEAT_DELAY, 0.9)
+    nav.repeat(nav.DOWN, menu.down, REPEAT_DELAY, 0.9)
 
 
-@joystick.on(joystick.LEFT)
+@nav.on(nav.LEFT)
 def handle_left(pin):
     menu.left()
-    joystick.repeat(joystick.LEFT, menu.left, REPEAT_DELAY, 0.9)
+    nav.repeat(nav.LEFT, menu.left, REPEAT_DELAY, 0.9)
 
 
-@joystick.on(joystick.RIGHT)
+@nav.on(nav.RIGHT)
 def handle_right(pin):
     menu.right()
-    joystick.repeat(joystick.RIGHT, menu.right, REPEAT_DELAY, 0.9)
+    nav.repeat(nav.RIGHT, menu.right, REPEAT_DELAY, 0.9)
 
 
-@joystick.on(joystick.BUTTON)
+@nav.on(nav.BUTTON)
 def handle_button(pin):
     menu.select()
 

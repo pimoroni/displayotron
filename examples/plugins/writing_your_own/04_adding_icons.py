@@ -1,11 +1,15 @@
 #!/usr/bin/env python
+
 """
 Building upon our doing stuff example, we'll now add icons to show
 when things are running.
 """
-from dot3k.menu import MenuOption
-import threading
+
 import subprocess
+import threading
+
+from dot3k.menu import MenuOption
+
 
 class HelloWorld(MenuOption):
 
