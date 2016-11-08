@@ -1,3 +1,5 @@
+from sys import exit
+
 try:
     from cap1xxx import Cap1166, PID_CAP1166
 except ImportError:
