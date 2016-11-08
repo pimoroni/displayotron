@@ -1,6 +1,6 @@
 Source: dot3k
 Maintainer: Phil Howard <phil@pimoroni.com>
-Homepage: https://github.com/pimoroni/dot3k
+Homepage: https://github.com/pimoroni/displayotron
 Section: python
 Priority: extra
 Build-Depends: debhelper (>= 9.0.0), dh-python, python-all (>= 2.7), python-setuptools, python3-all (>= 3.4), python3-setuptools
