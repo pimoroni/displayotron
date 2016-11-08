@@ -1,7 +1,7 @@
 import os
 import subprocess
-import sys
 import time
+from sys import version_info
 
 import dot3k.backlight
 from dot3k.menu import MenuIcon
@@ -80,7 +80,7 @@ class Volume(MenuOption):
 
     def get_volume(self):
         actual_volume = subprocess.check_output("amixer get 'PCM' | awk '$0~/%/{print $4}' | tr -d '[]%'", shell=True)
-        if sys.version_info[0] >= 3:
+        if version_info[0] >= 3:
             return actual_volume.strip().decode('utf-8')
         else:
             return actual_volume.strip()
