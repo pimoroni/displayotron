@@ -1,6 +1,7 @@
-from dot3k.menu import MenuOption
-from dot3k.menu import MenuIcon
 import colorsys
+
+from dot3k.menu import MenuIcon
+from dot3k.menu import MenuOption
 
 
 class Backlight(MenuOption):

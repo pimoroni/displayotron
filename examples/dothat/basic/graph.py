@@ -1,14 +1,17 @@
 #!/usr/bin/env python
+
+import time
+
+import dothat.backlight as backlight
+import dothat.lcd as lcd
+
+
 print("""
 This example shows you how to take individual control of the bar graph LEDs.
 You should see the bar graph LEDs count up in binary!
 
 Press CTRL+C to exit.
 """)
-
-import dothat.backlight as backlight
-import dothat.lcd as lcd
-import time
 
 '''
 Each LED can be either on/off,

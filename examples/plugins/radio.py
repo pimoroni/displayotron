@@ -1,10 +1,11 @@
-from dot3k.menu import MenuOption
-import re
-import subprocess
-import socket
 import atexit
-import time
+import re
+import socket
+import subprocess
 import sys
+import time
+
+from dot3k.menu import MenuOption
 
 
 class Radio(MenuOption):

@@ -1,4 +1,18 @@
 #!/usr/bin/env python
+
+import sys
+import time
+
+import dot3k.backlight as backlight
+import dot3k.joystick as nav
+import dot3k.lcd as lcd
+from dot3k.menu import Menu, MenuOption
+
+from plugins.clock import Clock
+from plugins.graph import IPAddress, GraphTemp, GraphCPU, GraphNetSpeed
+from plugins.wlan import Wlan
+
+
 print("""
 This example uses automation to advance through each menu item.
 You should see each menu item appear in turn. However use-input will not be accepted.
@@ -6,18 +20,7 @@ You should see each menu item appear in turn. However use-input will not be acce
 Press CTRL+C to exit.
 """)
 
-import sys
-
 sys.path.append('../../')
-
-import dot3k.joystick as joystick
-import dot3k.lcd as lcd
-import dot3k.backlight as backlight
-from dot3k.menu import Menu, MenuOption
-from plugins.graph import IPAddress, GraphTemp, GraphCPU, GraphNetSpeed
-from plugins.clock import Clock
-from plugins.wlan import Wlan
-import time
 
 menu = Menu({
         'Clock': Clock(),

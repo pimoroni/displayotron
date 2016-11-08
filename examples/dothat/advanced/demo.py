@@ -1,15 +1,18 @@
 #!/usr/bin/env python
+
+import math
+import time
+
+import dothat.backlight as backlight
+import dothat.lcd as lcd
+
+
 print("""
 This example gives a basic demo of Display-o-Tron HAT's features.
 It will sweep the backlight, scan the bargraph and display text on screen!
 
 Press CTRL+C to exit.
 """)
-
-import dothat.backlight as backlight
-import dothat.lcd as lcd
-import time
-import math
 
 pirate = [
     [0x00, 0x1f, 0x0b, 0x03, 0x00, 0x04, 0x11, 0x1f],

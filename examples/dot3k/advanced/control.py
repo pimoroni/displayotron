@@ -1,4 +1,19 @@
 #!/usr/bin/env python
+
+import sys
+import time
+
+import dot3k.lcd as lcd
+import dot3k.backlight as backlight
+import dot3k.joystick as nav
+
+import utils.usbkeyboard as keyboard
+from menu import Menu, MenuOption
+from plugins.deluge import Deluge
+from plugins.text import Text
+from plugins import Volume, Backlight, Contrast, GraphTemp, GraphCPU, Clock, Radio, Stocks
+
+
 print("""
 This example builds upon the others and incorporates idle plugins,
 remote control support, and more.
@@ -8,19 +23,9 @@ To use this example you need a Rii mini wireless keyboard plugged into USB!
 Press CTRL+C to exit.
 """)
 
-import sys
 
 sys.path.append('../../')
 
-import dot3k.lcd as lcd
-import dot3k.backlight as backlight
-import dot3k.joystick as joystick
-import utils.usbkeyboard as keyboard
-from menu import Menu, MenuOption
-from plugins.text import Text
-from plugins.deluge import Deluge
-from plugins import Volume, Backlight, Contrast, GraphTemp, GraphCPU, Clock, Radio, Stocks
-import time
 
 my_clock = Clock()
 
@@ -79,31 +84,31 @@ REPEAT_DELAY = 0.5
 REPEAT_DATE = 0.99
 
 
-@joystick.on(joystick.UP)
+@nav.on(nav.UP)
 def handle_up(pin):
     menu.up()
-    joystick.repeat(joystick.UP, menu.up, REPEAT_DELAY, 0.99)
+    nav.repeat(nav.UP, menu.up, REPEAT_DELAY, 0.99)
 
 
-@joystick.on(joystick.DOWN)
+@nav.on(nav.DOWN)
 def handle_down(pin):
     menu.down()
-    joystick.repeat(joystick.DOWN, menu.down, REPEAT_DELAY, 0.99)
+    nav.repeat(nav.DOWN, menu.down, REPEAT_DELAY, 0.99)
 
 
-@joystick.on(joystick.LEFT)
+@nav.on(nav.LEFT)
 def handle_left(pin):
     menu.left()
-    joystick.repeat(joystick.LEFT, menu.left, REPEAT_DELAY, 0.99)
+    nav.repeat(nav.LEFT, menu.left, REPEAT_DELAY, 0.99)
 
 
-@joystick.on(joystick.RIGHT)
+@nav.on(nav.RIGHT)
 def handle_right(pin):
     menu.right()
-    joystick.repeat(joystick.RIGHT, menu.right, REPEAT_DELAY, 0.99)
+    nav.repeat(nav.RIGHT, menu.right, REPEAT_DELAY, 0.99)
 
 
-@joystick.on(joystick.BUTTON)
+@nav.on(nav.BUTTON)
 def handle_button(pin):
     menu.select()
 

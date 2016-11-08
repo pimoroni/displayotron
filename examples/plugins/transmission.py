@@ -14,9 +14,10 @@ Find the setting rpc-authentication-required and make sure it's set to false.
 Support for pausing/resuming torrents is planned.
 """
 
-from dot3k.menu import MenuOption
-import dot3k.backlight
 import threading
+
+import dot3k.backlight
+from dot3k.menu import MenuOption
 
 
 class Transmission(MenuOption):

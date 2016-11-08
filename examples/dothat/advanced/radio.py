@@ -1,4 +1,20 @@
 #!/usr/bin/env python
+
+import sys
+import time
+
+import dothat.backlight as backlight
+import dothat.lcd as lcd
+import dothat.touch as nav
+from dot3k.menu import Menu
+
+from plugins.clock import Clock
+from plugins.graph import GraphCPU, GraphTemp
+from plugins.radio import Radio
+from plugins.volume import Volume
+from plugins.utils import Backlight, Contrast
+
+
 print("""
 This advanced example uses the menu framework.
 Providing you have VLC and extra dependencies installed, it should function as an internet radio!
@@ -7,22 +23,9 @@ Press CTRL+C to exit.
 """)
 
 # Include advanced so Python can find the plugins
-import sys
-
 sys.path.append("../../")
 
-import dothat.touch as touch
-import dothat.lcd as lcd
-import dothat.backlight as backlight
-from dot3k.menu import Menu
-from plugins.utils import Backlight, Contrast
-from plugins.volume import Volume
-from plugins.clock import Clock
-from plugins.radio import Radio
-from plugins.graph import GraphCPU, GraphTemp
-import time
-
-touch.enable_repeat(True)
+nav.enable_repeat(True)
 
 # We want to use clock both as an option
 # and as the idle plugin
@@ -60,32 +63,32 @@ but you'll probably want to use dot3k.touch
 """
 
 
-@touch.on(touch.UP)
+@nav.on(nav.UP)
 def handle_up(ch, evt):
     menu.up()
 
 
-@touch.on(touch.CANCEL)
+@nav.on(nav.CANCEL)
 def handle_cancel(ch, evt):
     menu.cancel()
 
 
-@touch.on(touch.DOWN)
+@nav.on(nav.DOWN)
 def handle_down(ch, evt):
     menu.down()
 
 
-@touch.on(touch.LEFT)
+@nav.on(nav.LEFT)
 def handle_left(ch, evt):
     menu.left()
 
 
-@touch.on(touch.RIGHT)
+@nav.on(nav.RIGHT)
 def handle_right(ch, evt):
     menu.right()
 
 
-@touch.on(touch.BUTTON)
+@nav.on(nav.BUTTON)
 def handle_button(ch, evt):
     menu.select()
 

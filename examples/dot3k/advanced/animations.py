@@ -1,14 +1,25 @@
 #!/usr/bin/env python
+
+import copy
+import datetime
+import math
+import time
+
+try:
+    import psutil
+except ImportError:
+    exit("This library requires the psutil module\nInstall with: sudo pip install psutil")
+
+import dot3k.backlight as backlight
+import dot3k.lcd as lcd
+
+
 print("""
 This example shows you how to create animations on Display-o-Tron!
 You should see a collection of animated icons on your display.
 
 Press CTRL+C to exit.
 """)
-
-import dot3k.lcd as lcd
-import dot3k.backlight as backlight
-import time, datetime, copy, math, psutil
 
 lcd.write(chr(0) + 'Ooo! Such time' + chr(0))
 lcd.set_cursor_position(0, 2)

@@ -1,4 +1,20 @@
 #!/usr/bin/env python
+
+import sys
+import time
+
+import dothat.backlight as backlight
+import dothat.lcd as lcd
+import dothat.touch as nav
+from dot3k.menu import Menu, MenuOption
+
+from plugins.clock import Clock
+from plugins.graph import IPAddress, GraphTemp, GraphCPU, GraphNetSpeed
+from plugins.text import Text
+from plugins.utils import Backlight, Contrast
+from plugins.wlan import Wlan
+
+
 print("""
 This advanced example uses the menu framework.
 It gives you a basic menu setup with plugins. You should be able to view system info and adjust settings!
@@ -7,20 +23,7 @@ Press CTRL+C to exit.
 """)
 
 # Include advanced so Python can find the plugins
-import sys
-
 sys.path.append("../../")
-
-import dothat.touch as touch
-import dothat.lcd as lcd
-import dothat.backlight as backlight
-from dot3k.menu import Menu, MenuOption
-from plugins.utils import Backlight, Contrast
-from plugins.graph import IPAddress, GraphTemp, GraphCPU, GraphNetSpeed
-from plugins.clock import Clock
-from plugins.wlan import Wlan
-from plugins.text import Text
-import time
 
 
 class SpaceInvader(MenuOption):
@@ -83,9 +86,9 @@ menu = Menu(
 
 """
 You can use anything to control dot3k.menu,
-but you'll probably want to use dot3k.captouch
+but you'll probably want to use dot3k.touch
 """
-touch.bind_defaults(menu)
+nav.bind_defaults(menu)
 
 while 1:
     menu.redraw()

@@ -1,7 +1,9 @@
 #!/usr/bin/env python
+
 """
 Every dot3k.menu plugin is derived from MenuOption
 """
+
 from dot3k.menu import MenuOption
 
 

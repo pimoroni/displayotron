@@ -3,10 +3,11 @@ Plugin for Deluge torrent client.
 Requires deluge install: sudo apt-get install deluged deluged-console
 """
 
-from dot3k.menu import MenuOption
-import dot3k.backlight
-import threading
 import subprocess
+import threading
+
+import dot3k.backlight
+from dot3k.menu import MenuOption
 
 
 class Deluge(MenuOption):

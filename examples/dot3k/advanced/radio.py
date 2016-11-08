@@ -1,4 +1,20 @@
 #!/usr/bin/env python
+
+import sys
+import time
+
+import dot3k.backlight as backlight
+import dot3k.joystick as nav
+import dot3k.lcd as lcd
+from dot3k.menu import Menu
+
+from plugins.clock import Clock
+from plugins.graph import GraphCPU, GraphTemp
+from plugins.radio import Radio
+from plugins.utils import Backlight, Contrast
+from plugins.volume import Volume
+
+
 print("""
 This advanced example uses the menu framework.
 Providing you have VLC and extra dependencies installed, it should function as an internet radio!
@@ -6,20 +22,7 @@ Providing you have VLC and extra dependencies installed, it should function as a
 Press CTRL+C to exit.
 """)
 
-import sys
-
 sys.path.append('../../')
-
-import dot3k.joystick as joystick
-import dot3k.lcd as lcd
-import dot3k.backlight as backlight
-from dot3k.menu import Menu
-from plugins.utils import Backlight, Contrast
-from plugins.volume import Volume
-from plugins.clock import Clock
-from plugins.radio import Radio
-from plugins.graph import GraphCPU, GraphTemp
-import time
 
 # We want to use clock both as an option
 # and as the idle plugin
@@ -61,31 +64,31 @@ in a direction will start to trigger repeats
 REPEAT_DELAY = 0.5
 
 
-@joystick.on(joystick.UP)
+@nav.on(nav.UP)
 def handle_up(pin):
     menu.up()
-    joystick.repeat(joystick.UP, menu.up, REPEAT_DELAY, 0.9)
+    nav.repeat(nav.UP, menu.up, REPEAT_DELAY, 0.9)
 
 
-@joystick.on(joystick.DOWN)
+@nav.on(nav.DOWN)
 def handle_down(pin):
     menu.down()
-    joystick.repeat(joystick.DOWN, menu.down, REPEAT_DELAY, 0.9)
+    nav.repeat(nav.DOWN, menu.down, REPEAT_DELAY, 0.9)
 
 
-@joystick.on(joystick.LEFT)
+@nav.on(nav.LEFT)
 def handle_left(pin):
     menu.left()
-    joystick.repeat(joystick.LEFT, menu.left, REPEAT_DELAY, 0.9)
+    nav.repeat(nav.LEFT, menu.left, REPEAT_DELAY, 0.9)
 
 
-@joystick.on(joystick.RIGHT)
+@nav.on(nav.RIGHT)
 def handle_right(pin):
     menu.right()
-    joystick.repeat(joystick.RIGHT, menu.right, REPEAT_DELAY, 0.9)
+    nav.repeat(nav.RIGHT, menu.right, REPEAT_DELAY, 0.9)
 
 
-@joystick.on(joystick.BUTTON)
+@nav.on(nav.BUTTON)
 def handle_button(pin):
     menu.select()
 
