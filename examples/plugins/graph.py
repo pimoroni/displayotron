@@ -3,6 +3,7 @@ import socket
 import struct
 import subprocess
 import time
+from sys import exit
 
 try:
     import psutil

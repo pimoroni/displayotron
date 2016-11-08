@@ -1,7 +1,13 @@
 #!/usr/bin/env python
+
 import socket
 import sys
-import ConfigParser
+
+try:
+    import ConfigParser
+except ImportError:
+    import configparser as ConfigParser
+
 
 config = ConfigParser.ConfigParser()
 config.read(['../dot3k.cfg', 'dot3k.cfg'])
@@ -31,4 +37,4 @@ if command is not None:
         sck.connect((host, port))
         sck.send(command + '\n')
     except socket.error:
-        exit('Unable to connect to server: ' + host + ':' + str(port))
+        sys.exit('Unable to connect to server: ' + host + ':' + str(port))
