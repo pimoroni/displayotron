@@ -2,8 +2,8 @@ import atexit
 import re
 import socket
 import subprocess
-import sys
 import time
+from sys import version_info
 
 from dot3k.menu import MenuOption
 
@@ -169,7 +169,7 @@ class Radio(MenuOption):
 
     def send(self, command):
         try:
-            if sys.version_info[0] >= 3:
+            if version_info[0] >= 3:
                 self.socket.send((command + "\n").encode('utf-8'))
             else:
                 self.socket.send(command + "\n")
@@ -179,7 +179,7 @@ class Radio(MenuOption):
     def get_current_stream(self):
         self.send("status")
         status = self.socket.recv(8192)
-        if sys.version_info[0] >= 3:
+        if version_info[0] >= 3:
             status = status.decode('utf-8')
         result = re.search('input:\ (.*)\ ', status)
         state = re.search('state\ (.*)\ ', status)
@@ -210,7 +210,7 @@ class Radio(MenuOption):
         if self.pid is None:
             try:
                 return_value = subprocess.check_output(['pidof', 'vlc'])
-                if sys.version_info[0] >= 3:
+                if version_info[0] >= 3:
                     self.pid = int(return_value.decode('utf-8').split(' ')[0])
                 else:
                     self.pid = int(return_value.decode('utf-8').split(' ')[0])

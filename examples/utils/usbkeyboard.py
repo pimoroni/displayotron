@@ -1,7 +1,11 @@
 import threading
+from sys import exit
 
-import usb.core
-import usb.util
+try:
+    import usb.core
+    import usb.util
+except ImportError:
+    exit("This script requires the pyusb module\nInstall with: sudo pip install pyusb")
 
 
 class StoppableThread(threading.Thread):

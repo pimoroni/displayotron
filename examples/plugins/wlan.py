@@ -4,6 +4,7 @@ Plugin for managing connections to wifi networks
 
 import subprocess
 import threading
+from sys import exit
 
 try:
     import wifi
