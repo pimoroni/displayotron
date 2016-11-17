@@ -20,11 +20,12 @@ def get_addr(ifname):
 
 wlan0 = get_addr('wlan0')
 eth0 = get_addr('eth0')
+host = socket.gethostname
 
 lcd.clear()
 
 lcd.set_cursor_position(0,0)
-lcd.write('Wired / wifi IP')
+lcd.write('{}.local'.format(host))
 
 lcd.set_cursor_position(0,1)
 if eth0 != 'Not Found!':
