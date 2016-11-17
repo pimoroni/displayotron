@@ -12,7 +12,8 @@ The easiest way to represent this in python is to convert eight character string
 
 The pacman image is represented here:
 
-```pacman = [
+```python
+pacman = [
 [0x0e, 0x1f, 0x1d, 0x1f, 0x18, 0x1f, 0x1f, 0x0e],
 [0x0e, 0x1d, 0x1e, 0x1c, 0x18, 0x1c, 0x1e, 0x0f]
 ]
@@ -20,7 +21,8 @@ The pacman image is represented here:
 
 in condensed form using hexadecimal (base sixteen), but base two (binary) is easier to visualize. Here's an example of a static (non-animated) bitmap:
 
-```char_map_pacman = [
+```python
+char_map_pacman = [
 int('01110', 2),
 int('11111', 2),
 int('11101', 2),
@@ -34,7 +36,8 @@ int('01110', 2),
 
 And for an animation you would use a list of lists, so each frame is a list of eight strings of eight bits.
 
-```anim_map_pacman = [
+```python
+anim_map_pacman = [
 [ # Frame 1
 int('01110', 2),
 int('11111', 2),
