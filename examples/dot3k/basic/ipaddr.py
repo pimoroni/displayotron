@@ -4,7 +4,7 @@ import fcntl
 import socket
 import struct
 
-import dothat.lcd as lcd
+import dot3k.lcd as lcd
 
 
 def get_addr(ifname):
