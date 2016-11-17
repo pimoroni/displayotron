@@ -8,6 +8,9 @@ import dot3k.joystick as nav
 import dot3k.lcd as lcd
 from dot3k.menu import Menu, MenuOption
 
+# Add the root examples dir so Python can find the plugins
+sys.path.append('../../')
+
 from plugins.clock import Clock
 from plugins.graph import IPAddress, GraphTemp, GraphCPU, GraphNetSpeed
 from plugins.utils import Backlight, Contrast
@@ -20,9 +23,6 @@ It gives you a basic menu setup with plugins. You should be able to view system 
 
 Press CTRL+C to exit.
 """)
-
-sys.path.append('../../')
-
 
 class SpaceInvader(MenuOption):
     """
