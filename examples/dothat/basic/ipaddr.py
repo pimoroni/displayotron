@@ -23,14 +23,17 @@ eth0 = get_addr('eth0')
 
 lcd.clear()
 
-if wlan0 != 'Not Found!':
-    lcd.set_cursor_position(0, 1)
-    lcd.write(wlan0)
-else:
-    lcd.write('wlan0 {}'.format(wlan0))
+lcd.set_cursor_position(0,0)
+lcd.write('Wired / wifi IP')
 
+lcd.set_cursor_position(0,1)
 if eth0 != 'Not Found!':
-    lcd.set_cursor_position(1, 1)
     lcd.write(eth0)
 else:
     lcd.write('eth0 {}'.format(eth0))
+
+lcd.set_cursor_position(0,2)
+if wlan0 != 'Not Found!':
+    lcd.write(wlan0)
+else:
+    lcd.write('wlan0 {}'.format(wlan0))
