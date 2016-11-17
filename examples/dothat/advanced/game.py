@@ -8,6 +8,9 @@ import dothat.lcd as lcd
 import dothat.touch as nav
 from dot3k.menu import Menu
 
+# Add the root examples dir so Python can find the plugins
+sys.path.append('../../')
+
 from plugins.debris import Debris
 from plugins.utils import Backlight, Contrast
 
@@ -18,9 +21,6 @@ It loads the debris game plugin. Your score is time survived in seconds, see how
 
 Press CTRL+C to exit.
 """)
-
-# Add the root examples dir so Python can find the plugins
-sys.path.append("../../")
 
 # Build your menu!
 menu = Menu({
