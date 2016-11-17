@@ -7,11 +7,15 @@ import dot3k.lcd as lcd
 import dot3k.backlight as backlight
 import dot3k.joystick as nav
 
-import utils.usbkeyboard as keyboard
 from menu import Menu, MenuOption
+
+# Add the root examples dir so Python can find the plugins
+sys.path.append('../../')
+
 from plugins.deluge import Deluge
 from plugins.text import Text
 from plugins import Volume, Backlight, Contrast, GraphTemp, GraphCPU, Clock, Radio, Stocks
+import utils.usbkeyboard as keyboard
 
 
 print("""
@@ -22,10 +26,6 @@ To use this example you need a Rii mini wireless keyboard plugged into USB!
 
 Press CTRL+C to exit.
 """)
-
-
-sys.path.append('../../')
-
 
 my_clock = Clock()
 

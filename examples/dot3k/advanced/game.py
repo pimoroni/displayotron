@@ -8,6 +8,9 @@ import dot3k.joystick as nav
 import dot3k.lcd as lcd
 from dot3k.menu import Menu
 
+# Add the root examples dir so Python can find the plugins
+sys.path.append('../../')
+
 from plugins.debris import Debris
 from plugins.utils import Backlight, Contrast
 
@@ -18,8 +21,6 @@ It loads the debris game plugin. Your score is time survived in seconds, see how
 
 Press CTRL+C to exit.
 """)
-
-sys.path.append('../../')
 
 menu = Menu({
         'Debris Game': Debris(),

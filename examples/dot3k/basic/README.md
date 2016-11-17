@@ -19,6 +19,18 @@ bargraph.py
 Shows how to display a percentage on the bargraph, or control the LEDs individually
 
 
+hue.py
+-----------
+
+Sets the backlight to a hue using colorsys
+
+
+ipaddr.py
+-----------
+
+Displays hostname and eth0/wlan0 IP addresses
+
+
 joystick.py
 -----------
 
