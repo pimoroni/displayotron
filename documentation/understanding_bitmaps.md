@@ -1,4 +1,4 @@
-#Understanding Bitmaps
+# Understanding Bitmaps
 
 The character LCD display consists of a grid of cursor positions and each cursor position consists of a grid of pixels. Any supported character can be written to any cursor position, but how do you create new characters that aren't built into the LCD?
 
@@ -12,49 +12,54 @@ The easiest way to represent this in python is to convert eight character string
 
 The pacman image is represented here:
 
-```pacman = [
-[0x0e, 0x1f, 0x1d, 0x1f, 0x18, 0x1f, 0x1f, 0x0e],
-[0x0e, 0x1d, 0x1e, 0x1c, 0x18, 0x1c, 0x1e, 0x0f]
+```python
+pacman = [
+  [0x0e, 0x1f, 0x1d, 0x1f, 0x18, 0x1f, 0x1f, 0x0e],
+  [0x0e, 0x1d, 0x1e, 0x1c, 0x18, 0x1c, 0x1e, 0x0f]
 ]
 ```
 
 in condensed form using hexadecimal (base sixteen), but base two (binary) is easier to visualize. Here's an example of a static (non-animated) bitmap:
 
-```char_map_pacman = [
-int('01110', 2),
-int('11111', 2),
-int('11101', 2),
-int('11111', 2),
-int('11000', 2),
-int('11111', 2),
-int('11111', 2),
-int('01110', 2),
+```python
+char_map_pacman = [
+  0b01110,
+  0b11111,
+  0b11101,
+  0b11111,
+  0b11000,
+  0b11111,
+  0b11111,
+  0b01110,
 ]
 ```
 
 And for an animation you would use a list of lists, so each frame is a list of eight strings of eight bits.
 
-```anim_map_pacman = [
-[ # Frame 1
-int('01110', 2),
-int('11111', 2),
-int('11101', 2),
-int('11111', 2),
-int('11000', 2),
-int('11111', 2),
-int('11111', 2),
-int('01110', 2),
-],
-[ # Frame 2
-int('01110', 2),
-int('11101', 2),
-int('11110', 2),
-int('11100', 2),
-int('11000', 2),
-int('11100', 2),
-int('11110', 2),
-int('01111', 2),
-],
-# Add more frames as needed, a list of eight integers per frame
+```python
+anim_map_pacman = [
+  # Frame 1
+  [
+    0b01110,
+    0b11111,
+    0b11101,
+    0b11111,
+    0b11000,
+    0b11111,
+    0b11111,
+    0b01110,
+  ],
+  # Frame 2
+  [
+    0b01110,
+    0b11101,
+    0b11110,
+    0b11100,
+    0b11000,
+    0b11100,
+    0b11110,
+    0b01111,
+  ],
+  # Add more frames as needed, a list of eight integers per frame
 ]
 ```
