@@ -8,6 +8,9 @@ import dot3k.joystick as nav
 import dot3k.lcd as lcd
 from dot3k.menu import Menu
 
+# Add the root examples dir so Python can find the plugins
+sys.path.append('../../')
+
 from plugins.clock import Clock
 from plugins.graph import GraphCPU, GraphTemp
 from plugins.radio import Radio
@@ -21,8 +24,6 @@ Providing you have VLC and extra dependencies installed, it should function as a
 
 Press CTRL+C to exit.
 """)
-
-sys.path.append('../../')
 
 # We want to use clock both as an option
 # and as the idle plugin

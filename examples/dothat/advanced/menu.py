@@ -8,6 +8,9 @@ import dothat.lcd as lcd
 import dothat.touch as nav
 from dot3k.menu import Menu, MenuOption
 
+# Add the root examples dir so Python can find the plugins
+sys.path.append('../../')
+
 from plugins.clock import Clock
 from plugins.graph import IPAddress, GraphTemp, GraphCPU, GraphNetSpeed
 from plugins.text import Text
@@ -21,10 +24,6 @@ It gives you a basic menu setup with plugins. You should be able to view system 
 
 Press CTRL+C to exit.
 """)
-
-# Include advanced so Python can find the plugins
-sys.path.append("../../")
-
 
 class SpaceInvader(MenuOption):
     """

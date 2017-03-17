@@ -7,7 +7,7 @@ import dot3k.backlight as backlight
 
 print("""
 This example shows how to set the backlight to a hue!
-It uses coloursys, rather than the built-in hue function, to show you a colour conversion in Python.
+It uses colorsys, rather than the built-in hue function, to show you a colour conversion in Python.
 
 Press CTRL+C to exit.
 """)

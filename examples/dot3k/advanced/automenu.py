@@ -8,6 +8,9 @@ import dot3k.joystick as nav
 import dot3k.lcd as lcd
 from dot3k.menu import Menu, MenuOption
 
+# Add the root examples dir so Python can find the plugins
+sys.path.append('../../')
+
 from plugins.clock import Clock
 from plugins.graph import IPAddress, GraphTemp, GraphCPU, GraphNetSpeed
 from plugins.wlan import Wlan
@@ -19,8 +22,6 @@ You should see each menu item appear in turn. However use-input will not be acce
 
 Press CTRL+C to exit.
 """)
-
-sys.path.append('../../')
 
 menu = Menu({
         'Clock': Clock(),

@@ -8,6 +8,9 @@ import dothat.lcd as lcd
 import dothat.touch as nav
 from dot3k.menu import Menu
 
+# Add the root examples dir so Python can find the plugins
+sys.path.append('../../')
+
 from plugins.clock import Clock
 from plugins.graph import GraphCPU, GraphTemp
 from plugins.radio import Radio
@@ -21,9 +24,6 @@ Providing you have VLC and extra dependencies installed, it should function as a
 
 Press CTRL+C to exit.
 """)
-
-# Include advanced so Python can find the plugins
-sys.path.append("../../")
 
 nav.enable_repeat(True)
 

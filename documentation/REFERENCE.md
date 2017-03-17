@@ -166,6 +166,16 @@ Set the right backlight to supplied r, g, b colour
 * b (int): blue value between 0 and 255
 
 ```python
+backlight.single_rgb(index, r, g, b)
+```
+Set a specific backlight supplied r, g, b colour.
+
+* index (int): index of the LED from 0 to 5 (or 0 to 2 on Dot3k)
+* r (int): red value between 0 and 255
+* g (int): green value between 0 and 255
+* b (int): blue value between 0 and 255
+
+```python
 backlight.set(index, value)
 ```
 Set a specific LED to a value
