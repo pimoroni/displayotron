@@ -1,3 +1,9 @@
+dot3k (2.0.2) stable; urgency=low
+
+  * Added __version__ to module
+
+ -- Phil Howard <phil@pimoroni.com>  Thu, 10 Nov 2016 00:00:00 +0000
+
 dot3k (2.0.1) UNRELEASED; urgency=low
 
   * Now handles reset pin for Display-o-Tron HAT

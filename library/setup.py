@@ -39,7 +39,7 @@ classifiers = ['Development Status :: 5 - Production/Stable',
 
 setup(
     name            = 'dot3k',
-    version         = '2.0.1',
+    version         = '2.0.2',
     author          = 'Philip Howard',
     author_email    = 'phil@pimoroni.com',
     description     = 'Display-o-Tron 3000/HAT Driver',
