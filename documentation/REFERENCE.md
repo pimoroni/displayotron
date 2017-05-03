@@ -47,6 +47,22 @@ Sets the cursor position to column,row
 * row (int): row ( vertical ) position from 0 to 2
 
 ```python
+lcd.set_cursor_offset(offset)
+```
+Sets the cursor position in DRAM
+
+* offset (int): DRAM offset to place cursor
+
+```python
+lcd.set_display_mode(enable, cursor, blink)
+```
+Sets the display mode
+
+* enable (boolean): enable display output
+* cursor (boolean): show cursor
+* blink (boolean): blink cursor (if shown)
+
+```python
 lcd.create_char(char_pos, char_map)
 ```
 Create a custom character and save into dot3k memory.
@@ -197,6 +213,21 @@ backlight.set_graph(value)
 Lights a number of bargraph LEDs depending upon value
 
 * value (float): percentage between 0.0 and 1.0
+
+```python
+backlight.sweep(hue, range)
+```
+Sets the backlight LEDs to a gradient centred on supplied hue
+
+Supplying zero to range would be the same as hue()
+
+* hue (float): hue value between 0.0 and 1.0
+* range (float): range value to deviate the left and right hue
+
+```python
+backlight.update()
+```
+Update backlight with changes to the LED buffer
 
 ##Touch
 
