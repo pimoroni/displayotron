@@ -1,6 +1,6 @@
-#Display-o-tron Function Reference
+# Display-o-tron Function Reference
 
-##LCD
+## LCD
 
 For Display-o-Tron HAT:
 
@@ -14,7 +14,7 @@ For Display-o-Tron 3000:
 from dot3k import lcd
 ```
 
-###Methods
+### Methods
 
 ```python
 lcd.write(value)
@@ -84,7 +84,7 @@ lcd.update_animations()
 ```
 Advances all animations by one frame- this updates the character corresponding to each animation with the correct frame.
 
-##Backlight
+## Backlight
 
 For Display-o-Tron HAT:
 
@@ -98,7 +98,7 @@ For Display-o-Tron 3000:
 from dot3k import backlight
 ```
 
-###Methods
+### Methods
 
 ```python
 backlight.use_rbg()
@@ -229,7 +229,7 @@ backlight.update()
 ```
 Update backlight with changes to the LED buffer
 
-##Touch
+## Touch
 
 For Display-o-Tron HAT only:
 
@@ -237,7 +237,7 @@ For Display-o-Tron HAT only:
 from dothat import touch
 ```
 
-###Constants
+### Constants
 
 Constants are defined for all the buttons, giving them friendly names like so:
 
@@ -250,7 +250,7 @@ touch.BUTTON
 touch.CANCEL
 ```
 
-###Methods
+### Methods
 
 ```python
 touch.high_sensitivity()
