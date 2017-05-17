@@ -50,4 +50,4 @@ coverage.xml
 *.log
 *.pot
 # Sphinx documentation
-docs/_build/
+sphinx/_build/
