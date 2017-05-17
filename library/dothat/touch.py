@@ -21,29 +21,53 @@ _cap1166._write_byte(0x26, 0b00111111)  # Force recalibration
 for x in range(6):
     _cap1166.set_led_linking(x, False)
 
-
 def high_sensitivity():
+    """Switch to high sensitivity mode
+
+    This predetermined high sensitivity mode is for using
+    touch through 3mm perspex or similar materials.
+
+    """
+
     _cap1166._write_byte(0x00, 0b11000000)
     _cap1166._write_byte(0x1f, 0b00000000)
 
-
 def enable_repeat(enable):
+    """Enable touch hold repeat
+
+    If enable is true, repeat will be enabled. This will
+    trigger new touch events at the set repeat_rate when
+    a touch input is held.
+
+    :param enable: enable/disable repeat: True/False
+
+    """
+
     if enable:
         _cap1166.enable_repeat(0b11111111)
     else:
         _cap1166.enable_repeat(0b00000000)
 
-
 def set_repeat_rate(rate):
+    """Set hold repeat rate
+
+    Repeat rate values are clamped to the nearest 35ms,
+    values from 35 to 560 are valid.
+
+    :param rate: time in ms from 35 to 560
+
+    """
+
     _cap1166.set_repeat_rate(rate)
 
-
 def on(buttons, bounce=-1):
-    """
+    """Handle a press of one or more buttons
+
     Decorator. Use with @captouch.on(UP)
-    Args:
-      buttons (list): List, or single instance of cap touch button constant
-      bounce (int): Maintained for compatibility with Dot3k joystick, unused
+
+    :param buttons: List, or single instance of cap touch button constant
+    :param bounce: Maintained for compatibility with Dot3k joystick, unused
+
     """
     buttons = buttons if isinstance(buttons, list) else [buttons]
 
@@ -56,6 +80,12 @@ def on(buttons, bounce=-1):
 
 
 def bind_defaults(menu):
+    """Bind the default controls to a menu instance
+
+    This should be used in conjunction with a menu class instance
+    to bind touch inputs to the default controls.
+
+    """
     @on(UP)
     def handle_up(ch, evt):
         menu.up()

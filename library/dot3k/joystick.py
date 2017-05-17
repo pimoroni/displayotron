@@ -33,12 +33,15 @@ repeat_status = {
 
 
 def on(buttons, bounce=BOUNCE):
-    """
+    """Handle a joystick direction or button push
+
     Decorator. Use with @joystick.on(joystick.UP)
-    Args:
-      buttons (list): List, or single instance of joystick button constant
-      bounce (int): Debounce time in milliseconds
+
+    :param buttons: List, or single instance of joystick button constant
+    :param bounce: Debounce delay in milliseconds: default 300
+
     """
+
     buttons = buttons if isinstance(buttons, list) else [buttons]
 
     def register(handler):
@@ -48,20 +51,21 @@ def on(buttons, bounce=BOUNCE):
 
     return register
 
-
 def millis():
+    """Return the current time in milliseconds."""
     return int(round(time.time() * 1000))
 
-
 def repeat(button, handler, delay=0.1, ramp=1.0):
-    """
+    """Detect a held direction and repeat
+
     If you want to hold a direction and have it auto-repeat,
     call this within a joystick direction handler.
-    Args:
-      button (int): Joystick button constant to watch
-      handler (function): Function to call every repeat
-      delay (float): Delay, in seconds, before repeat starts and between each repeat
-      ramp (float): Multiplier applied to delay after each repeat, 1.0=linear speed up
+
+    :param button: Joystick button constant to watch
+    :param handler: Function to call every repeat
+    :param delay: Delay, in seconds, before repeat starts and between each repeat
+    :param ramp: Multiplier applied to delay after each repeat, 1.0=linear speed up
+
     """
     if repeat_status[button]:
         return False

@@ -16,82 +16,109 @@ lcd.clear()
 def write(value):
     """Write a string to the current cursor position.
 
-    Args:
-        value (string): The string to write
+    :param value: The string to write
     """
+
     lcd.write(value)
 
 
 def clear():
-    """Clears the display and resets the cursor."""
+    """Clear the display and reset the cursor."""
+
     lcd.clear()
 
 
 def set_contrast(contrast):
-    """Sets the display contrast.
+    """Set the display contrast.
 
-    Args:
-        contrast (int): contrast value
-    Raises:
-        TypeError: if contrast is not an int
-        ValueError: if contrast is not in the range 0..0x3F
+    Raises TypeError if contrast is not an int
+    Raises ValueError if contrast is not in the range 0..0x3F
+
+    :param contrast: contrast value
+
     """
+
     lcd.set_contrast(contrast)
 
 
 def set_display_mode(enable=True, cursor=False, blink=False):
-    """Sets the display mode.
+    """Set the display mode.
 
-    Args:
-        enable (boolean): enable display output
-        cursor (boolean): show cursor
-        blink (boolean): blink cursor (if shown)
+    :param enable: enable display output: True/False
+    :param cursor: show cursor: True/False
+    :param blink: blink cursor (if shown): True/False
+
     """
+
     lcd.set_display_mode(enable, cursor, blink)
 
 
 def set_cursor_offset(offset):
-    """Sets the cursor position in DRAM
+    """Set the cursor position in DRAM
 
-    Args:
-        offset (int): DRAM offset to place cursor
+    :param offset: DRAM offset to place cursor
+
     """
+
     lcd.set_cursor_offset(offset)
 
 
 def set_cursor_position(column, row):
-    """Sets the cursor position in DRAM based on a row and column offset.
+    """Set the cursor position in DRAM
 
-    Args:
-        column (int): column to move the cursor to
-        row (int): row to move the cursor to
-    Raises:
-     ValueError: if row and column are not within defined screen size
+    Calculates the cursor offset based on a row and column offset.
+
+    Raises ValueError if row and column are not within defined screen size
+
+    :param column: column to move the cursor to
+    :param row: row to move the cursor to
+
     """
+
     lcd.set_cursor_position(column, row)
 
 
 def create_animation(anim_pos, anim_map, frame_rate):
-    """Create a custom animation. These are saved in the same memory locations as custom characters.
+    """Create an animation in a given custom character slot
 
-    Args:
-        char_pos (int): Value from 0-7, to save anim in dot3k memory
-        anim_map (list): List of (List of 8, 8-bit integers describing the character)
-        frame_rate (int): Animation speed in frames-per-second
+    Each definition should be a list of 8 bytes describing the custom character for that frame,
+
+    :param anim_pos: Character slot from 0 to 7 to store animation
+    :param anim_map: A list of custom character definitions
+    :param frame_rate: Speed of animation in frames-per-second
+
     """
+
     lcd.create_animation(anim_pos, anim_map, frame_rate)
 
 
 def update_animations():
-    """Advances all registered animations by one frame."""
+    """Update animations onto the LCD
+
+    Uses wall time to figure out which frame is current for
+    each animation, and then updates the animations character
+    slot to the contents of that frame.
+
+    Only one frame, the current one, is ever stored on the LCD.
+
+    """
+
     lcd.update_animations()
 
 
 def create_char(char_pos, char_map):
-    """Create a custom character.
-    
-    Args:
-        char_pos (int): Value from 0-7, to save char in dot3k memory
-        char_map (list): List of 8, 8-bit integers describing the character
+    """Create a character in the LCD memory
+
+    The st7036 has 8 slots for custom characters.
+
+    A char is defined as a list of 8 integers with the
+    upper 5 bits setting the state of each row of pixels.
+
+    Note: These slots are also used for animations!
+
+    :param char_pos: Char slot to use (0-7)
+    :param char_map: List of 8 integers containing bitmap
+
     """
+
     lcd.create_char(char_pos, char_map)

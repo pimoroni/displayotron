@@ -35,10 +35,10 @@ graph_set_led_duty = cap.set_led_direct_duty
 
 
 def use_rbg():
-    """
-    Swaps the Green and Blue channels on the LED backlight
-  
-    Use if you have a first batch Display-o-Tron 3K
+    """Does nothing.
+
+    Implemented for library compatibility with Dot3k backlight.
+
     """
     pass
 
@@ -49,18 +49,20 @@ def graph_off():
 
 
 def set_graph(percentage):
-    """
-    Lights a number of bargraph LEDs depending upon value
-    
-    Args:
-        value (float): percentage between 0.0 and 1.0
+    """Light a number of bargraph LEDs depending upon value
 
-    Todo:
-        Reimplement using CAP
+    :param hue: hue value between 0.0 and 1.0
+
     """
+
     cap._write_byte(cap1xxx.R_LED_DIRECT_RAMP, 0b00000000)
     cap._write_byte(cap1xxx.R_LED_BEHAVIOUR_1, 0b00000000)
     cap._write_byte(cap1xxx.R_LED_BEHAVIOUR_2, 0b00000000)
+
+    # The Cap 1xxx chips do *not* have full per-LED PWM
+    # brightness control. However...
+    # They have the ability to define what on/off actually
+    # means, plus invert the state of any LED.
 
     total_value = STEP_VALUE * NUM_LEDS
     actual_value = int(total_value * percentage)
@@ -80,13 +82,13 @@ def set_graph(percentage):
 
 
 def set(index, value):
+    """Set a specific backlight LED to a value
+
+    :param index (int): index of the LED from 0 to 18
+    :param value (int): brightness value from 0 to 255
+
     """
-    Set a specific LED to a value
-    
-    Args:
-        index (int): index of the LED from 0 to 18
-        value (int): brightness value from 0 to 255
-    """
+
     index = index if isinstance(index, list) else [index]
     for i in index:
         leds[i] = value
@@ -94,49 +96,47 @@ def set(index, value):
 
 
 def set_bar(index, value):
-    """
-    Set a value or values to one or more LEDs
-    
-    Args:
-        index (int): starting index
-        value (int or list): a single int, or list of brightness values from 0 to 255
+    """Does nothing.
+
+    Implemented for library compatibility with Dot3k backlight.
+
     """
     pass
 
 
 def hue_to_rgb(hue):
+    """Convert a hue to RGB brightness values
+
+    :param hue: hue value between 0.0 and 1.0
+
     """
-    Converts a hue to RGB brightness values
-    
-    Args:
-        hue (float): hue value between 0.0 and 1.0
-    """
+
     rgb = colorsys.hsv_to_rgb(hue, 1.0, 1.0)
 
     return [int(rgb[0] * 255), int(rgb[1] * 255), int(rgb[2] * 255)]
 
 
 def hue(hue):
+    """Set the backlight LEDs to supplied hue
+
+    :param hue: hue value between 0.0 and 1.0
+
     """
-    Sets the backlight LEDs to supplied hue
-    
-    Args:
-        hue (float): hue value between 0.0 and 1.0
-    """
+
     col_rgb = hue_to_rgb(hue)
     rgb(col_rgb[0], col_rgb[1], col_rgb[2])
 
 
 def sweep(hue, sweep_range=0.0833):
-    """
-    Sets the backlight LEDs to a gradient centered on supplied hue
-    
+    """Set the backlight LEDs to a gradient centered on supplied hue
+
     Supplying zero to range would be the same as hue()
-    
-    Args:
-        hue (float): hue value between 0.0 and 1.0
-        range (float): range value to deviate the left and right hue
+
+    :param hue: hue value between 0.0 and 1.0
+    :param range: range value to deviate the left and right hue
+
     """
+
     global leds
     for x in range(0, 18, 3):
         rgb = hue_to_rgb((hue + (sweep_range * (x / 3))) % 1)
@@ -146,84 +146,97 @@ def sweep(hue, sweep_range=0.0833):
 
 
 def left_hue(hue):
+    """Set the left backlight to supplied hue
+
+    :param hue: hue value between 0.0 and 1.0
+
     """
-    Set the left backlight to supplied hue
-    
-    Args:
-        hue (float): hue value between 0.0 and 1.0
-    """
+
     col_rgb = hue_to_rgb(hue)
     left_rgb(col_rgb[0], col_rgb[1], col_rgb[2])
     update()
 
 
 def mid_hue(hue):
+    """Set the middle backlight to supplied hue
+
+    :param hue: hue value between 0.0 and 1.0
+
     """
-    Set the middle backlight to supplied hue
-    
-    Args:
-        hue (float): hue value between 0.0 and 1.0
-    """
+
     col_rgb = hue_to_rgb(hue)
     mid_rgb(col_rgb[0], col_rgb[1], col_rgb[2])
     update()
 
 
 def right_hue(hue):
+    """Set the right backlight to supplied hue
+
+    :param hue: hue value between 0.0 and 1.0
+
     """
-    Set the right backlight to supplied hue
-    
-    Args:
-        hue (float): hue value between 0.0 and 1.0
-    """
+
     col_rgb = hue_to_rgb(hue)
     right_rgb(col_rgb[0], col_rgb[1], col_rgb[2])
     update()
 
 
 def left_rgb(r, g, b):
+    """Set the left backlight to supplied r, g, b colour
+
+    :param r: red value between 0 and 255
+    :param g: green value between 0 and 255
+    :param b: blue value between 0 and 255
+
     """
-    Set the left backlight to supplied r, g, b colour
-    
-    Args:
-        r (int): red value between 0 and 255
-        g (int): green value between 0 and 255
-        b (int): blue value between 0 and 255
-    """
+
     single_rgb(0, r, g, b, False)
     single_rgb(1, r, g, b, False)
     update()
 
 
 def mid_rgb(r, g, b):
+    """Set the middle backlight to supplied r, g, b colour
+
+    :param r: red value between 0 and 255
+    :param g: green value between 0 and 255
+    :param b: blue value between 0 and 255
+
     """
-    Set the middle backlight to supplied r, g, b colour
-    
-    Args:
-        r (int): red value between 0 and 255
-        g (int): green value between 0 and 255
-        b (int): blue value between 0 and 255
-    """
+
     single_rgb(2, r, g, b, False)
     single_rgb(3, r, g, b, False)
     update()
 
 
 def right_rgb(r, g, b):
+    """Set the right backlight to supplied r, g, b colour
+
+    :param r: red value between 0 and 255
+    :param g: green value between 0 and 255
+    :param b: blue value between 0 and 255
+
     """
-    Set the right backlight to supplied r, g, b colour
-    
-    Args:
-        r (int): red value between 0 and 255
-        g (int): green value between 0 and 255
-        b (int): blue value between 0 and 255
-    """
+
     single_rgb(4, r, g, b, False)
     single_rgb(5, r, g, b, False)
     update()
 
 
 def single_rgb(led, r, g, b, auto_update=True):
+    """A single backlight LED to the supplied r, g, b colour
+
+    The `auto_update` parameter will trigger a write to the LEDs
+    after the r, g, b colour has been set. Omit it and manually
+    call `update()` to batch multiple LED changes into one update.
+
+    :param r: red value between 0 and 255
+    :param g: green value between 0 and 255
+    :param b: blue value between 0 and 255
+    :param auto_update: autmatically update the LEDs
+
+    """
+
     global leds
     leds[(led * 3)] = b
     leds[(led * 3) + 1] = g
@@ -233,28 +246,26 @@ def single_rgb(led, r, g, b, auto_update=True):
 
 
 def rgb(r, g, b):
+    """Set all backlights to supplied r, g, b colour
+
+    :param r: red value between 0 and 255
+    :param g: green value between 0 and 255
+    :param b: blue value between 0 and 255
+
     """
-    Sets all backlights to supplied r, g, b colour
-    
-    Args:
-        r (int): red value between 0 and 255
-        g (int): green value between 0 and 255
-        b (int): blue value between 0 and 255
-    """
+
     global leds
     leds = [b, g, r] * 6
     update()
 
 
 def off():
-    """
-    Turns off the backlight.
-    """
+    """Turn off the backlight."""
+
     rgb(0, 0, 0)
 
 
 def update():
-    """
-    Update backlight with changes to the LED buffer
-    """
+    """Update backlight with changes to the LED buffer"""
+
     sn3218.output(leds)
