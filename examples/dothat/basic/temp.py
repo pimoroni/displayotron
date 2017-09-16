@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from dothat import lcd
 from dothat import backlight
 import time
