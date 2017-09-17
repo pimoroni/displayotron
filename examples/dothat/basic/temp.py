@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from multiprocessing import Process
+import threading
 
 print("""
 This example shows you a feature of the Dot HAT.
@@ -57,9 +58,36 @@ def graph():
 
 
 if __name__ == '__main__':
+
     p1 = Process(target=temp)
     p1.start()
     p2 = Process(target=graph)
     p2.start()
     p1.join()
     p2.join()
+
+
+""" 
+Multithreading:    
+==============
+
+p1 = threading.Thread(name='background', target=temp)
+p2 = threading.Thread(name='background', target=graph)
+
+p1.start()
+p2.start()
+
+Another way of doing parallel:
+=============================
+
+def runInParallel(*fns):
+    proc = []
+    for fn in fns:
+        p = Process(target=fn)
+        p.start()
+        proc.append(p)
+    for p in proc:
+        p.join()
+
+runInParallel(func1, func2)
+"""
