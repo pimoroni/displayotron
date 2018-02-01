@@ -52,3 +52,11 @@ You also need to make sure the uinput module is running on your Pi:
     sudo modprobe uinput
 
 Then run mouse.py and move the joystick on your dot3k to control the mouse.
+
+
+clock.py
+--------
+
+Display 24-hour time with custom character (to achieve three-line height font)
+
+![](images/clock.jpg?raw=true)
