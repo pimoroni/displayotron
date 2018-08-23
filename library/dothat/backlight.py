@@ -84,7 +84,7 @@ def set_graph(percentage):
 def set(index, value):
     """Set a specific backlight LED to a value
 
-    :param index (int): index of the LED from 0 to 18
+    :param index (int): index of the LED from 0 to 17
     :param value (int): brightness value from 0 to 255
 
     """
