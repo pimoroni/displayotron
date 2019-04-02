@@ -49,9 +49,12 @@ class Clock(MenuOption):
         self.set_option('Clock', 'binary', str(self.binary))
 
     def load_options(self):
-        self.dim_hour = int(self.get_option('Clock', 'dim', str(self.dim_hour)))
-        self.bright_hour = int(self.get_option('Clock', 'bright', str(self.bright_hour)))
-        self.binary = self.get_option('Clock', 'binary', str(self.binary)) == 'True'
+        self.dim_hour = int(
+            self.get_option('Clock', 'dim', str(self.dim_hour)))
+        self.bright_hour = int(
+            self.get_option('Clock', 'bright', str(self.bright_hour)))
+        self.binary = self.get_option('Clock', 'binary',
+                                      str(self.binary)) == 'True'
 
     def cleanup(self):
         self.running = False
@@ -106,14 +109,17 @@ class Clock(MenuOption):
             menu.lcd.create_char(1, [0, 0, 0, 14, 31, 31, 14, 0])
             menu.lcd.create_char(2, [0, 14, 17, 17, 17, 14, 0, 0])
             menu.lcd.create_char(3, [0, 14, 31, 31, 31, 14, 0, 0])
-            menu.lcd.create_char(4, [0, 4, 14, 0, 0, 14, 4, 0])  # Up down arrow
-            menu.lcd.create_char(5, [0, 0, 10, 27, 10, 0, 0, 0])  # Left right arrow
+            menu.lcd.create_char(4,
+                                 [0, 4, 14, 0, 0, 14, 4, 0])  # Up down arrow
+            menu.lcd.create_char(
+                5, [0, 0, 10, 27, 10, 0, 0, 0])  # Left right arrow
             self.is_setup = True
 
         hour = float(time.strftime('%H'))
         brightness = 1.0
         if hour > self.dim_hour:
-            brightness = 1.0 - ((hour - self.dim_hour) / (24.0 - self.dim_hour))
+            brightness = 1.0 - (
+                (hour - self.dim_hour) / (24.0 - self.dim_hour))
         elif hour < self.bright_hour:
             brightness = 1.0 * (hour / self.bright_hour)
 
@@ -122,9 +128,15 @@ class Clock(MenuOption):
         menu.write_row(0, time.strftime('  %a %H:%M:%S  '))
 
         if self.binary:
-            binary_hour = str(bin(int(time.strftime('%I'))))[2:].zfill(4).replace('0', chr(0)).replace('1', chr(1))
-            binary_min = str(bin(int(time.strftime('%M'))))[2:].zfill(6).replace('0', chr(2)).replace('1', chr(3))
-            binary_sec = str(bin(int(time.strftime('%S'))))[2:].zfill(6).replace('0', chr(0)).replace('1', chr(1))
+            binary_hour = str(
+                bin(int(time.strftime('%I'))))[2:].zfill(4).replace(
+                    '0', chr(0)).replace('1', chr(1))
+            binary_min = str(
+                bin(int(time.strftime('%M'))))[2:].zfill(6).replace(
+                    '0', chr(2)).replace('1', chr(3))
+            binary_sec = str(
+                bin(int(time.strftime('%S'))))[2:].zfill(6).replace(
+                    '0', chr(0)).replace('1', chr(1))
             menu.write_row(1, binary_hour + binary_min + binary_sec)
         else:
             menu.write_row(1, '-' * 16)
@@ -144,6 +156,7 @@ class Clock(MenuOption):
         elif self.modes[self.mode] == 'dim':
             bottom_row = ' Dim at ' + chr(5) + str(self.dim_hour).zfill(2)
         elif self.modes[self.mode] == 'bright':
-            bottom_row = ' Bright at ' + chr(5) + str(self.bright_hour).zfill(2)
+            bottom_row = ' Bright at ' + chr(5) + str(
+                self.bright_hour).zfill(2)
 
         menu.write_row(2, chr(4) + bottom_row)

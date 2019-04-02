@@ -1,11 +1,14 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+from __future__ import (division, absolute_import, print_function,
+                        unicode_literals)
 
 import math
 import time
 
 import dothat.backlight as backlight
 import dothat.lcd as lcd
-
 
 print("""
 This example shows you a feature of the Dot HAT backlight.

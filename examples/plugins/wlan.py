@@ -9,7 +9,8 @@ from sys import exit
 try:
     import wifi
 except ImportError:
-    exit("This library requires the wifi module\nInstall with: sudo pip install wifi")
+    exit("This library requires the wifi module\n\
+        Install with: sudo pip install wifi")
 
 from dot3k.menu import MenuOption
 
@@ -35,23 +36,24 @@ class Wlan(MenuOption):
         self.is_setup = False
 
     def run_cmd(self, cmd):
-        result = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        result = subprocess.Popen(
+            cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
         stdout = result.stdout.read().decode()
         stderr = result.stderr.read().decode()
 
         return (stdout, stderr)
-        #print("stdout >> ", stdout)
-        #print("stderr >> ", stderr)
+        # print("stdout >> ", stdout)
+        # print("stderr >> ", stderr)
 
     def begin(self):
         self.has_errror = False
-        pass
 
     def setup(self, config):
         MenuOption.setup(self, config)
 
-    def update_options(self):
+    @staticmethod
+    def update_options():
         pass
 
     def cleanup(self):
@@ -60,10 +62,12 @@ class Wlan(MenuOption):
         self.is_setup = False
         self.has_error = False
 
-    def select(self):
+    @staticmethod
+    def select():
         return True
 
-    def left(self):
+    @staticmethod
+    def left():
         return False
 
     def right(self):
@@ -87,7 +91,8 @@ class Wlan(MenuOption):
 
         return None
 
-    def input_prompt(self):
+    @staticmethod
+    def input_prompt():
         return 'Password:'
 
     def connect(self):
@@ -95,13 +100,14 @@ class Wlan(MenuOption):
         scheme = wifi.Scheme.find(self.interface, network.ssid)
         if scheme is None:
             self.request_input()
-        else: 
+        else:
             print("Connecting to {}".format(self.current_network.ssid))
             t = threading.Thread(None, self.perform_connection)
             t.daemon = True
             t.start()
 
-    def initial_value(self):
+    @staticmethod
+    def initial_value():
         return ""
 
     def receive_input(self, value):
@@ -120,14 +126,10 @@ class Wlan(MenuOption):
         scheme = wifi.Scheme.find(self.interface, network.ssid)
         new = False
 
- 
         if scheme is None:
             new = True
             scheme = wifi.Scheme.for_cell(
-                self.interface,
-                network.ssid,
-                network,
-                passkey=self.wifi_pass)
+                self.interface, network.ssid, network, passkey=self.wifi_pass)
             scheme.save()
 
         try:
@@ -170,13 +172,12 @@ class Wlan(MenuOption):
 
         try:
             result = wifi.scan.Cell.all(self.interface)
-            self.items = result
-            print(result)
+            self.items = list(result)
+            print(self.items)
 
         except wifi.scan.InterfaceError as e:
             self.error("Interface Error!")
             print(e)
-
 
         self.scanning = False
 
@@ -203,8 +204,10 @@ class Wlan(MenuOption):
             menu.lcd.create_char(0, [0, 24, 30, 31, 30, 24, 0, 0])  # Play
             menu.lcd.create_char(1, [0, 27, 27, 27, 27, 27, 0, 0])  # Pause
 
-            menu.lcd.create_char(4, [0, 4, 14, 0, 0, 14, 4, 0])  # Up down arrow
-            menu.lcd.create_char(5, [0, 0, 10, 27, 10, 0, 0, 0])  # Left right arrow
+            menu.lcd.create_char(4,
+                                 [0, 4, 14, 0, 0, 14, 4, 0])  # Up down arrow
+            menu.lcd.create_char(
+                5, [0, 0, 10, 27, 10, 0, 0, 0])  # Left right arrow
 
             self.scan()
 
@@ -219,7 +222,8 @@ class Wlan(MenuOption):
 
             menu.write_option(row=0, text=str(item.ssid), scroll=True)
             menu.write_option(row=1, icon='', text=status, scroll=True)
-            menu.write_option(row=2, text='CH' + str(item.channel) + ' ' + item.frequency)
+            menu.write_option(
+                row=2, text='CH' + str(item.channel) + ' ' + item.frequency)
 
             signal = float(item.quality.split('/')[0])
             noise = float(item.quality.split('/')[1])

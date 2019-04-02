@@ -27,10 +27,8 @@ class Debris(MenuOption):
             [0, 0, 0, 0, 14, 31, 31, 14],  # 1: Debris bottom of char
             [30, 5, 7, 30, 0, 0, 0, 0],  # 2: Ship top of char
             [0, 0, 0, 0, 30, 5, 7, 30],  # 3: Ship bottom of char
-
             [30, 5, 7, 30, 14, 31, 31, 14],  # 4: Ship above debris
             [14, 31, 31, 14, 30, 5, 7, 30],  # 5: Ship below debris
-
             [0, 14, 31, 31, 31, 31, 14, 0]  # 6: Giant debris
         ]
         self.width = 16
@@ -151,8 +149,7 @@ class Debris(MenuOption):
 
                 if self.debug:
                     print(debris_x, debris_y)
-                    print(self.player_x,
-                          self.player_y)
+                    print(self.player_x, self.player_y)
                     exit()
 
                 self.running = False
@@ -182,7 +179,8 @@ class Debris(MenuOption):
             self.last_update = self.millis()
 
         game_time = str(int((self.millis() - self.time_start) / 1000)).zfill(3)
-        self.backlight.sweep(((self.millis() - self.time_start) / 500 % 360) / 359.0)
+        self.backlight.sweep(
+            ((self.millis() - self.time_start) / 500 % 360) / 359.0)
 
         buffer = []
         for i in range(3):
@@ -202,7 +200,9 @@ class Debris(MenuOption):
 
             debris_sprite = debris_v
 
-            if int(debris_y / 2) == int(self.player_y / 2) and debris_x == self.player_x and debris_v != player_v:
+            if int(debris_y / 2) == int(
+                    self.player_y /
+                    2) and debris_x == self.player_x and debris_v != player_v:
                 debris_sprite = 4 + player_v
 
             current = buffer[int(debris_y / 2)][debris_x]

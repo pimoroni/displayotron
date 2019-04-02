@@ -17,13 +17,14 @@ from plugins.text import Text
 from plugins.utils import Backlight, Contrast
 from plugins.wlan import Wlan
 
-
 print("""
 This advanced example uses the menu framework.
-It gives you a basic menu setup with plugins. You should be able to view system info and adjust settings!
+It gives you a basic menu setup with plugins. You should be able
+to view system info and adjust settings!
 
 Press CTRL+C to exit.
 """)
+
 
 class BacklightIdleTimeout(MenuOption):
     def __init__(self, backlight):
@@ -47,6 +48,7 @@ class BacklightIdleTimeout(MenuOption):
     def begin(self):
         print("Idle timeout triggered. Turning off backlight!")
         self.backlight.rgb(0, 0, 0)
+
 
 """
 Using a set of nested lists you can describe
@@ -84,7 +86,6 @@ menu = Menu(
 # Pass the configuration into the idle handler,
 # since the menu class does not do this!
 backlight_idle.setup(menu.config)
-
 """
 You can use anything to control dot3k.menu,
 but you'll probably want to use dot3k.touch
