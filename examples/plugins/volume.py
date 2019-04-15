@@ -79,11 +79,13 @@ class Volume(MenuOption):
         subprocess.check_output("amixer cset numid=3 " + str(self.output_mode), shell=True)
 
     def get_volume(self):
-        actual_volume = subprocess.check_output("amixer get 'PCM' | awk '$0~/%/{print $4}' | tr -d '[]%'", shell=True)
+        actual_volume = subprocess.check_output("amixer sget 'PCM' | grep 'Left:' | awk -F'[][]' '{ print $2 }'", shell=True)
         if version_info[0] >= 3:
-            return actual_volume.strip().decode('utf-8')
+            actual_volume = actual_volume.strip().decode('utf-8')
         else:
-            return actual_volume.strip()
+            actual_volume = actual_volume.strip()
+        actual_volume = actual_volume[:2]
+        return float(actual_volume)
 
     def cleanup(self):
         if self.backlight is not None:
