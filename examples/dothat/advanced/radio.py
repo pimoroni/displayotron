@@ -17,10 +17,10 @@ from plugins.radio import Radio
 from plugins.volume import Volume
 from plugins.utils import Backlight, Contrast
 
-
 print("""
 This advanced example uses the menu framework.
-Providing you have VLC and extra dependencies installed, it should function as an internet radio!
+Providing you have VLC and extra dependencies installed,
+it should function as an internet radio!
 
 Press CTRL+C to exit.
 """)
@@ -30,16 +30,17 @@ nav.enable_repeat(True)
 # We want to use clock both as an option
 # and as the idle plugin
 clock = Clock(backlight)
-
 """
 Using a set of nested dictionaries you can describe
 the menu you want to display on dot3k.
 
 A nested dictionary describes a submenu.
-An instance of a plugin class ( derived from MenuOption ) can be used for things like settings, radio, etc
+An instance of a plugin class ( derived from MenuOption ) can
+be used for things like settings, radio, etc
 A function name will call that function.
 """
-menu = Menu({
+menu = Menu(
+    {
         'Clock': clock,
         'Radio Stream': Radio(),
         'Volume': Volume(backlight),
@@ -56,7 +57,6 @@ menu = Menu({
     clock,  # Idle with the clock plugin,
     10  # Idle after 10 seconds
 )
-
 """
 You can use anything to control dot3k.menu,
 but you'll probably want to use dot3k.touch

@@ -14,25 +14,24 @@ sys.path.append('../../')
 from plugins.debris import Debris
 from plugins.utils import Backlight, Contrast
 
-
 print("""
 This advanced example uses the menu framework.
-It loads the debris game plugin. Your score is time survived in seconds, see how well you can do!
+It loads the debris game plugin. Your score is
+time survived in seconds, see how well you can do!
 
 Press CTRL+C to exit.
 """)
 
 # Build your menu!
 menu = Menu({
-        'Debris Game': Debris(backlight),
-        'Settings': {
-            'Display': {
-                'Contrast': Contrast(lcd),
-                'Backlight': Backlight(backlight)
-            }
+    'Debris Game': Debris(backlight),
+    'Settings': {
+        'Display': {
+            'Contrast': Contrast(lcd),
+            'Backlight': Backlight(backlight)
         }
-    },
-    lcd)
+    }
+}, lcd)
 
 # Hook captouch into menu with default settings
 nav.bind_defaults(menu)

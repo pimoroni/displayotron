@@ -6,19 +6,17 @@ import dothat.backlight as backlight
 import dothat.lcd as lcd
 import dothat.touch as nav
 
-
 print("""
 This example shows the Display-o-Tron HAT touch inputs in action.
 Touch an input and you should see the LCD change accordingly.
 
 Press CTRL+C to exit.
 """)
-
 """
 Captouch provides the @captouch.on() decorator
 to make it super easy to attach handlers to each button.
 
-It's also a drop-in replacement for joystick, with one exception: 
+It's also a drop-in replacement for joystick, with one exception:
 it has a "cancel" method.
 
 The handler will receive "channel" ( corresponding to a particular

@@ -1,11 +1,14 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+from __future__ import (division, absolute_import, print_function,
+                        unicode_literals)
 
 import atexit
 import time
 
 import dothat.backlight as backlight
 import dothat.lcd as lcd
-
 
 print("""
 This is a really experimental example that doesn't do much!
@@ -14,17 +17,11 @@ Do not adjust the horizontal, or the vertical!
 Press CTRL+C to exit.
 """)
 
-rain = [
-    [1, 0, 0, 0, 0, 0, 0, 0],
-    [0, 1, 0, 0, 0, 0, 0, 0],
-    [0, 0, 2, 0, 0, 0, 0, 0],
-    [0, 0, 0, 2, 0, 0, 0, 0],
-    [0, 0, 0, 0, 4, 0, 0, 0],
-    [0, 0, 0, 0, 0, 4, 0, 0],
-    [0, 0, 0, 0, 0, 0, 8, 0],
-    [0, 0, 0, 0, 0, 0, 0, 16],
-    [0, 0, 0, 0, 0, 0, 0, 0]
-]
+rain = [[1, 0, 0, 0, 0, 0, 0, 0], [0, 1, 0, 0, 0, 0, 0, 0],
+        [0, 0, 2, 0, 0, 0, 0, 0], [0, 0, 0, 2, 0, 0, 0, 0],
+        [0, 0, 0, 0, 4, 0, 0, 0], [0, 0, 0, 0, 0, 4, 0, 0],
+        [0, 0, 0, 0, 0, 0, 8, 0], [0, 0, 0, 0, 0, 0, 0, 16],
+        [0, 0, 0, 0, 0, 0, 0, 0]]
 
 
 def tidyup():
