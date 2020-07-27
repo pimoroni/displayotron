@@ -1,9 +1,10 @@
 ![Display-o-Tron 3000](display-o-tron-logo.png)
 
-Library and examples for the Display-o-Tron 3000 (_Dot3K_) and Display-o-Tron HAT (_DotHAT_) Raspberry Pi add-on boards from Pimoroni
+Library and examples for the Display-o-Tron HAT (_DotHAT_) and Display-o-Tron 3000 (_Dot3K_) Raspberry Pi add-on boards from [Pimoroni](https://pimoroni.com).
 
-* Display-o-Tron 3000 (for all Pi models): ~~http://shop.pimoroni.com/products/displayotron-3000~~ (no longer on sale)
-* Display-o-Tron HAT (for A+, B+ and Pi 2): https://shop.pimoroni.com/products/display-o-tron-hat
+* Display-o-Tron HAT (for all Rasperry Pi models with 40-pin headers): https://shop.pimoroni.com/products/display-o-tron-hat
+* Display-o-Tron 3000 (for all Raspberry Pi models): ~~http://shop.pimoroni.com/products/displayotron-3000~~ (no longer on sale)
+
 
 ## Using Python?
 
@@ -25,11 +26,13 @@ We've also created a full [function reference](documentation/REFERENCE.md).
 
 Make sure you run the right examples for your product, if you've got a Display-o-Tron 3000 you should be using the examples in `/home/pi/Pimoroni/displayotron/dot3k` and if you have a Display-o-Tron HAT you should be using the ones in `/home/pi/Pimoroni/displayotron/dothat`*
 
-The Display-o-Tron 3000 looks like this:
-![Display-o-Tron 3000 image](https://cdn.shopify.com/s/files/1/0174/1800/products/IMG_5944_1024x1024.png)
 
 The Display-o-Tron HAT looks like this:
 ![Display-o-Tron HAT image](https://cdn.shopify.com/s/files/1/0174/1800/products/Display-o-tron_HAT_1_of_2_1024x1024.JPG)
+
+The Display-o-Tron 3000 looks like this:
+![Display-o-Tron 3000 image](https://cdn.shopify.com/s/files/1/0174/1800/products/IMG_5944_1024x1024.png)
+
 
 ## Documentation & Support
 
