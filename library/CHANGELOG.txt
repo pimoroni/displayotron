@@ -1,3 +1,8 @@
+2.0.3
+-----
+
+* Bump cap1xxx dependency to v0.1.4
+
 2.0.2
 -----
 
