@@ -3,7 +3,7 @@
 import sys
 import site
 
-import mock
+from unittest import mock
 
 
 # Prompte /usr/local/lib to the front of sys.path
