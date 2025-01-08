@@ -2,9 +2,14 @@ import colorsys
 from sys import exit
 
 try:
-    import sn3218
+    from sn3218 import SN3218
 except ImportError:
-    exit("This library requires the sn3218 module\nInstall with: sudo pip install sn3218")
+    try:
+        import sn3218
+    except ImportError:
+        exit("This library requires the sn3218 module\nInstall with: sudo pip install sn3218")
+else:
+    sn3218 = SN3218()
 
 try:
     import cap1xxx
